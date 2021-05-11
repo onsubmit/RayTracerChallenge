@@ -46,10 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Numerics\DoubleExtensions.cs" />
-    <Compile Include="Numerics\PointEx.cs" />
     <Compile Include="Numerics\TupleEx.cs" />
-    <Compile Include="Numerics\TupleType.cs" />
-    <Compile Include="Numerics\VectorEx.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -14,21 +14,19 @@ namespace OnSubmit.RayTracerChallenge.Numerics
     public class TupleEx
     {
         /// <summary>
-        /// The type of tuple.
+        /// The 'w' value for vectors.
         /// </summary>
-        private TupleType tupleType;
+        private const double VectorTuple = 0.0;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TupleEx"/> class.
+        /// The 'w' value for points.
         /// </summary>
-        /// <param name="x">The x value.</param>
-        /// <param name="y">The y value.</param>
-        /// <param name="z">The z value.</param>
-        /// <param name="tupleType">The type of the tuple.</param>
-        public TupleEx(double x, double y, double z, TupleType tupleType)
-        {
-            this.Initialize(x, y, z, tupleType);
-        }
+        private const double PointTuple = 1.0;
+
+        /// <summary>
+        /// The zero vector.
+        /// </summary>
+        private static TupleEx zeroVector;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TupleEx"/> class.
@@ -39,27 +37,21 @@ namespace OnSubmit.RayTracerChallenge.Numerics
         /// <param name="w">Represents whether the tuple is a point (1) or vector (0).</param>
         public TupleEx(double x, double y, double z, double w)
         {
-            if (!w.Compare(0) && !w.Compare(1))
-            {
-                throw new ArgumentOutOfRangeException(nameof(w), $"{nameof(w)} must be 0 or 1");
-            }
+            this.X = x;
+            this.Y = y;
+            this.Z = z;
+            this.W = w;
+        }
 
-            int tupleType;
-            try
+        /// <summary>
+        /// Gets the zero vector.
+        /// </summary>
+        public static TupleEx ZeroVector
+        {
+            get
             {
-                tupleType = Convert.ToInt32(w);
+                return zeroVector ?? (zeroVector = CreateVector(0, 0, 0));
             }
-            catch (OverflowException oex)
-            {
-                throw new ArgumentOutOfRangeException($"{nameof(w)} must be 0 or 1", oex);
-            }
-
-            if (!Enum.IsDefined(typeof(TupleType), tupleType))
-            {
-                throw new ArgumentOutOfRangeException(nameof(w), $"{nameof(w)} must be 0 or 1");
-            }
-
-            this.Initialize(x, y, z, (TupleType)tupleType);
         }
 
         /// <summary>
@@ -85,12 +77,180 @@ namespace OnSubmit.RayTracerChallenge.Numerics
         /// <summary>
         /// Gets a value indicating whether the tuple is a point.
         /// </summary>
-        public bool IsPoint => this.tupleType == TupleType.Point;
+        public bool IsPoint => this.W == PointTuple;
 
         /// <summary>
         /// Gets a value indicating whether the tuple is a vector.
         /// </summary>
-        public bool IsVector => this.tupleType == TupleType.Vector;
+        public bool IsVector => this.W == VectorTuple;
+
+        /// <summary>
+        /// Gets the magnitude of the tuple.
+        /// </summary>
+        public double Magnitude
+        {
+            get
+            {
+                double sum = 0;
+                sum += Math.Pow(this.X, 2);
+                sum += Math.Pow(this.Y, 2);
+                sum += Math.Pow(this.Z, 2);
+                sum += Math.Pow(this.W, 2);
+
+                return Math.Sqrt(sum);
+            }
+        }
+
+        /// <summary>
+        /// Computes the sum of two tuples.
+        /// </summary>
+        /// <param name="a">First tuple.</param>
+        /// <param name="b">Second tuple.</param>
+        /// <returns>The sum of the tuples.</returns>
+        public static TupleEx operator +(TupleEx a, TupleEx b)
+        {
+            if (a.IsPoint && b.IsPoint)
+            {
+                throw new InvalidOperationException("Cannot add two points together.");
+            }
+
+            // Adding 2 vectors gives a vector
+            return new TupleEx(a.X + b.X, a.Y + b.Y, a.Z + b.Z, a.W + b.W);
+        }
+
+        /// <summary>
+        /// Negates the tuple.
+        /// </summary>
+        /// <param name="t">The tuple to negate.</param>
+        /// <returns>The negative of the tuple.</returns>
+        public static TupleEx operator -(TupleEx t)
+        {
+            return new TupleEx(-t.X, -t.Y, -t.Z, -t.W);
+        }
+
+        /// <summary>
+        /// Computes the difference of two tuples.
+        /// </summary>
+        /// <param name="a">First tuple.</param>
+        /// <param name="b">Second tuple.</param>
+        /// <returns>The difference of the tuples.</returns>
+        public static TupleEx operator -(TupleEx a, TupleEx b)
+        {
+            if (a.IsVector && b.IsPoint)
+            {
+                throw new InvalidOperationException("Cannot subtract a point from a vector.");
+            }
+
+            return new TupleEx(a.X - b.X, a.Y - b.Y, a.Z - b.Z, a.W - b.W);
+        }
+
+        /// <summary>
+        /// Multiples a tuple by a scalar.
+        /// </summary>
+        /// <param name="t">The tuple.</param>
+        /// <param name="k">The scalar to multiple by.</param>
+        /// <returns>The tuple multiplied by the scalar.</returns>
+        public static TupleEx operator *(TupleEx t, double k)
+        {
+            return new TupleEx(t.X * k, t.Y * k, t.Z * k, t.W * k);
+        }
+
+        /// <summary>
+        /// Divides a tuple by a scalar.
+        /// </summary>
+        /// <param name="t">The tuple.</param>
+        /// <param name="k">The scalar to divide by.</param>
+        /// <returns>The tuple divided by the scalar.</returns>
+        public static TupleEx operator /(TupleEx t, double k)
+        {
+            return new TupleEx(t.X / k, t.Y / k, t.Z / k, t.W / k);
+        }
+
+        /// <summary>
+        /// Creates a new tuple.
+        /// </summary>
+        /// <param name="x">The x value.</param>
+        /// <param name="y">The y value.</param>
+        /// <param name="z">The z value.</param>
+        /// <param name="w">The w value.</param>
+        /// <returns>A new tuple.</returns>
+        public static TupleEx Create(double x, double y, double z, double w)
+        {
+            return new TupleEx(x, y, z, w);
+        }
+
+        /// <summary>
+        /// Creates a new point tuple.
+        /// </summary>
+        /// <param name="x">The x value.</param>
+        /// <param name="y">The y value.</param>
+        /// <param name="z">The z value.</param>
+        /// <returns>A new point tuple.</returns>
+        public static TupleEx CreatePoint(double x, double y, double z)
+        {
+            return new TupleEx(x, y, z, PointTuple);
+        }
+
+        /// <summary>
+        /// Creates a new vector tuple.
+        /// </summary>
+        /// <param name="x">The x value.</param>
+        /// <param name="y">The y value.</param>
+        /// <param name="z">The z value.</param>
+        /// <returns>A new vector tuple.</returns>
+        public static TupleEx CreateVector(double x, double y, double z)
+        {
+            return new TupleEx(x, y, z, VectorTuple);
+        }
+
+        /// <summary>
+        /// Normalizes the tuple.
+        /// </summary>
+        /// <returns>The corresponding unit vector.</returns>
+        public TupleEx Normalize()
+        {
+            if (this == ZeroVector)
+            {
+                throw new DivideByZeroException("Cannot normalize the zero vector.");
+            }
+
+            return this / this.Magnitude;
+        }
+
+        /// <summary>
+        /// Computes the dot product of the tuple with another.
+        /// </summary>
+        /// <param name="t">The tuple to use.</param>
+        /// <returns>The dot product.</returns>
+        public double GetDotProductWith(TupleEx t)
+        {
+            double sum = 0;
+            sum += this.X * t.X;
+            sum += this.Y * t.Y;
+            sum += this.Z * t.Z;
+            sum += this.W * t.W;
+
+            return sum;
+        }
+
+        /// <summary>
+        /// Computes the cross product of the tuple with another.
+        /// </summary>
+        /// <param name="t">The tuple to use.</param>
+        /// <returns>The cross product.</returns>
+        public TupleEx GetCrossProductWith(TupleEx t)
+        {
+            if (!this.IsVector)
+            {
+                throw new InvalidOperationException("Only 3D cross product is supported.");
+            }
+
+            double x = (this.Y * t.Z) - (this.Z * t.Y);
+            double y = (this.Z * t.X) - (this.X * t.Z);
+            double z = (this.X * t.Y) - (this.Y * t.X);
+
+            return CreateVector(x, y, z);
+        }
 
         /// <summary>
         /// Compares a <see cref="TupleEx"/> with another object.
@@ -141,22 +301,6 @@ namespace OnSubmit.RayTracerChallenge.Numerics
             hashCode = (hashCode * -1521134295) + EqualityComparer<double>.Default.GetHashCode(this.Z);
             hashCode = (hashCode * -1521134295) + EqualityComparer<double>.Default.GetHashCode(this.W);
             return hashCode;
-        }
-
-        /// <summary>
-        /// Initializes the properties and fields.
-        /// </summary>
-        /// <param name="x">The x value.</param>
-        /// <param name="y">The y value.</param>
-        /// <param name="z">The z value.</param>
-        /// <param name="tupleType">The type of the tuple.</param>
-        private void Initialize(double x, double y, double z, TupleType tupleType)
-        {
-            this.X = x;
-            this.Y = y;
-            this.Z = z;
-            this.W = (double)tupleType;
-            this.tupleType = tupleType;
         }
     }
 }
