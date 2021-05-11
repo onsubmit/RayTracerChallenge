@@ -5,7 +5,7 @@
     using OnSubmit.RayTracerChallenge.Numerics;
 
     [TestClass]
-    public class TupleExTests
+    public class Tuple4DTests
     {
         [TestMethod]
         public void TupleIsPoint()
@@ -15,7 +15,7 @@
             const double Z = 3.1;
             const double W = 1.0;
 
-            TupleEx a = TupleEx.Create(X, Y, Z, W);
+            Tuple4D a = Tuple4D.Create(X, Y, Z, W);
             Assert.AreEqual(X, a.X);
             Assert.AreEqual(Y, a.Y);
             Assert.AreEqual(Z, a.Z);
@@ -32,7 +32,7 @@
             const double Z = 3.1;
             const double W = 0.0;
 
-            TupleEx a = TupleEx.Create(X, Y, Z, W);
+            Tuple4D a = Tuple4D.Create(X, Y, Z, W);
             Assert.AreEqual(X, a.X);
             Assert.AreEqual(Y, a.Y);
             Assert.AreEqual(Z, a.Z);
@@ -49,8 +49,8 @@
             const double Z = 3.1;
             const double W = 1.0;
 
-            TupleEx a = TupleEx.CreatePoint(X, Y, Z);
-            TupleEx t = TupleEx.Create(X, Y, Z, W);
+            Tuple4D a = Tuple4D.CreatePoint(X, Y, Z);
+            Tuple4D t = Tuple4D.Create(X, Y, Z, W);
             Assert.AreEqual(t, a);
         }
 
@@ -62,91 +62,97 @@
             const double Z = 3.1;
             const double W = 0.0;
 
-            TupleEx v = TupleEx.CreateVector(X, Y, Z);
-            TupleEx t = TupleEx.Create(X, Y, Z, W);
+            Tuple4D v = Tuple4D.CreateVector(X, Y, Z);
+            Tuple4D t = Tuple4D.Create(X, Y, Z, W);
             Assert.AreEqual(t, v);
         }
 
         [TestMethod]
         public void AddTuples()
         {
-            TupleEx a1 = TupleEx.Create(3, -2, 5, 1);
-            TupleEx a2 = TupleEx.Create(-2, 3, 1, w: 0);
-            Assert.AreEqual(TupleEx.Create(1, 1, 6, 1), a1 + a2);
+            Tuple4D a1 = Tuple4D.Create(3, -2, 5, 1);
+            Tuple4D a2 = Tuple4D.Create(-2, 3, 1, w: 0);
+            Assert.AreEqual(Tuple4D.Create(1, 1, 6, 1), a1 + a2);
+            Assert.AreEqual(Tuple4D.Create(1, 1, 6, 1), a2 + a1);
+            Assert.AreEqual(a1 + a2, a2 + a1);
         }
 
         [TestMethod]
         public void SubtractVectorFromPoint()
         {
-            TupleEx p = TupleEx.CreatePoint(3, 2, 1);
-            TupleEx v = TupleEx.CreateVector(5, 6, 7);
-            Assert.AreEqual(TupleEx.CreatePoint(-2, -4, -6), p - v);
+            Tuple4D p = Tuple4D.CreatePoint(3, 2, 1);
+            Tuple4D v = Tuple4D.CreateVector(5, 6, 7);
+            Assert.AreEqual(Tuple4D.CreatePoint(-2, -4, -6), p - v);
         }
 
         [TestMethod]
         public void SubtractVectorFromVector()
         {
-            TupleEx p = TupleEx.CreateVector(3, 2, 1);
-            TupleEx v = TupleEx.CreateVector(5, 6, 7);
-            Assert.AreEqual(TupleEx.CreateVector(-2, -4, -6), p - v);
+            Tuple4D p = Tuple4D.CreateVector(3, 2, 1);
+            Tuple4D v = Tuple4D.CreateVector(5, 6, 7);
+            Assert.AreEqual(Tuple4D.CreateVector(-2, -4, -6), p - v);
+            Assert.AreEqual(Tuple4D.CreateVector(2, 4, 6), v - p);
+            Assert.AreEqual(-(p - v), v - p);
         }
 
         [TestMethod]
         public void SubtractVectorFromZeroVector()
         {
-            TupleEx zero = TupleEx.ZeroVector;
-            TupleEx v = TupleEx.CreateVector(1, -2, 3);
-            Assert.AreEqual(TupleEx.CreateVector(-1, 2, -3), zero - v);
+            Tuple4D zero = Tuple4D.ZeroVector;
+            Tuple4D v = Tuple4D.CreateVector(1, -2, 3);
+            Assert.AreEqual(Tuple4D.CreateVector(-1, 2, -3), zero - v);
         }
 
         [TestMethod]
         public void NegateTuple()
         {
-            TupleEx a = TupleEx.Create(1, -2, 3, -4);
-            Assert.AreEqual(TupleEx.Create(-1, 2, -3, 4), -a);
+            Tuple4D a = Tuple4D.Create(1, -2, 3, -4);
+            Assert.AreEqual(Tuple4D.Create(-1, 2, -3, 4), -a);
         }
 
         [TestMethod]
         public void MultiplyTupleByScalar()
         {
-            TupleEx a = TupleEx.Create(1, -2, 3, -4);
-            Assert.AreEqual(TupleEx.Create(3.5, -7, 10.5, -14), a * 3.5);
+            Tuple4D a = Tuple4D.Create(1, -2, 3, -4);
+            Assert.AreEqual(Tuple4D.Create(3.5, -7, 10.5, -14), a * 3.5);
+            Assert.AreEqual(Tuple4D.Create(3.5, -7, 10.5, -14), 3.5 * a);
         }
 
         [TestMethod]
         public void MultiplyTupleByFraction()
         {
-            TupleEx a = TupleEx.Create(1, -2, 3, -4);
-            Assert.AreEqual(TupleEx.Create(0.5, -1, 1.5, -2), a * 0.5);
+            Tuple4D a = Tuple4D.Create(1, -2, 3, -4);
+            Assert.AreEqual(Tuple4D.Create(0.5, -1, 1.5, -2), a * 0.5);
+            Assert.AreEqual(Tuple4D.Create(0.5, -1, 1.5, -2), 0.5 * a);
         }
 
         [TestMethod]
         public void DivideTupleByScalar()
         {
-            TupleEx a = TupleEx.Create(1, -2, 3, -4);
-            Assert.AreEqual(TupleEx.Create(0.5, -1, 1.5, -2), a / 2);
+            Tuple4D a = Tuple4D.Create(1, -2, 3, -4);
+            Assert.AreEqual(Tuple4D.Create(0.5, -1, 1.5, -2), a / 2);
         }
 
         [TestMethod]
         public void VerifyMagnitude()
         {
-            double magnitude = TupleEx.CreateVector(0, 1, 0).Magnitude;
+            double magnitude = Tuple4D.CreateVector(0, 1, 0).Magnitude;
             Assert.IsTrue(
                 magnitude.Compare(1),
                 $"Expected: 1, Actual: {magnitude}");
 
-            magnitude = TupleEx.CreateVector(0, 0, 1).Magnitude;
+            magnitude = Tuple4D.CreateVector(0, 0, 1).Magnitude;
             Assert.IsTrue(
                 magnitude.Compare(1),
                 $"Expected: 1, Actual: {magnitude}");
 
             double root14 = Math.Sqrt(14);
-            magnitude = TupleEx.CreateVector(1, 2, 3).Magnitude;
+            magnitude = Tuple4D.CreateVector(1, 2, 3).Magnitude;
             Assert.IsTrue(
                 magnitude.Compare(root14),
                 $"Expected: {root14}, Actual: {magnitude}");
 
-            magnitude = TupleEx.CreateVector(-1, -2, -3).Magnitude;
+            magnitude = Tuple4D.CreateVector(-1, -2, -3).Magnitude;
             Assert.IsTrue(
                 magnitude.Compare(root14),
                 $"Expected: {root14}, Actual: {magnitude}");
@@ -155,34 +161,44 @@
         [TestMethod]
         public void VerifyUnitVectors()
         {
-            TupleEx v = TupleEx.CreateVector(4, 0, 0);
-            TupleEx unitVector = v.Normalize();
-            Assert.AreEqual(TupleEx.CreateVector(1, 0, 0), unitVector);
+            Tuple4D v = Tuple4D.CreateVector(4, 0, 0);
+            Tuple4D unitVector = v.Normalize();
+            Assert.AreEqual(Tuple4D.CreateVector(1, 0, 0), unitVector);
 
             double root14 = Math.Sqrt(14);
-            v = TupleEx.CreateVector(1, 2, 3);
+            v = Tuple4D.CreateVector(1, 2, 3);
             unitVector = v.Normalize();
-            Assert.AreEqual(TupleEx.CreateVector(1 / root14, 2 / root14, 3 / root14), unitVector);
+            Assert.AreEqual(Tuple4D.CreateVector(1 / root14, 2 / root14, 3 / root14), unitVector);
             Assert.AreEqual(1, unitVector.Magnitude);
         }
 
         [TestMethod]
         public void VerifyDotProduct()
         {
-            TupleEx a = TupleEx.CreateVector(1, 2, 3);
-            TupleEx b = TupleEx.CreateVector(2, 3, 4);
+            Tuple4D a = Tuple4D.CreateVector(1, 2, 3);
+            Tuple4D b = Tuple4D.CreateVector(2, 3, 4);
             double dotProduct = a.GetDotProductWith(b);
             Assert.IsTrue(
                 dotProduct.Compare(20),
                 $"Expected: {20}, Actual: {dotProduct}");
+
+            dotProduct = b.GetDotProductWith(a);
+            Assert.IsTrue(
+                dotProduct.Compare(20),
+                $"Expected: {20}, Actual: {dotProduct}");
+
+            Assert.AreEqual(a.GetDotProductWith(b), b.GetDotProductWith(a));
         }
 
         [TestMethod]
         public void VerifyCrossProduct()
         {
-            TupleEx a = TupleEx.CreateVector(1, 2, 3);
-            TupleEx b = TupleEx.CreateVector(2, 3, 4);
-            Assert.AreEqual(TupleEx.CreateVector(-1, 2, -1), a.GetCrossProductWith(b));
+            Tuple4D a = Tuple4D.CreateVector(1, 2, 3);
+            Tuple4D b = Tuple4D.CreateVector(2, 3, 4);
+            Assert.AreEqual(Tuple4D.CreateVector(-1, 2, -1), a.GetCrossProductWith(b));
+            Assert.AreEqual(Tuple4D.CreateVector(1, -2, 1), b.GetCrossProductWith(a));
+            Assert.AreEqual(-a.GetCrossProductWith(b), b.GetCrossProductWith(a));
+            Assert.AreEqual(-b.GetCrossProductWith(a), a.GetCrossProductWith(b));
         }
     }
 }

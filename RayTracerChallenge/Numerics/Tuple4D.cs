@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="TupleEx.cs" company="Andy Young">
+// <copyright file="Tuple4D.cs" company="Andy Young">
 //     Copyright (c) Andy Young. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
@@ -9,9 +9,9 @@ namespace OnSubmit.RayTracerChallenge.Numerics
     using System.Collections.Generic;
 
     /// <summary>
-    /// Represents a tuple of the form (x, y, z, w).
+    /// Represents a 4 dimensional tuple of the form (x, y, z, w).
     /// </summary>
-    public class TupleEx
+    public class Tuple4D
     {
         /// <summary>
         /// The 'w' value for vectors.
@@ -26,16 +26,16 @@ namespace OnSubmit.RayTracerChallenge.Numerics
         /// <summary>
         /// The zero vector.
         /// </summary>
-        private static TupleEx zeroVector;
+        private static Tuple4D zeroVector;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TupleEx"/> class.
+        /// Initializes a new instance of the <see cref="Tuple4D"/> class.
         /// </summary>
         /// <param name="x">The x value.</param>
         /// <param name="y">The y value.</param>
         /// <param name="z">The z value.</param>
         /// <param name="w">Represents whether the tuple is a point (1) or vector (0).</param>
-        public TupleEx(double x, double y, double z, double w)
+        public Tuple4D(double x, double y, double z, double w)
         {
             this.X = x;
             this.Y = y;
@@ -46,7 +46,7 @@ namespace OnSubmit.RayTracerChallenge.Numerics
         /// <summary>
         /// Gets the zero vector.
         /// </summary>
-        public static TupleEx ZeroVector
+        public static Tuple4D ZeroVector
         {
             get
             {
@@ -107,7 +107,7 @@ namespace OnSubmit.RayTracerChallenge.Numerics
         /// <param name="a">First tuple.</param>
         /// <param name="b">Second tuple.</param>
         /// <returns>The sum of the tuples.</returns>
-        public static TupleEx operator +(TupleEx a, TupleEx b)
+        public static Tuple4D operator +(Tuple4D a, Tuple4D b)
         {
             if (a.IsPoint && b.IsPoint)
             {
@@ -115,7 +115,7 @@ namespace OnSubmit.RayTracerChallenge.Numerics
             }
 
             // Adding 2 vectors gives a vector
-            return new TupleEx(a.X + b.X, a.Y + b.Y, a.Z + b.Z, a.W + b.W);
+            return new Tuple4D(a.X + b.X, a.Y + b.Y, a.Z + b.Z, a.W + b.W);
         }
 
         /// <summary>
@@ -123,9 +123,9 @@ namespace OnSubmit.RayTracerChallenge.Numerics
         /// </summary>
         /// <param name="t">The tuple to negate.</param>
         /// <returns>The negative of the tuple.</returns>
-        public static TupleEx operator -(TupleEx t)
+        public static Tuple4D operator -(Tuple4D t)
         {
-            return new TupleEx(-t.X, -t.Y, -t.Z, -t.W);
+            return new Tuple4D(-t.X, -t.Y, -t.Z, -t.W);
         }
 
         /// <summary>
@@ -134,14 +134,14 @@ namespace OnSubmit.RayTracerChallenge.Numerics
         /// <param name="a">First tuple.</param>
         /// <param name="b">Second tuple.</param>
         /// <returns>The difference of the tuples.</returns>
-        public static TupleEx operator -(TupleEx a, TupleEx b)
+        public static Tuple4D operator -(Tuple4D a, Tuple4D b)
         {
             if (a.IsVector && b.IsPoint)
             {
                 throw new InvalidOperationException("Cannot subtract a point from a vector.");
             }
 
-            return new TupleEx(a.X - b.X, a.Y - b.Y, a.Z - b.Z, a.W - b.W);
+            return new Tuple4D(a.X - b.X, a.Y - b.Y, a.Z - b.Z, a.W - b.W);
         }
 
         /// <summary>
@@ -150,9 +150,20 @@ namespace OnSubmit.RayTracerChallenge.Numerics
         /// <param name="t">The tuple.</param>
         /// <param name="k">The scalar to multiple by.</param>
         /// <returns>The tuple multiplied by the scalar.</returns>
-        public static TupleEx operator *(TupleEx t, double k)
+        public static Tuple4D operator *(Tuple4D t, double k)
         {
-            return new TupleEx(t.X * k, t.Y * k, t.Z * k, t.W * k);
+            return t.MultiplyByScalar(k);
+        }
+
+        /// <summary>
+        /// Multiples a tuple by a scalar.
+        /// </summary>
+        /// <param name="t">The tuple.</param>
+        /// <param name="k">The scalar to multiple by.</param>
+        /// <returns>The tuple multiplied by the scalar.</returns>
+        public static Tuple4D operator *(double k, Tuple4D t)
+        {
+            return t.MultiplyByScalar(k);
         }
 
         /// <summary>
@@ -161,9 +172,9 @@ namespace OnSubmit.RayTracerChallenge.Numerics
         /// <param name="t">The tuple.</param>
         /// <param name="k">The scalar to divide by.</param>
         /// <returns>The tuple divided by the scalar.</returns>
-        public static TupleEx operator /(TupleEx t, double k)
+        public static Tuple4D operator /(Tuple4D t, double k)
         {
-            return new TupleEx(t.X / k, t.Y / k, t.Z / k, t.W / k);
+            return new Tuple4D(t.X / k, t.Y / k, t.Z / k, t.W / k);
         }
 
         /// <summary>
@@ -174,9 +185,9 @@ namespace OnSubmit.RayTracerChallenge.Numerics
         /// <param name="z">The z value.</param>
         /// <param name="w">The w value.</param>
         /// <returns>A new tuple.</returns>
-        public static TupleEx Create(double x, double y, double z, double w)
+        public static Tuple4D Create(double x, double y, double z, double w)
         {
-            return new TupleEx(x, y, z, w);
+            return new Tuple4D(x, y, z, w);
         }
 
         /// <summary>
@@ -186,9 +197,9 @@ namespace OnSubmit.RayTracerChallenge.Numerics
         /// <param name="y">The y value.</param>
         /// <param name="z">The z value.</param>
         /// <returns>A new point tuple.</returns>
-        public static TupleEx CreatePoint(double x, double y, double z)
+        public static Tuple4D CreatePoint(double x, double y, double z)
         {
-            return new TupleEx(x, y, z, PointTuple);
+            return new Tuple4D(x, y, z, PointTuple);
         }
 
         /// <summary>
@@ -198,16 +209,16 @@ namespace OnSubmit.RayTracerChallenge.Numerics
         /// <param name="y">The y value.</param>
         /// <param name="z">The z value.</param>
         /// <returns>A new vector tuple.</returns>
-        public static TupleEx CreateVector(double x, double y, double z)
+        public static Tuple4D CreateVector(double x, double y, double z)
         {
-            return new TupleEx(x, y, z, VectorTuple);
+            return new Tuple4D(x, y, z, VectorTuple);
         }
 
         /// <summary>
         /// Normalizes the tuple.
         /// </summary>
         /// <returns>The corresponding unit vector.</returns>
-        public TupleEx Normalize()
+        public Tuple4D Normalize()
         {
             if (this == ZeroVector)
             {
@@ -222,7 +233,7 @@ namespace OnSubmit.RayTracerChallenge.Numerics
         /// </summary>
         /// <param name="t">The tuple to use.</param>
         /// <returns>The dot product.</returns>
-        public double GetDotProductWith(TupleEx t)
+        public double GetDotProductWith(Tuple4D t)
         {
             double sum = 0;
             sum += this.X * t.X;
@@ -238,7 +249,7 @@ namespace OnSubmit.RayTracerChallenge.Numerics
         /// </summary>
         /// <param name="t">The tuple to use.</param>
         /// <returns>The cross product.</returns>
-        public TupleEx GetCrossProductWith(TupleEx t)
+        public Tuple4D GetCrossProductWith(Tuple4D t)
         {
             if (!this.IsVector)
             {
@@ -253,7 +264,7 @@ namespace OnSubmit.RayTracerChallenge.Numerics
         }
 
         /// <summary>
-        /// Compares a <see cref="TupleEx"/> with another object.
+        /// Compares a <see cref="Tuple4D"/> with another object.
         /// </summary>
         /// <param name="obj">The object to compare against.</param>
         /// <returns><c>crue</c> if the objects are piecewise equivalent, <c>false</c> otherwise.</returns>
@@ -269,7 +280,7 @@ namespace OnSubmit.RayTracerChallenge.Numerics
                 return true;
             }
 
-            if (obj is TupleEx t)
+            if (obj is Tuple4D t)
             {
                 return this.W.Compare(t.W)
                     && this.X.Compare(t.X)
@@ -281,7 +292,7 @@ namespace OnSubmit.RayTracerChallenge.Numerics
         }
 
         /// <summary>
-        /// Generates a string representation of a <see cref="TupleEx"/>.
+        /// Generates a string representation of a <see cref="Tuple4D"/>.
         /// </summary>
         /// <returns>The string.</returns>
         public override string ToString()
@@ -290,7 +301,7 @@ namespace OnSubmit.RayTracerChallenge.Numerics
         }
 
         /// <summary>
-        /// Generates a hash code for the current <see cref="TupleEx"/>.
+        /// Generates a hash code for the current <see cref="Tuple4D"/>.
         /// </summary>
         /// <returns>The hash code.</returns>
         public override int GetHashCode()
@@ -301,6 +312,16 @@ namespace OnSubmit.RayTracerChallenge.Numerics
             hashCode = (hashCode * -1521134295) + EqualityComparer<double>.Default.GetHashCode(this.Z);
             hashCode = (hashCode * -1521134295) + EqualityComparer<double>.Default.GetHashCode(this.W);
             return hashCode;
+        }
+
+        /// <summary>
+        /// Multiplies a tuple by a scalar.
+        /// </summary>
+        /// <param name="k">The scalar to multiple by.</param>
+        /// <returns>The tuple multiplied by the scalar.</returns>
+        private Tuple4D MultiplyByScalar(double k)
+        {
+            return new Tuple4D(this.X * k, this.Y * k, this.Z * k, this.W * k);
         }
     }
 }

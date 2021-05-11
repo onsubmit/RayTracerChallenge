@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RayTracerChallenge", "RayTr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{2EABE94E-4008-4D65-9154-72E41DF40DDF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playground", "Playground\Playground.csproj", "{1F50D000-8E56-4399-A5D7-56E61534CEA3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{2EABE94E-4008-4D65-9154-72E41DF40DDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2EABE94E-4008-4D65-9154-72E41DF40DDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2EABE94E-4008-4D65-9154-72E41DF40DDF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1F50D000-8E56-4399-A5D7-56E61534CEA3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F50D000-8E56-4399-A5D7-56E61534CEA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F50D000-8E56-4399-A5D7-56E61534CEA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F50D000-8E56-4399-A5D7-56E61534CEA3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
