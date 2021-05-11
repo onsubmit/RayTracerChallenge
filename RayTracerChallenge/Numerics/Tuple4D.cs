@@ -114,7 +114,6 @@ namespace OnSubmit.RayTracerChallenge.Numerics
                 throw new InvalidOperationException("Cannot add two points together.");
             }
 
-            // Adding 2 vectors gives a vector
             return new Tuple4D(a.X + b.X, a.Y + b.Y, a.Z + b.Z, a.W + b.W);
         }
 
