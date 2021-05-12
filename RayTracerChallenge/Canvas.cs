@@ -41,6 +41,8 @@ namespace OnSubmit.RayTracerChallenge
         public Canvas(int width, int height)
         {
             this.pixels = new ColorTuple[width, height];
+            this.Width = width;
+            this.Height = height;
         }
 
         /// <summary>
@@ -58,12 +60,12 @@ namespace OnSubmit.RayTracerChallenge
         /// <summary>
         /// Gets the canvas width.
         /// </summary>
-        public int Width => this.pixels.GetLength(0);
+        public int Width { get; private set; }
 
         /// <summary>
         /// Gets the canvas height.
         /// </summary>
-        public int Height => this.pixels.GetLength(1);
+        public int Height { get; private set; }
 
         /// <summary>
         /// Indexer for the canvas.
@@ -92,7 +94,25 @@ namespace OnSubmit.RayTracerChallenge
         /// <param name="c">Color to set.</param>
         public void WritePixel(int x, int y, ColorTuple c)
         {
+            if (x < 0 || y < 0 || x >= this.Width || y >= this.Height)
+            {
+                return;
+            }
+
             this[x, y] = c;
+        }
+
+        /// <summary>
+        /// Writes the given color at the provided coordinates.
+        /// </summary>
+        /// <param name="x">X coordinate.</param>
+        /// <param name="y">Y coordinate.</param>
+        /// <param name="c">Color to set.</param>
+        public void WritePixel(double x, double y, ColorTuple c)
+        {
+            int i = (int)Math.Round(x);
+            int j = (int)Math.Round(y);
+            this.WritePixel(i, j, c);
         }
 
         /// <summary>
@@ -135,9 +155,9 @@ namespace OnSubmit.RayTracerChallenge
             };
 
             StringBuilder lineBuilder = new StringBuilder();
-            for (int y = 0, height = this.Height; y < height; y++)
+            for (int y = 0;  y < this.Height; y++)
             {
-                for (int x = 0, width = this.Width; x < width; x++)
+                for (int x = 0; x < this.Width; x++)
                 {
                     IEnumerable<string> entries = this[x, y]
                         .GetClampedColorArray(MaxColorValue)

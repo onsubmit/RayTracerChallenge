@@ -6,6 +6,9 @@
 namespace Playground
 {
     using System;
+    using System.IO;
+    using OnSubmit.RayTracerChallenge;
+    using OnSubmit.RayTracerChallenge.Colors;
     using OnSubmit.RayTracerChallenge.Numerics;
 
     /// <summary>
@@ -14,12 +17,17 @@ namespace Playground
     public class Program
     {
         /// <summary>
+        /// White color tuple.
+        /// </summary>
+        private static readonly ColorTuple White = ColorTuple.Create(1, 1, 1);
+
+        /// <summary>
         /// Main entry point.
         /// </summary>
         /// <param name="args">Command line arguments.</param>
         public static void Main(string[] args)
         {
-            double velocityMultiplier = 30;
+            double velocityMultiplier = 15;
 
             Projectile projectile = new Projectile(
                 Tuple4D.CreatePoint(0, 1, 0),
@@ -29,15 +37,19 @@ namespace Playground
                 Tuple4D.CreateVector(0, -0.1, 0),
                 Tuple4D.CreateVector(-0.01, 0, 0));
 
+            Canvas canvas = new Canvas(2100, 600);
+
             int tickCount = 0;
-            LogPosition(projectile, tickCount);
+            LogPosition(projectile, canvas, tickCount);
 
             while (projectile.Position.Y > 0)
             {
                 tickCount++;
                 projectile = Tick(environment, projectile);
-                LogPosition(projectile, tickCount);
+                LogPosition(projectile, canvas, tickCount);
             }
+
+            File.WriteAllText("test.ppm", canvas.ToPlainPortablePixmapString());
         }
 
         /// <summary>
@@ -57,10 +69,12 @@ namespace Playground
         /// Writes the position of the projectile to the console.
         /// </summary>
         /// <param name="projectile">The projectile.</param>
+        /// <param name="canvas">The canvas to write to.</param>
         /// <param name="tickCount">The tick counter.</param>
-        private static void LogPosition(Projectile projectile, int tickCount)
+        private static void LogPosition(Projectile projectile, Canvas canvas, int tickCount)
         {
             Console.WriteLine($"Position after tick {tickCount}: {projectile.Position}");
+            canvas.WritePixel(projectile.Position.X, canvas.Height - projectile.Position.Y, White);
         }
     }
 }
