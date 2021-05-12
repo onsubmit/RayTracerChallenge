@@ -3,7 +3,7 @@
 //     Copyright (c) Andy Young. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
-namespace OnSubmit.RayTracerChallenge.Numerics
+namespace OnSubmit.RayTracerChallenge.Extensions
 {
     using System;
 

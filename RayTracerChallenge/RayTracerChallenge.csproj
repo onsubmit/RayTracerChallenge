@@ -45,8 +45,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Numerics\DoubleExtensions.cs" />
+    <Compile Include="Colors\ColorTuple.cs" />
+    <Compile Include="Extensions\DoubleExtensions.cs" />
     <Compile Include="Numerics\Tuple4D.cs" />
+    <Compile Include="BaseTuple.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

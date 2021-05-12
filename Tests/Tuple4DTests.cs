@@ -2,6 +2,7 @@
 {
     using System;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using OnSubmit.RayTracerChallenge.Extensions;
     using OnSubmit.RayTracerChallenge.Numerics;
 
     [TestClass]
@@ -73,7 +74,6 @@
             Tuple4D a1 = Tuple4D.Create(3, -2, 5, 1);
             Tuple4D a2 = Tuple4D.Create(-2, 3, 1, w: 0);
             Assert.AreEqual(Tuple4D.Create(1, 1, 6, 1), a1 + a2);
-            Assert.AreEqual(Tuple4D.Create(1, 1, 6, 1), a2 + a1);
             Assert.AreEqual(a1 + a2, a2 + a1);
         }
 
@@ -115,7 +115,7 @@
         {
             Tuple4D a = Tuple4D.Create(1, -2, 3, -4);
             Assert.AreEqual(Tuple4D.Create(3.5, -7, 10.5, -14), a * 3.5);
-            Assert.AreEqual(Tuple4D.Create(3.5, -7, 10.5, -14), 3.5 * a);
+            Assert.AreEqual(a * 3.5, 3.5 * a);
         }
 
         [TestMethod]
@@ -123,7 +123,7 @@
         {
             Tuple4D a = Tuple4D.Create(1, -2, 3, -4);
             Assert.AreEqual(Tuple4D.Create(0.5, -1, 1.5, -2), a * 0.5);
-            Assert.AreEqual(Tuple4D.Create(0.5, -1, 1.5, -2), 0.5 * a);
+            Assert.AreEqual(a * 0.5, 0.5 * a);
         }
 
         [TestMethod]
@@ -178,11 +178,6 @@
             Tuple4D a = Tuple4D.CreateVector(1, 2, 3);
             Tuple4D b = Tuple4D.CreateVector(2, 3, 4);
             double dotProduct = a.GetDotProductWith(b);
-            Assert.IsTrue(
-                dotProduct.Compare(20),
-                $"Expected: {20}, Actual: {dotProduct}");
-
-            dotProduct = b.GetDotProductWith(a);
             Assert.IsTrue(
                 dotProduct.Compare(20),
                 $"Expected: {20}, Actual: {dotProduct}");

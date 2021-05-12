@@ -7,11 +7,12 @@ namespace OnSubmit.RayTracerChallenge.Numerics
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     /// <summary>
     /// Represents a 4 dimensional tuple of the form (x, y, z, w).
     /// </summary>
-    public class Tuple4D
+    public class Tuple4D : BaseTuple
     {
         /// <summary>
         /// The 'w' value for vectors.
@@ -31,16 +32,14 @@ namespace OnSubmit.RayTracerChallenge.Numerics
         /// <summary>
         /// Initializes a new instance of the <see cref="Tuple4D"/> class.
         /// </summary>
-        /// <param name="x">The x value.</param>
-        /// <param name="y">The y value.</param>
-        /// <param name="z">The z value.</param>
-        /// <param name="w">Represents whether the tuple is a point (1) or vector (0).</param>
-        public Tuple4D(double x, double y, double z, double w)
+        /// <param name="items">The 4 items.</param>
+        public Tuple4D(params double[] items)
+            : base(items)
         {
-            this.X = x;
-            this.Y = y;
-            this.Z = z;
-            this.W = w;
+            if (items.Length != 4)
+            {
+                throw new ArgumentException($"4 items are required. Found: {items.Length}");
+            }
         }
 
         /// <summary>
@@ -55,24 +54,24 @@ namespace OnSubmit.RayTracerChallenge.Numerics
         }
 
         /// <summary>
-        /// Gets or sets the x value.
+        /// Gets the x value.
         /// </summary>
-        public double X { get; set; }
+        public double X => this[0];
 
         /// <summary>
-        /// Gets or sets the y value.
+        /// Gets the y value.
         /// </summary>
-        public double Y { get; set; }
+        public double Y => this[1];
 
         /// <summary>
-        /// Gets or sets the z value.
+        /// Gets the z value.
         /// </summary>
-        public double Z { get; set; }
+        public double Z => this[2];
 
         /// <summary>
         /// Gets the w value.
         /// </summary>
-        public double W { get; private set; }
+        public double W => this[3];
 
         /// <summary>
         /// Gets a value indicating whether the tuple is a point.
@@ -114,7 +113,7 @@ namespace OnSubmit.RayTracerChallenge.Numerics
                 throw new InvalidOperationException("Cannot add two points together.");
             }
 
-            return new Tuple4D(a.X + b.X, a.Y + b.Y, a.Z + b.Z, a.W + b.W);
+            return a.Add(b);
         }
 
         /// <summary>
@@ -124,7 +123,7 @@ namespace OnSubmit.RayTracerChallenge.Numerics
         /// <returns>The negative of the tuple.</returns>
         public static Tuple4D operator -(Tuple4D t)
         {
-            return new Tuple4D(-t.X, -t.Y, -t.Z, -t.W);
+            return t.Negate<Tuple4D>();
         }
 
         /// <summary>
@@ -140,7 +139,7 @@ namespace OnSubmit.RayTracerChallenge.Numerics
                 throw new InvalidOperationException("Cannot subtract a point from a vector.");
             }
 
-            return new Tuple4D(a.X - b.X, a.Y - b.Y, a.Z - b.Z, a.W - b.W);
+            return a.Subtract(b);
         }
 
         /// <summary>
@@ -151,7 +150,7 @@ namespace OnSubmit.RayTracerChallenge.Numerics
         /// <returns>The tuple multiplied by the scalar.</returns>
         public static Tuple4D operator *(Tuple4D t, double k)
         {
-            return t.MultiplyByScalar(k);
+            return t.MultiplyByScalar<Tuple4D>(k);
         }
 
         /// <summary>
@@ -162,7 +161,7 @@ namespace OnSubmit.RayTracerChallenge.Numerics
         /// <returns>The tuple multiplied by the scalar.</returns>
         public static Tuple4D operator *(double k, Tuple4D t)
         {
-            return t.MultiplyByScalar(k);
+            return t.MultiplyByScalar<Tuple4D>(k);
         }
 
         /// <summary>
@@ -173,7 +172,7 @@ namespace OnSubmit.RayTracerChallenge.Numerics
         /// <returns>The tuple divided by the scalar.</returns>
         public static Tuple4D operator /(Tuple4D t, double k)
         {
-            return new Tuple4D(t.X / k, t.Y / k, t.Z / k, t.W / k);
+            return t.DivideByScalar<Tuple4D>(k);
         }
 
         /// <summary>
@@ -263,64 +262,13 @@ namespace OnSubmit.RayTracerChallenge.Numerics
         }
 
         /// <summary>
-        /// Compares a <see cref="Tuple4D"/> with another object.
+        /// Creates a new instance of the <see cref="Tuple4D"/> class.
         /// </summary>
-        /// <param name="obj">The object to compare against.</param>
-        /// <returns><c>crue</c> if the objects are piecewise equivalent, <c>false</c> otherwise.</returns>
-        public override bool Equals(object obj)
+        /// <param name="items">The items in the tuple.</param>
+        /// <returns>The new instance of the tuple.</returns>
+        protected override BaseTuple Create(IEnumerable<double> items)
         {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-
-            if (obj is Tuple4D t)
-            {
-                return this.W.Compare(t.W)
-                    && this.X.Compare(t.X)
-                    && this.Y.Compare(t.Y)
-                    && this.Z.Compare(t.Z);
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Generates a string representation of a <see cref="Tuple4D"/>.
-        /// </summary>
-        /// <returns>The string.</returns>
-        public override string ToString()
-        {
-            return $"({this.X}, {this.Y}, {this.Z}, {this.W})";
-        }
-
-        /// <summary>
-        /// Generates a hash code for the current <see cref="Tuple4D"/>.
-        /// </summary>
-        /// <returns>The hash code.</returns>
-        public override int GetHashCode()
-        {
-            int hashCode = 707706286;
-            hashCode = (hashCode * -1521134295) + EqualityComparer<double>.Default.GetHashCode(this.X);
-            hashCode = (hashCode * -1521134295) + EqualityComparer<double>.Default.GetHashCode(this.Y);
-            hashCode = (hashCode * -1521134295) + EqualityComparer<double>.Default.GetHashCode(this.Z);
-            hashCode = (hashCode * -1521134295) + EqualityComparer<double>.Default.GetHashCode(this.W);
-            return hashCode;
-        }
-
-        /// <summary>
-        /// Multiplies a tuple by a scalar.
-        /// </summary>
-        /// <param name="k">The scalar to multiple by.</param>
-        /// <returns>The tuple multiplied by the scalar.</returns>
-        private Tuple4D MultiplyByScalar(double k)
-        {
-            return new Tuple4D(this.X * k, this.Y * k, this.Z * k, this.W * k);
+            return new Tuple4D(items.ToArray());
         }
     }
 }
