@@ -32,5 +32,16 @@ namespace OnSubmit.RayTracerChallenge.Extensions
 
             return false;
         }
+
+        /// <summary>
+        /// Normalizes and clamps the double between 0 and <paramref name="max"/>.
+        /// </summary>
+        /// <param name="d">The double.</param>
+        /// <param name="max">The max allowed value.</param>
+        /// <returns>The clamped value.</returns>
+        public static int Clamp(this double d, int max)
+        {
+            return d < 0 ? 0 : (d > 1 ? max : (int)Math.Round(d * max));
+        }
     }
 }
