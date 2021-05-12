@@ -74,6 +74,16 @@ namespace OnSubmit.RayTracerChallenge
 
             if (obj is BaseTuple t)
             {
+                if (this.items.Length != t.items.Length)
+                {
+                    return false;
+                }
+
+                if (this.GetType() != t.GetType())
+                {
+                    return false;
+                }
+
                 for (int i = 0; i < this.items.Length; i++)
                 {
                     if (!this[i].Compare(t[i]))
