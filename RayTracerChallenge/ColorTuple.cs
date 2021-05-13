@@ -3,7 +3,7 @@
 //     Copyright (c) Andy Young. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
-namespace OnSubmit.RayTracerChallenge.Colors
+namespace OnSubmit.RayTracerChallenge
 {
     using System;
     using System.Collections.Generic;

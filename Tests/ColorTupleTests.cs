@@ -1,8 +1,7 @@
 ﻿namespace Tests
 {
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using OnSubmit.RayTracerChallenge.Colors;
-    using OnSubmit.RayTracerChallenge.Numerics;
+    using OnSubmit.RayTracerChallenge;
 
     [TestClass]
     public class ColorTupleTests

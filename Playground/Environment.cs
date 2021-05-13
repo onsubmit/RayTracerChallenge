@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------
 namespace Playground
 {
-    using OnSubmit.RayTracerChallenge.Numerics;
+    using OnSubmit.RayTracerChallenge;
 
     /// <summary>
     /// Represents an environment.

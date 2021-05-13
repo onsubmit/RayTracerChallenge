@@ -8,8 +8,6 @@ namespace Playground
     using System;
     using System.IO;
     using OnSubmit.RayTracerChallenge;
-    using OnSubmit.RayTracerChallenge.Colors;
-    using OnSubmit.RayTracerChallenge.Numerics;
 
     /// <summary>
     /// Playground program.
@@ -26,6 +24,15 @@ namespace Playground
         /// </summary>
         /// <param name="args">Command line arguments.</param>
         public static void Main(string[] args)
+        {
+            DoChapters1And2();
+            DoChapter3();
+        }
+
+        /// <summary>
+        /// Does the "Putting It Together" sections for chapters 1 and 2.
+        /// </summary>
+        private static void DoChapters1And2()
         {
             double velocityMultiplier = 15;
 
@@ -50,6 +57,58 @@ namespace Playground
             }
 
             File.WriteAllText("test.ppm", canvas.ToPlainPortablePixmapString());
+        }
+
+        /// <summary>
+        /// Does the "Putting It Together" section for chapter 3.
+        /// </summary>
+        private static void DoChapter3()
+        {
+            Matrix identity = Matrix.GetIdentityMatrix(4);
+            Matrix inverse = identity.GetInverse();
+            if (!inverse.Equals(identity))
+            {
+                throw new Exception("Inversing the identity matrix should not modify it.");
+            }
+
+            Matrix a = new Matrix(
+                new double[4, 4]
+                {
+                    { 3, -9, 7, 3 },
+                    { 3, -8, 2, -9 },
+                    { -4, 4, 4, 1 },
+                    { -6, 5, -1, 1 },
+                });
+
+            Matrix b = a.GetInverse();
+            Matrix product = a * b;
+            if (!product.Equals(identity))
+            {
+                throw new Exception("Multiplying a matrix by its inverse should result in the identity matrix.");
+            }
+
+            Matrix inverseOfTranspose = a.Transpose().GetInverse();
+            Matrix transposeOfInverse = a.GetInverse().Transpose();
+            if (!transposeOfInverse.Equals(inverseOfTranspose))
+            {
+                throw new Exception("The inverse of the transpose of a matrix should be the same as the transpose of the inverse.");
+            }
+
+            Tuple4D tuple = Tuple4D.Create(1, 4, 9, 16);
+            Tuple4D identityTimesTuple = identity * tuple;
+            if (!identityTimesTuple.Equals(tuple))
+            {
+                throw new Exception("Multiplying the identity matrix by a tuple should not change the tuple.");
+            }
+
+            const int Scale = 5;
+            Matrix modifiedIdentity = Matrix.GetIdentityMatrix(4);
+            modifiedIdentity[2, 2] = Scale;
+            Tuple4D modifiedIdentityTimesTuple = modifiedIdentity * tuple;
+            if (!modifiedIdentityTimesTuple.Equals(Tuple4D.Create(tuple.X, tuple.Y, tuple.Z * Scale, tuple.W)))
+            {
+                throw new Exception("Only the tuple's z element should have scaled.");
+            }
         }
 
         /// <summary>

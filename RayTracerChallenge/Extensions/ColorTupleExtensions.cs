@@ -6,7 +6,7 @@
 namespace OnSubmit.RayTracerChallenge.Extensions
 {
     using System.Linq;
-    using OnSubmit.RayTracerChallenge.Colors;
+    using OnSubmit.RayTracerChallenge;
 
     /// <summary>
     /// Extension methods for <see cref="ColorTuple"/>.

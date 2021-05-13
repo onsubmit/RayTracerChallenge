@@ -54,6 +54,7 @@
   <ItemGroup>
     <Compile Include="CanvasTests.cs" />
     <Compile Include="ColorTupleTests.cs" />
+    <Compile Include="MatrixTests.cs" />
     <Compile Include="Tuple4DTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

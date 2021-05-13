@@ -2,8 +2,8 @@
 {
     using System;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using OnSubmit.RayTracerChallenge;
     using OnSubmit.RayTracerChallenge.Extensions;
-    using OnSubmit.RayTracerChallenge.Numerics;
 
     [TestClass]
     public class Tuple4DTests

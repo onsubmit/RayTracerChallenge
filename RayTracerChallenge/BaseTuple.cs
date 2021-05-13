@@ -16,18 +16,23 @@ namespace OnSubmit.RayTracerChallenge
     public abstract class BaseTuple
     {
         /// <summary>
-        /// The tuple items.
-        /// </summary>
-        private readonly double[] items;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="BaseTuple"/> class.
         /// </summary>
         /// <param name="items">The items in the tuple.</param>
         protected BaseTuple(params double[] items)
         {
-            this.items = items;
+            this.Items = items;
         }
+
+        /// <summary>
+        /// Gets the items.
+        /// </summary>
+        public double[] Items { get; private set; }
+
+        /// <summary>
+        /// Gets the length of the tuple.
+        /// </summary>
+        public int Length => this.Items.Length;
 
         /// <summary>
         /// The indexer for the tuple.
@@ -37,12 +42,12 @@ namespace OnSubmit.RayTracerChallenge
         {
             get
             {
-                return this.items[i];
+                return this.Items[i];
             }
 
             set
             {
-                this.items[i] = value;
+                this.Items[i] = value;
             }
         }
 
@@ -52,7 +57,7 @@ namespace OnSubmit.RayTracerChallenge
         /// <returns>The string.</returns>
         public override string ToString()
         {
-            return $"<{string.Join(",", this.items)}>";
+            return $"<{string.Join(",", this.Items)}>";
         }
 
         /// <summary>
@@ -74,7 +79,7 @@ namespace OnSubmit.RayTracerChallenge
 
             if (obj is BaseTuple t)
             {
-                if (this.items.Length != t.items.Length)
+                if (this.Length != t.Length)
                 {
                     return false;
                 }
@@ -84,7 +89,7 @@ namespace OnSubmit.RayTracerChallenge
                     return false;
                 }
 
-                for (int i = 0; i < this.items.Length; i++)
+                for (int i = 0; i < this.Length; i++)
                 {
                     if (!this[i].Compare(t[i]))
                     {
@@ -104,7 +109,7 @@ namespace OnSubmit.RayTracerChallenge
         /// <returns>The hash code.</returns>
         public override int GetHashCode()
         {
-            return -452805401 + EqualityComparer<double[]>.Default.GetHashCode(this.items);
+            return -452805401 + EqualityComparer<double[]>.Default.GetHashCode(this.Items);
         }
 
         /// <summary>
@@ -174,7 +179,7 @@ namespace OnSubmit.RayTracerChallenge
         /// <param name="func">Mapping function that is called for every element of the tuple.</param>
         /// <returns>A new tuple with each element being the result of the mapping function.</returns>
         private T Map<T>(Func<double, double> func)
-            where T : BaseTuple => (T)this.Create(this.items.Select(func));
+            where T : BaseTuple => (T)this.Create(this.Items.Select(func));
 
         /// <summary>
         /// Creates a new tuple populated with the results of calling a provided function on every element in the calling tuple.
@@ -183,6 +188,6 @@ namespace OnSubmit.RayTracerChallenge
         /// <param name="func">Index-aware mapping function that is called for every element of the tuple.</param>
         /// <returns>A new tuple with each element being the result of the mapping function.</returns>
         private T Map<T>(Func<double, int, double> func)
-            where T : BaseTuple => (T)this.Create(this.items.Select(func));
+            where T : BaseTuple => (T)this.Create(this.Items.Select(func));
     }
 }

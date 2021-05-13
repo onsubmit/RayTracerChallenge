@@ -46,10 +46,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Canvas.cs" />
-    <Compile Include="Colors\ColorTuple.cs" />
+    <Compile Include="ColorTuple.cs" />
     <Compile Include="Extensions\ColorTupleExtensions.cs" />
     <Compile Include="Extensions\DoubleExtensions.cs" />
-    <Compile Include="Numerics\Tuple4D.cs" />
+    <Compile Include="Extensions\IntegerExtensions.cs" />
+    <Compile Include="Matrix.cs" />
+    <Compile Include="Tuple4D.cs" />
     <Compile Include="BaseTuple.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

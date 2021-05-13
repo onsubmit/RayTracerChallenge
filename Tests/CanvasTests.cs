@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using OnSubmit.RayTracerChallenge;
-    using OnSubmit.RayTracerChallenge.Colors;
 
     [TestClass]
     public class CanvasTests

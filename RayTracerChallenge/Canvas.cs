@@ -7,10 +7,9 @@ namespace OnSubmit.RayTracerChallenge
 {
     using System;
     using System.Collections.Generic;
-    using System.IO;
     using System.Linq;
     using System.Text;
-    using OnSubmit.RayTracerChallenge.Colors;
+    using OnSubmit.RayTracerChallenge;
     using OnSubmit.RayTracerChallenge.Extensions;
 
     /// <summary>
@@ -31,7 +30,7 @@ namespace OnSubmit.RayTracerChallenge
         /// <summary>
         /// The pixels.
         /// </summary>
-        private ColorTuple[,] pixels;
+        private readonly ColorTuple[,] pixels;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Canvas"/> class.
