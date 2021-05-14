@@ -27,6 +27,7 @@ namespace Playground
         {
             DoChapters1And2();
             DoChapter3();
+            DoChapter4();
         }
 
         /// <summary>
@@ -109,6 +110,48 @@ namespace Playground
             {
                 throw new Exception("Only the tuple's z element should have scaled.");
             }
+        }
+
+        /// <summary>
+        /// Does the "Putting It Together" section for chapter 4.
+        /// </summary>
+        private static void DoChapter4()
+        {
+            const int CanvasSize = 501;
+            const int NumSegments = 12;
+            double twoPi = Math.PI * 2;
+
+            int scalingFactor = CanvasSize * 3 / 8;
+
+            Canvas c = new Canvas(CanvasSize, CanvasSize);
+
+            // Canvas orientation is in the x-z plane.
+            // Start at 12 o'clock.
+            Tuple4D point = Tuple4D.CreatePoint(0, 0, 1);
+            for (int i = 0; i < NumSegments; i++)
+            {
+                Matrix transform = Matrix.GetRotationMatrixY(twoPi * i / NumSegments)
+                    .Scale(scalingFactor, scalingFactor, scalingFactor);
+
+                Tuple4D p = transform * point;
+                WriteToCanvasWithCenteredOrigin(c, p.X, p.Z);
+            }
+
+            File.WriteAllText("clock.ppm", c.ToPlainPortablePixmapString());
+        }
+
+        /// <summary>
+        /// Writes a white pixel to the canvas centered at (0, 0).
+        /// </summary>
+        /// <param name="c">The canvas.</param>
+        /// <param name="x">The x coordinate.</param>
+        /// <param name="y">The y coordinate.</param>
+        private static void WriteToCanvasWithCenteredOrigin(Canvas c, double x, double y)
+        {
+            int xAdjustment = c.Width / 2;
+            int yAdjustment = c.Height / 2;
+
+            c.WritePixel(x + xAdjustment, -y + yAdjustment, White);
         }
 
         /// <summary>

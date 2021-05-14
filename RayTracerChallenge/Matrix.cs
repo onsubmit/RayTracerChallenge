@@ -181,6 +181,171 @@ namespace OnSubmit.RayTracerChallenge
         }
 
         /// <summary>
+        /// Gets the translation matrix for the given coordinates.
+        /// </summary>
+        /// <param name="coordinates">The coordinates.</param>
+        /// <returns>The translation matrix.</returns>
+        public static Matrix GetTranslationMatrix(params int[] coordinates)
+        {
+            int size = coordinates.Length;
+            if (size < 1)
+            {
+                throw new ArgumentException("At least one coordinate is required.", nameof(coordinates));
+            }
+
+            double[,] elements = new double[size + 1, size + 1];
+            for (int i = 0; i < size; i++)
+            {
+                elements[i, i] = 1;
+                elements[i, size] = coordinates[i];
+            }
+
+            elements[size, size] = 1;
+
+            return new Matrix(elements);
+        }
+
+        /// <summary>
+        /// Gets the scaling matrix for the given coordinates.
+        /// </summary>
+        /// <param name="coordinates">The coordinates.</param>
+        /// <returns>The scaling matrix.</returns>
+        public static Matrix GetScalingMatrix(params int[] coordinates)
+        {
+            int size = coordinates.Length;
+            if (size < 1)
+            {
+                throw new ArgumentException("At least one coordinate is required.", nameof(coordinates));
+            }
+
+            double[,] elements = new double[size + 1, size + 1];
+            for (int i = 0; i < size; i++)
+            {
+                elements[i, i] = coordinates[i];
+            }
+
+            elements[size, size] = 1;
+
+            return new Matrix(elements);
+        }
+
+        /// <summary>
+        /// Gets the rotation matrix for the given angle in radians around the x axis.
+        /// </summary>
+        /// <param name="radians">Number of radians.</param>
+        /// <returns>The rotation matrix.</returns>
+        public static Matrix GetRotationMatrixX(double radians)
+        {
+            if (radians == 0)
+            {
+                return GetIdentityMatrix(4);
+            }
+
+            double cos = Math.Cos(radians);
+            double sin = Math.Sin(radians);
+
+            double[,] elements = new double[4, 4];
+            elements[0, 0] = 1;
+
+            elements[1, 1] = cos;
+            elements[1, 2] = -sin;
+
+            elements[2, 1] = sin;
+            elements[2, 2] = cos;
+
+            elements[3, 3] = 1;
+
+            return new Matrix(elements);
+        }
+
+        /// <summary>
+        /// Gets the rotation matrix for the given angle in radians around the y axis.
+        /// </summary>
+        /// <param name="radians">Number of radians.</param>
+        /// <returns>The rotation matrix.</returns>
+        public static Matrix GetRotationMatrixY(double radians)
+        {
+            if (radians == 0)
+            {
+                return GetIdentityMatrix(4);
+            }
+
+            double cos = Math.Cos(radians);
+            double sin = Math.Sin(radians);
+
+            double[,] elements = new double[4, 4];
+            elements[0, 0] = cos;
+            elements[0, 2] = sin;
+
+            elements[1, 1] = 1;
+
+            elements[2, 0] = -sin;
+            elements[2, 2] = cos;
+
+            elements[3, 3] = 1;
+
+            return new Matrix(elements);
+        }
+
+        /// <summary>
+        /// Gets the rotation matrix for the given angle in radians around the z axis.
+        /// </summary>
+        /// <param name="radians">Number of radians.</param>
+        /// <returns>The rotation matrix.</returns>
+        public static Matrix GetRotationMatrixZ(double radians)
+        {
+            if (radians == 0)
+            {
+                return GetIdentityMatrix(4);
+            }
+
+            double cos = Math.Cos(radians);
+            double sin = Math.Sin(radians);
+
+            double[,] elements = new double[4, 4];
+            elements[0, 0] = cos;
+            elements[0, 1] = -sin;
+
+            elements[1, 0] = sin;
+            elements[1, 1] = cos;
+
+            elements[2, 2] = 1;
+            elements[3, 3] = 1;
+
+            return new Matrix(elements);
+        }
+
+        /// <summary>
+        /// Gets the shearing transformation matrix.
+        /// </summary>
+        /// <param name="xy">x in proportion to y.</param>
+        /// <param name="xz">x in proportion to z.</param>
+        /// <param name="yx">y in proportion to x.</param>
+        /// <param name="yz">y in proportion to z.</param>
+        /// <param name="zx">z in proportion to x.</param>
+        /// <param name="zy">z in proportion to y.</param>
+        /// <returns>The shearing transformation matrix.</returns>
+        public static Matrix GetShearingMatrix(double xy = 0, double xz = 0, double yx = 0, double yz = 0, double zx = 0, double zy = 0)
+        {
+            double[,] elements = new double[4, 4];
+            elements[0, 0] = 1;
+            elements[1, 1] = 1;
+            elements[2, 2] = 1;
+            elements[3, 3] = 1;
+
+            elements[0, 1] = xy;
+            elements[0, 2] = xz;
+
+            elements[1, 0] = yx;
+            elements[1, 2] = yz;
+
+            elements[2, 0] = zx;
+            elements[2, 1] = zy;
+
+            return new Matrix(elements);
+        }
+
+        /// <summary>
         /// Transposes the matrix.
         /// </summary>
         /// <returns>The transposed matrix.</returns>
@@ -281,7 +446,7 @@ namespace OnSubmit.RayTracerChallenge
         public double GetCofactor(int row, int column)
         {
             double minor = this.GetMinor(row, column);
-            return (row + column).IsOdd() ? 0 - minor : minor;
+            return (row + column).IsOdd() ? -minor : minor;
         }
 
         /// <summary>
@@ -333,6 +498,41 @@ namespace OnSubmit.RayTracerChallenge
 
             return new Matrix(elements);
         }
+
+        /// <summary>
+        /// Rotates the matrix around the x axis.
+        /// </summary>
+        /// <param name="radians">Number of radians.</param>
+        /// <returns>The rotated matrix.</returns>
+        public Matrix RotateX(double radians) => GetRotationMatrixX(radians) * this;
+
+        /// <summary>
+        /// Rotates the matrix around the y axis.
+        /// </summary>
+        /// <param name="radians">Number of radians.</param>
+        /// <returns>The rotated matrix.</returns>
+        public Matrix RotateY(double radians) => GetRotationMatrixY(radians) * this;
+
+        /// <summary>
+        /// Rotates the matrix around the z axis.
+        /// </summary>
+        /// <param name="radians">Number of radians.</param>
+        /// <returns>The rotated matrix.</returns>
+        public Matrix RotateZ(double radians) => GetRotationMatrixZ(radians) * this;
+
+        /// <summary>
+        /// Scales the matrix by the given coordinates.
+        /// </summary>
+        /// <param name="coordinates">The coordinates.</param>
+        /// <returns>The scaled matrix.</returns>
+        public Matrix Scale(params int[] coordinates) => GetScalingMatrix(coordinates) * this;
+
+        /// <summary>
+        /// Translates the matrix by the given coordinates.
+        /// </summary>
+        /// <param name="coordinates">The coordinates.</param>
+        /// <returns>The translated matrix.</returns>
+        public Matrix Translate(params int[] coordinates) => GetTranslationMatrix(coordinates) * this;
 
         /// <summary>
         /// Generates a string representation of a <see cref="Matrix"/>.
