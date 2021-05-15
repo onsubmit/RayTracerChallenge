@@ -19,10 +19,22 @@ namespace OnSubmit.RayTracerChallenge
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Sphere"/> class.
+        /// Creates the unit sphere.
+        /// </summary>
+        /// <param name="material">The sphere's material.</param>
+        public Sphere(Material material = null)
+            : this(Tuple4D.CreatePoint(0, 0, 0), 1, material)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Sphere"/> class.
         /// </summary>
         /// <param name="origin">The sphere's origin point.</param>
         /// <param name="radius">The sphere's radius.</param>
-        public Sphere(Tuple4D origin, double radius)
+        /// <param name="material">The sphere's material.</param>
+        public Sphere(Tuple4D origin, double radius, Material material = null)
+            : base(material)
         {
             if (!origin.IsPoint)
             {
@@ -57,7 +69,7 @@ namespace OnSubmit.RayTracerChallenge
             {
                 if (this.transformation == null)
                 {
-                    this.transformation = Matrix.GetIdentityMatrix(3);
+                    this.transformation = Matrix.GetIdentityMatrix(4);
                 }
 
                 return this.transformation;
@@ -67,6 +79,26 @@ namespace OnSubmit.RayTracerChallenge
             {
                 this.transformation = value;
             }
+        }
+
+        /// <summary>
+        /// Gets the surface normal vector at the given point.
+        /// </summary>
+        /// <param name="point">The point.</param>
+        /// <returns>The surface normal vector.</returns>
+        public Tuple4D GetNormalAtPoint(Tuple4D point)
+        {
+            if (!point.IsPoint)
+            {
+                throw new ArgumentException(nameof(point), $"{nameof(point)} must be a point.");
+            }
+
+            Tuple4D objectPoint = this.Transformation.GetInverse() * point;
+            Tuple4D objectNormal = objectPoint - this.Origin;
+            Tuple4D worldNormal = this.Transformation.GetInverse().Transpose() * objectNormal;
+            worldNormal.ToVector();
+
+            return worldNormal.Normalize();
         }
     }
 }

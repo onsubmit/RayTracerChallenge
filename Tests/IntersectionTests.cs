@@ -9,7 +9,7 @@
         [TestMethod]
         public void BasicTest()
         {
-            Sphere sphere = new Sphere(Tuple4D.CreatePoint(0, 0, 0), 1);
+            Sphere sphere = new Sphere();
             Intersection intersection = new Intersection(3.5, sphere);
             Assert.AreEqual(3.5, intersection.T);
             Assert.AreEqual(sphere, intersection.Object);
@@ -23,7 +23,7 @@
             Tuple4D direction = Tuple4D.CreateVector(0, 0, 1);
             Ray ray = new Ray(origin, direction);
 
-            Sphere sphere = new Sphere(Tuple4D.CreatePoint(0, 0, 0), 1);
+            Sphere sphere = new Sphere();
             Intersections intersections = ray.GetIntersectionsWith(sphere);
             Assert.AreEqual(2, intersections.Count);
             Assert.AreEqual(4, intersections[0].T);
@@ -37,7 +37,7 @@
             Tuple4D direction = Tuple4D.CreateVector(0, 0, 1);
             Ray ray = new Ray(origin, direction);
 
-            Sphere sphere = new Sphere(Tuple4D.CreatePoint(0, 0, 0), 1);
+            Sphere sphere = new Sphere();
             Intersections intersectionPoints = ray.GetIntersectionsWith(sphere);
             Assert.AreEqual(2, intersectionPoints.Count);
             Assert.AreEqual(5, intersectionPoints[0].T);
@@ -51,7 +51,7 @@
             Tuple4D direction = Tuple4D.CreateVector(0, 0, 1);
             Ray ray = new Ray(origin, direction);
 
-            Sphere sphere = new Sphere(Tuple4D.CreatePoint(0, 0, 0), 1);
+            Sphere sphere = new Sphere();
             Intersections intersections = ray.GetIntersectionsWith(sphere);
             Assert.AreEqual(0, intersections.Count);
         }
@@ -63,7 +63,7 @@
             Tuple4D direction = Tuple4D.CreateVector(0, 0, 1);
             Ray ray = new Ray(origin, direction);
 
-            Sphere sphere = new Sphere(Tuple4D.CreatePoint(0, 0, 0), 1);
+            Sphere sphere = new Sphere();
             Intersections intersections = ray.GetIntersectionsWith(sphere);
             Assert.AreEqual(2, intersections.Count);
             Assert.AreEqual(-1, intersections[0].T);
@@ -77,7 +77,7 @@
             Tuple4D direction = Tuple4D.CreateVector(0, 0, 1);
             Ray ray = new Ray(origin, direction);
 
-            Sphere sphere = new Sphere(Tuple4D.CreatePoint(0, 0, 0), 1);
+            Sphere sphere = new Sphere();
             Intersections intersections = ray.GetIntersectionsWith(sphere);
             Assert.AreEqual(2, intersections.Count);
             Assert.AreEqual(-6, intersections[0].T);
@@ -87,7 +87,7 @@
         [TestMethod]
         public void AggregatingIntersections()
         {
-            Sphere sphere = new Sphere(Tuple4D.CreatePoint(0, 0, 0), 1);
+            Sphere sphere = new Sphere();
             Intersection i1 = new Intersection(1, sphere);
             Intersection i2 = new Intersection(2, sphere);
             Intersections intersections = new Intersections(i1, i2);
@@ -104,7 +104,7 @@
             Tuple4D direction = Tuple4D.CreateVector(0, 0, 1);
             Ray ray = new Ray(origin, direction);
 
-            Sphere sphere = new Sphere(Tuple4D.CreatePoint(0, 0, 0), 1);
+            Sphere sphere = new Sphere();
             Intersections intersections = ray.GetIntersectionsWith(sphere);
             Assert.AreEqual(2, intersections.Count);
             Assert.AreEqual(sphere, intersections[0].Object);
@@ -114,7 +114,7 @@
         [TestMethod]
         public void GetHitWithAllPositiveT()
         {
-            Sphere sphere = new Sphere(Tuple4D.CreatePoint(0, 0, 0), 1);
+            Sphere sphere = new Sphere();
             Intersection i1 = new Intersection(1, sphere);
             Intersection i2 = new Intersection(2, sphere);
             Intersections intersections = new Intersections(i1, i2);
@@ -124,7 +124,7 @@
         [TestMethod]
         public void GetHitSomeWithNegativeT()
         {
-            Sphere sphere = new Sphere(Tuple4D.CreatePoint(0, 0, 0), 1);
+            Sphere sphere = new Sphere();
             Intersection i1 = new Intersection(-1, sphere);
             Intersection i2 = new Intersection(1, sphere);
             Intersections intersections = new Intersections(i1, i2);
@@ -134,7 +134,7 @@
         [TestMethod]
         public void GetHitWithAllNegativeT()
         {
-            Sphere sphere = new Sphere(Tuple4D.CreatePoint(0, 0, 0), 1);
+            Sphere sphere = new Sphere();
             Intersection i1 = new Intersection(-2, sphere);
             Intersection i2 = new Intersection(-1, sphere);
             Intersections intersections = new Intersections(i1, i2);
@@ -144,7 +144,7 @@
         [TestMethod]
         public void GetHitWithManyIntersections()
         {
-            Sphere sphere = new Sphere(Tuple4D.CreatePoint(0, 0, 0), 1);
+            Sphere sphere = new Sphere();
             Intersection i1 = new Intersection(5, sphere);
             Intersection i2 = new Intersection(7, sphere);
             Intersection i3 = new Intersection(-3, sphere);
@@ -160,7 +160,7 @@
             Tuple4D direction = Tuple4D.CreateVector(0, 0, 1);
             Ray ray = new Ray(origin, direction);
 
-            Sphere sphere = new Sphere(Tuple4D.CreatePoint(0, 0, 0), 1);
+            Sphere sphere = new Sphere();
             sphere.Transformation = Matrix.GetScalingMatrix(2, 2, 2);
             Intersections intersections = ray.GetIntersectionsWith(sphere);
 
@@ -176,7 +176,7 @@
             Tuple4D direction = Tuple4D.CreateVector(0, 0, 1);
             Ray ray = new Ray(origin, direction);
 
-            Sphere sphere = new Sphere(Tuple4D.CreatePoint(0, 0, 0), 1);
+            Sphere sphere = new Sphere();
             sphere.Transformation = Matrix.GetTranslationMatrix(5, 0, 0);
             Intersections intersections = ray.GetIntersectionsWith(sphere);
 

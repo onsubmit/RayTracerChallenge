@@ -156,7 +156,7 @@ namespace Playground
             double pixelSize = WallSize / CanvasSize;
             double half = WallSize / 2;
 
-            Sphere sphere = new Sphere(Tuple4D.CreatePoint(0, 0, 0), 1);
+            Sphere sphere = new Sphere();
             sphere.Transformation = Matrix.GetScalingMatrix(1, 0.5, 1);
             sphere.Transformation = Matrix.GetScalingMatrix(0.5, 1, 1);
             sphere.Transformation = Matrix.GetScalingMatrix(0.5, 1, 1).RotateZ(Math.PI / 4);

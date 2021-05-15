@@ -52,6 +52,9 @@
     <Compile Include="Extensions\IntegerExtensions.cs" />
     <Compile Include="Intersection.cs" />
     <Compile Include="Intersections.cs" />
+    <Compile Include="Light.cs" />
+    <Compile Include="Lighting.cs" />
+    <Compile Include="Material.cs" />
     <Compile Include="Matrix.cs" />
     <Compile Include="Ray.cs" />
     <Compile Include="Shape.cs" />

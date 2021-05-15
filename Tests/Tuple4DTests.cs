@@ -195,5 +195,24 @@
             Assert.AreEqual(-a.GetCrossProductWith(b), b.GetCrossProductWith(a));
             Assert.AreEqual(-b.GetCrossProductWith(a), a.GetCrossProductWith(b));
         }
+
+        [TestMethod]
+        public void ReflectVectorAt45Degrees()
+        {
+            Tuple4D vector = Tuple4D.CreateVector(1, -1, 0);
+            Tuple4D normal = Tuple4D.CreateVector(0, 1, 0);
+            Tuple4D reflected = vector.ReflectVector(normal);
+            Assert.AreEqual(Tuple4D.CreateVector(1, 1, 0), reflected);
+        }
+
+        [TestMethod]
+        public void ReflectVectorOffSlantedSurface()
+        {
+            double root2over2 = Math.Sqrt(2) / 2;
+            Tuple4D vector = Tuple4D.CreateVector(0, -1, 0);
+            Tuple4D normal = Tuple4D.CreateVector(root2over2, root2over2, 0);
+            Tuple4D reflected = vector.ReflectVector(normal);
+            Assert.AreEqual(Tuple4D.CreateVector(1, 0, 0), reflected);
+        }
     }
 }

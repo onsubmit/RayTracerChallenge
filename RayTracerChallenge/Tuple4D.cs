@@ -71,7 +71,18 @@ namespace OnSubmit.RayTracerChallenge
         /// <summary>
         /// Gets the w value.
         /// </summary>
-        public double W => this[3];
+        public double W
+        {
+            get
+            {
+                return this[3];
+            }
+
+            private set
+            {
+                this[3] = value;
+            }
+        }
 
         /// <summary>
         /// Gets a value indicating whether the tuple is a point.
@@ -227,6 +238,26 @@ namespace OnSubmit.RayTracerChallenge
         }
 
         /// <summary>
+        /// Changes the tuple to a point.
+        /// </summary>
+        /// <returns>Itself.</returns>
+        public Tuple4D ToPoint()
+        {
+            this.W = PointTuple;
+            return this;
+        }
+
+        /// <summary>
+        /// Changes the tuple to a vector.
+        /// </summary>
+        /// <returns>Itself.</returns>
+        public Tuple4D ToVector()
+        {
+            this.W = VectorTuple;
+            return this;
+        }
+
+        /// <summary>
         /// Computes the dot product of the tuple with another.
         /// </summary>
         /// <param name="t">The tuple to use.</param>
@@ -259,6 +290,26 @@ namespace OnSubmit.RayTracerChallenge
             double z = (this.X * t.Y) - (this.Y * t.X);
 
             return CreateVector(x, y, z);
+        }
+
+        /// <summary>
+        /// Reflects the vector around the given normal vector.
+        /// </summary>
+        /// <param name="normalVector">The normal vector to reflect around.</param>
+        /// <returns>The reflected vector</returns>
+        public Tuple4D ReflectVector(Tuple4D normalVector)
+        {
+            if (!this.IsVector)
+            {
+                throw new InvalidOperationException("Tuple must be a vector.");
+            }
+
+            if (!normalVector.IsVector || normalVector.Magnitude != 1)
+            {
+                throw new ArgumentException(nameof(normalVector), $"{nameof(normalVector)} must be a normal vector.");
+            }
+
+            return this - (normalVector * 2 * this.GetDotProductWith(normalVector));
         }
 
         /// <summary>
