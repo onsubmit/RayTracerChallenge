@@ -50,7 +50,12 @@
     <Compile Include="Extensions\ColorTupleExtensions.cs" />
     <Compile Include="Extensions\DoubleExtensions.cs" />
     <Compile Include="Extensions\IntegerExtensions.cs" />
+    <Compile Include="Intersection.cs" />
+    <Compile Include="Intersections.cs" />
     <Compile Include="Matrix.cs" />
+    <Compile Include="Ray.cs" />
+    <Compile Include="Shape.cs" />
+    <Compile Include="Sphere.cs" />
     <Compile Include="Tuple4D.cs" />
     <Compile Include="BaseTuple.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

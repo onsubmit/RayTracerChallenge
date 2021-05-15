@@ -54,6 +54,7 @@
   <ItemGroup>
     <Compile Include="CanvasTests.cs" />
     <Compile Include="ColorTupleTests.cs" />
+    <Compile Include="IntersectionTests.cs" />
     <Compile Include="MatrixTests.cs" />
     <Compile Include="MatrixTransformationTests.cs" />
     <Compile Include="Tuple4DTests.cs" />
@@ -61,6 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <Compile Include="RayTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RayTracerChallenge\RayTracerChallenge.csproj">
