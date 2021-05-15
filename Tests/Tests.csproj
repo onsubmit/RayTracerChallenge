@@ -57,6 +57,7 @@
     <Compile Include="IntersectionTests.cs" />
     <Compile Include="MatrixTests.cs" />
     <Compile Include="MatrixTransformationTests.cs" />
+    <Compile Include="SphereTests.cs" />
     <Compile Include="Tuple4DTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

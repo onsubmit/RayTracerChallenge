@@ -13,6 +13,11 @@ namespace OnSubmit.RayTracerChallenge
     public class Sphere : Shape
     {
         /// <summary>
+        /// The sphere's transformation.
+        /// </summary>
+        private Matrix transformation;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Sphere"/> class.
         /// </summary>
         /// <param name="origin">The sphere's origin point.</param>
@@ -37,5 +42,31 @@ namespace OnSubmit.RayTracerChallenge
         /// Gets the sphere radius.
         /// </summary>
         public double Radius { get; private set; }
+
+        /// <summary>
+        /// Gets a value indicating whether the sphere has a transformation defined.
+        /// </summary>
+        public bool HasTransformation => this.transformation != null;
+
+        /// <summary>
+        /// Gets or sets the sphere's transformation.
+        /// </summary>
+        public Matrix Transformation
+        {
+            get
+            {
+                if (this.transformation == null)
+                {
+                    this.transformation = Matrix.GetIdentityMatrix(3);
+                }
+
+                return this.transformation;
+            }
+
+            set
+            {
+                this.transformation = value;
+            }
+        }
     }
 }

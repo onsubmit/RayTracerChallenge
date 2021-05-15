@@ -185,7 +185,7 @@ namespace OnSubmit.RayTracerChallenge
         /// </summary>
         /// <param name="coordinates">The coordinates.</param>
         /// <returns>The translation matrix.</returns>
-        public static Matrix GetTranslationMatrix(params int[] coordinates)
+        public static Matrix GetTranslationMatrix(params double[] coordinates)
         {
             int size = coordinates.Length;
             if (size < 1)
@@ -210,7 +210,7 @@ namespace OnSubmit.RayTracerChallenge
         /// </summary>
         /// <param name="coordinates">The coordinates.</param>
         /// <returns>The scaling matrix.</returns>
-        public static Matrix GetScalingMatrix(params int[] coordinates)
+        public static Matrix GetScalingMatrix(params double[] coordinates)
         {
             int size = coordinates.Length;
             if (size < 1)
@@ -325,7 +325,13 @@ namespace OnSubmit.RayTracerChallenge
         /// <param name="zx">z in proportion to x.</param>
         /// <param name="zy">z in proportion to y.</param>
         /// <returns>The shearing transformation matrix.</returns>
-        public static Matrix GetShearingMatrix(double xy = 0, double xz = 0, double yx = 0, double yz = 0, double zx = 0, double zy = 0)
+        public static Matrix GetShearingMatrix(
+            double xy = 0,
+            double xz = 0,
+            double yx = 0,
+            double yz = 0,
+            double zx = 0,
+            double zy = 0)
         {
             double[,] elements = new double[4, 4];
             elements[0, 0] = 1;
@@ -525,14 +531,32 @@ namespace OnSubmit.RayTracerChallenge
         /// </summary>
         /// <param name="coordinates">The coordinates.</param>
         /// <returns>The scaled matrix.</returns>
-        public Matrix Scale(params int[] coordinates) => GetScalingMatrix(coordinates) * this;
+        public Matrix Scale(params double[] coordinates) => GetScalingMatrix(coordinates) * this;
 
         /// <summary>
         /// Translates the matrix by the given coordinates.
         /// </summary>
         /// <param name="coordinates">The coordinates.</param>
         /// <returns>The translated matrix.</returns>
-        public Matrix Translate(params int[] coordinates) => GetTranslationMatrix(coordinates) * this;
+        public Matrix Translate(params double[] coordinates) => GetTranslationMatrix(coordinates) * this;
+
+        /// <summary>
+        /// Shears the matrix.
+        /// </summary>
+        /// <param name="xy">x in proportion to y.</param>
+        /// <param name="xz">x in proportion to z.</param>
+        /// <param name="yx">y in proportion to x.</param>
+        /// <param name="yz">y in proportion to z.</param>
+        /// <param name="zx">z in proportion to x.</param>
+        /// <param name="zy">z in proportion to y.</param>
+        /// <returns>The sheared matrix.</returns>
+        public Matrix Shear(
+            double xy = 0,
+            double xz = 0,
+            double yx = 0,
+            double yz = 0,
+            double zx = 0,
+            double zy = 0) => GetShearingMatrix(xy, xz, yx, yz, zx, zy) * this;
 
         /// <summary>
         /// Generates a string representation of a <see cref="Matrix"/>.

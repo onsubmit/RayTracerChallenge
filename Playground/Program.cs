@@ -28,6 +28,7 @@ namespace Playground
             DoChapters1And2();
             DoChapter3();
             DoChapter4();
+            DoChapter5();
         }
 
         /// <summary>
@@ -138,6 +139,48 @@ namespace Playground
             }
 
             File.WriteAllText("clock.ppm", c.ToPlainPortablePixmapString());
+        }
+
+        /// <summary>
+        /// Does the "Putting It Together" section for chapter 5.
+        /// </summary>
+        private static void DoChapter5()
+        {
+            const int CanvasSize = 1001;
+            const double WallZ = 10;
+            const double WallSize = 8;
+
+            Canvas c = new Canvas(CanvasSize, CanvasSize);
+
+            Tuple4D rayOrigin = Tuple4D.CreatePoint(0, 0, -5);
+            double pixelSize = WallSize / CanvasSize;
+            double half = WallSize / 2;
+
+            Sphere sphere = new Sphere(Tuple4D.CreatePoint(0, 0, 0), 1);
+            sphere.Transformation = Matrix.GetScalingMatrix(1, 0.5, 1);
+            sphere.Transformation = Matrix.GetScalingMatrix(0.5, 1, 1);
+            sphere.Transformation = Matrix.GetScalingMatrix(0.5, 1, 1).RotateZ(Math.PI / 4);
+            sphere.Transformation = Matrix.GetScalingMatrix(0.5, 1, 1).Shear(xy: 1);
+
+            for (int y = 0; y < CanvasSize; y++)
+            {
+                double worldY = half - (pixelSize * y);
+                for (int x = 0; x < CanvasSize; x++)
+                {
+                    double worldX = -half + (pixelSize * x);
+
+                    Tuple4D position = Tuple4D.CreatePoint(worldX, worldY, WallZ);
+                    Ray ray = new Ray(rayOrigin, (position - rayOrigin).Normalize());
+                    Intersections intersections = ray.GetIntersectionsWith(sphere);
+
+                    if (intersections.HasHit)
+                    {
+                        c.WritePixel(x, y, White);
+                    }
+                }
+            }
+
+            File.WriteAllText("sphere-shadow.ppm", c.ToPlainPortablePixmapString());
         }
 
         /// <summary>

@@ -55,12 +55,13 @@ namespace OnSubmit.RayTracerChallenge
         /// </summary>
         /// <param name="sphere">The sphere.</param>
         /// <returns>The intersections along the ray.</returns>
-        public Intersection[] GetIntersectionsWith(Sphere sphere)
+        public Intersections GetIntersectionsWith(Sphere sphere)
         {
-            Tuple4D sphereToRay = this.Origin - sphere.Origin;
+            Ray ray = sphere.HasTransformation ? this.TransformWith(sphere.Transformation.GetInverse()) : this;
+            Tuple4D sphereToRay = ray.Origin - sphere.Origin;
 
-            double a = this.Direction.GetDotProductWith(this.Direction);
-            double b = 2 * this.Direction.GetDotProductWith(sphereToRay);
+            double a = ray.Direction.GetDotProductWith(ray.Direction);
+            double b = 2 * ray.Direction.GetDotProductWith(sphereToRay);
             double c = sphereToRay.GetDotProductWith(sphereToRay) - 1;
             double discriminant = (b * b) - (4 * a * c);
 
@@ -69,14 +70,21 @@ namespace OnSubmit.RayTracerChallenge
                 double sqrtDiscriminant = Math.Sqrt(discriminant);
                 double twoA = 2 * a;
 
-                return new Intersection[2]
+                return new Intersections(new Intersection[2]
                 {
                     new Intersection((-b - sqrtDiscriminant) / twoA, sphere),
                     new Intersection((-b + sqrtDiscriminant) / twoA, sphere),
-                };
+                });
             }
 
-            return new Intersection[0];
+            return new Intersections();
         }
+
+        /// <summary>
+        /// Transforms the ray by the given transformation matrix.
+        /// </summary>
+        /// <param name="matrix">The transformation matrix.</param>
+        /// <returns>The transformed ray.</returns>
+        public Ray TransformWith(Matrix matrix) => new Ray(matrix * this.Origin, matrix * this.Direction);
     }
 }
