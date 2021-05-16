@@ -9,7 +9,7 @@ namespace OnSubmit.RayTracerChallenge
     using OnSubmit.RayTracerChallenge.Extensions;
 
     /// <summary>
-    /// Represents a ray.
+    /// Represents a intersection.
     /// </summary>
     public class Intersection
     {

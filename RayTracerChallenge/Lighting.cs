@@ -8,7 +8,7 @@ namespace OnSubmit.RayTracerChallenge
     using System;
 
     /// <summary>
-    /// Represents a material.
+    /// Static class used to calculate lighting.
     /// </summary>
     public static class Lighting
     {

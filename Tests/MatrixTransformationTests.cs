@@ -283,5 +283,55 @@
             Matrix t = c * b * a;
             Assert.AreEqual(Tuple4D.CreatePoint(15, 0, 7), t * p);
         }
+
+        [TestMethod]
+        public void ViewTransformationForDefaultOrientation()
+        {
+            Tuple4D from = Tuple4D.CreatePoint(0, 0, 0);
+            Tuple4D to = Tuple4D.CreatePoint(0, 0, -1);
+            Tuple4D up = Tuple4D.CreateVector(0, 1, 0);
+            Matrix transformation = Matrix.GetViewTransformationMatrix(from, to, up);
+            Assert.AreEqual(Matrix.GetIdentityMatrix(4), transformation);
+        }
+
+        [TestMethod]
+        public void ViewTransformationLookingInZDirection()
+        {
+            Tuple4D from = Tuple4D.CreatePoint(0, 0, 0);
+            Tuple4D to = Tuple4D.CreatePoint(0, 0, 1);
+            Tuple4D up = Tuple4D.CreateVector(0, 1, 0);
+            Matrix transformation = Matrix.GetViewTransformationMatrix(from, to, up);
+            Assert.AreEqual(Matrix.GetScalingMatrix(-1, 1, -1), transformation);
+        }
+
+        [TestMethod]
+        public void ViewTransformationMovesWorld()
+        {
+            Tuple4D from = Tuple4D.CreatePoint(0, 0, 8);
+            Tuple4D to = Tuple4D.CreatePoint(0, 0, 0);
+            Tuple4D up = Tuple4D.CreateVector(0, 1, 0);
+            Matrix transformation = Matrix.GetViewTransformationMatrix(from, to, up);
+            Assert.AreEqual(Matrix.GetTranslationMatrix(0, 0, -8), transformation);
+        }
+
+        [TestMethod]
+        public void ViewTransformationArbitrary()
+        {
+            Tuple4D from = Tuple4D.CreatePoint(1, 3, 2);
+            Tuple4D to = Tuple4D.CreatePoint(4, -2, 8);
+            Tuple4D up = Tuple4D.CreateVector(1, 1, 0);
+            Matrix transformation = Matrix.GetViewTransformationMatrix(from, to, up);
+
+            Matrix expected = new Matrix(
+                new double[,]
+                {
+                    { -0.50709, 0.50709, 0.67612, -2.36643 },
+                    { 0.76772, 0.60609, 0.12122, -2.82843 },
+                    { -0.35857, 0.59761, -0.71714, 0 },
+                    { 0, 0, 0, 1 },
+                });
+
+            Assert.AreEqual(expected, transformation);
+        }
     }
 }

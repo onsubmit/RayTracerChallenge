@@ -28,13 +28,21 @@ namespace OnSubmit.RayTracerChallenge
         public World(Light lightSource, params Shape[] shapes)
         {
             this.LightSource = lightSource;
-            this.Shapes = shapes;
+
+            if (shapes == null || shapes.Length == 0)
+            {
+                this.Shapes = new List<Shape>();
+            }
+            else
+            {
+                this.Shapes = new List<Shape>(shapes);
+            }
         }
 
         /// <summary>
         /// Gets a value indicating whether the world has any shapes in it.
         /// </summary>
-        public bool HasShapes => this.Shapes == null ? false : this.Shapes.Length != 0;
+        public bool HasShapes => this.Shapes.Count != 0;
 
         /// <summary>
         /// Gets a value indicating whether the world has any light source.
@@ -44,7 +52,7 @@ namespace OnSubmit.RayTracerChallenge
         /// <summary>
         /// Gets the world's shapes.
         /// </summary>
-        public Shape[] Shapes { get; private set; }
+        public List<Shape> Shapes { get; private set; }
 
         /// <summary>
         /// Gets or sets the world's light source.
@@ -61,6 +69,15 @@ namespace OnSubmit.RayTracerChallenge
             Sphere s1 = new Sphere(new Material(ColorTuple.Create(0.8, 1.0, 0.6), diffuse: 0.7, specular: 0.2));
             Sphere s2 = new Sphere(Matrix.GetScalingMatrix(0.5, 0.5, 0.5));
             return new World(light, s1, s2);
+        }
+
+        /// <summary>
+        /// Adds a shape to the world.
+        /// </summary>
+        /// <param name="shape">The shape to add.</param>
+        public void AddShape(Shape shape)
+        {
+            this.Shapes.Add(shape);
         }
 
         /// <summary>

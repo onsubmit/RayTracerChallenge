@@ -11,7 +11,7 @@ namespace OnSubmit.RayTracerChallenge
     using OnSubmit.RayTracerChallenge.Extensions;
 
     /// <summary>
-    /// Represents a canvas.
+    /// Represents a matrix.
     /// </summary>
     public sealed class Matrix
     {
@@ -349,6 +349,61 @@ namespace OnSubmit.RayTracerChallenge
             elements[2, 1] = zy;
 
             return new Matrix(elements);
+        }
+
+        /// <summary>
+        /// Gets the view transformation matrix.
+        /// </summary>
+        /// <param name="from">Eye location.</param>
+        /// <param name="to">The point in the scene where the eye should look.</param>
+        /// <param name="up">The vector indicating which way is up.</param>
+        /// <returns>The view transformation matrix.</returns>
+        public static Matrix GetViewTransformationMatrix(Tuple4D from, Tuple4D to, Tuple4D up)
+        {
+            if (from == null)
+            {
+                throw new ArgumentNullException(nameof(from));
+            }
+
+            if (to == null)
+            {
+                throw new ArgumentNullException(nameof(to));
+            }
+
+            if (up == null)
+            {
+                throw new ArgumentNullException(nameof(up));
+            }
+
+            if (!from.IsPoint)
+            {
+                throw new ArgumentException(nameof(from), $"{nameof(from)} must be a point.");
+            }
+
+            if (!to.IsPoint)
+            {
+                throw new ArgumentException(nameof(to), $"{nameof(to)} must be a point.");
+            }
+
+            if (!up.IsVector)
+            {
+                throw new ArgumentException(nameof(up), $"{nameof(up)} must be a vector.");
+            }
+
+            Tuple4D forward = (to - from).Normalize();
+            Tuple4D left = forward.GetCrossProductWith(up.Normalize());
+            Tuple4D trueUp = left.GetCrossProductWith(forward);
+
+            Matrix orientation = new Matrix(
+                new double[,]
+                {
+                    { left.X, left.Y, left.Z, 0 },
+                    { trueUp.X, trueUp.Y, trueUp.Z, 0 },
+                    { -forward.X, -forward.Y, -forward.Z, 0 },
+                    { 0, 0, 0, 1 },
+                });
+
+            return orientation * GetTranslationMatrix(-from.X, -from.Y, -from.Z);
         }
 
         /// <summary>
