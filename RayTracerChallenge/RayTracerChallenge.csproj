@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="Canvas.cs" />
     <Compile Include="ColorTuple.cs" />
+    <Compile Include="Computation.cs" />
     <Compile Include="Extensions\ColorTupleExtensions.cs" />
     <Compile Include="Extensions\DoubleExtensions.cs" />
     <Compile Include="Extensions\IntegerExtensions.cs" />
@@ -62,6 +63,7 @@
     <Compile Include="Tuple4D.cs" />
     <Compile Include="BaseTuple.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="World.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

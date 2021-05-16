@@ -14,9 +14,9 @@
             const double Blue = 1.7;
 
             ColorTuple c = ColorTuple.Create(Red, Green, Blue);
-            Assert.AreEqual(Red, c.Red);
-            Assert.AreEqual(Green, c.Green);
-            Assert.AreEqual(Blue, c.Blue);
+            Assert.AreEqual(Red, c.RedValue);
+            Assert.AreEqual(Green, c.GreenValue);
+            Assert.AreEqual(Blue, c.BlueValue);
         }
 
         [TestMethod]

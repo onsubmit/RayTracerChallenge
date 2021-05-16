@@ -41,7 +41,7 @@ namespace OnSubmit.RayTracerChallenge.Extensions
                 return new[] { 0.0, 0.0, 0.0 };
             }
 
-            return new[] { c.Red, c.Green, c.Blue };
+            return new[] { c.RedValue, c.GreenValue, c.BlueValue };
         }
     }
 }

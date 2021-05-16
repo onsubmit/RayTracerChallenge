@@ -17,7 +17,7 @@ namespace Playground
         /// <summary>
         /// White color tuple.
         /// </summary>
-        private static readonly ColorTuple White = ColorTuple.Create(1, 1, 1);
+        private static readonly ColorTuple White = ColorTuple.White;
 
         /// <summary>
         /// Main entry point.
@@ -212,7 +212,7 @@ namespace Playground
             Sphere sphere = new Sphere(material);
 
             Tuple4D lightPosition = Tuple4D.CreatePoint(-10, 10, -10);
-            ColorTuple lightColor = ColorTuple.Create(1, 1, 1);
+            ColorTuple lightColor = ColorTuple.White;
             Light light = new Light(lightPosition, lightColor);
 
             int count = 0;

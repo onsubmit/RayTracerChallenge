@@ -6,6 +6,8 @@
 namespace OnSubmit.RayTracerChallenge
 {
     using System;
+    using System.Collections.Generic;
+    using OnSubmit.RayTracerChallenge.Extensions;
 
     /// <summary>
     /// Represents a sphere.
@@ -19,11 +21,30 @@ namespace OnSubmit.RayTracerChallenge
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Sphere"/> class.
-        /// Creates the unit sphere.
+        /// </summary>
+        /// <param name="transformation">The sphere's transformation matrix.</param>
+        public Sphere(Matrix transformation)
+            : this(Tuple4D.CreatePoint(0, 0, 0), 1, transformation, null)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Sphere"/> class.
         /// </summary>
         /// <param name="material">The sphere's material.</param>
-        public Sphere(Material material = null)
-            : this(Tuple4D.CreatePoint(0, 0, 0), 1, material)
+        public Sphere(Material material)
+            : this(Tuple4D.CreatePoint(0, 0, 0), 1, null, material)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Sphere"/> class.
+        /// Creates the unit sphere.
+        /// </summary>
+        /// <param name="transformation">The sphere's transformation matrix.</param>
+        /// <param name="material">The sphere's material.</param>
+        public Sphere(Matrix transformation = null, Material material = null)
+            : this(Tuple4D.CreatePoint(0, 0, 0), 1, transformation, material)
         {
         }
 
@@ -32,8 +53,9 @@ namespace OnSubmit.RayTracerChallenge
         /// </summary>
         /// <param name="origin">The sphere's origin point.</param>
         /// <param name="radius">The sphere's radius.</param>
+        /// <param name="transformation">The sphere's transformation matrix.</param>
         /// <param name="material">The sphere's material.</param>
-        public Sphere(Tuple4D origin, double radius, Material material = null)
+        public Sphere(Tuple4D origin, double radius, Matrix transformation = null, Material material = null)
             : base(material)
         {
             if (!origin.IsPoint)
@@ -43,6 +65,7 @@ namespace OnSubmit.RayTracerChallenge
 
             this.Origin = origin;
             this.Radius = radius;
+            this.Transformation = transformation;
         }
 
         /// <summary>
@@ -99,6 +122,49 @@ namespace OnSubmit.RayTracerChallenge
             worldNormal.ToVector();
 
             return worldNormal.Normalize();
+        }
+
+        /// <summary>
+        /// Compares a <see cref="Sphere"/> with another object.
+        /// </summary>
+        /// <param name="obj">The object to compare against.</param>
+        /// <returns><c>true</c> if the objects are piecewise equivalent, <c>false</c> otherwise.</returns>
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj is Sphere s)
+            {
+                return base.Equals(s)
+                    && this.Origin.Equals(s.Origin)
+                    && this.Radius.Compare(s.Radius)
+                    && this.Transformation.Equals(s.Transformation);
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Generates a hash code for the current <see cref="Sphere"/>.
+        /// </summary>
+        /// <returns>The hash code.</returns>
+        public override int GetHashCode()
+        {
+            int hashCode = -715739984;
+            hashCode = (hashCode * -1521134295) + base.GetHashCode();
+            hashCode = (hashCode * -1521134295) + EqualityComparer<Material>.Default.GetHashCode(this.Material);
+            hashCode = (hashCode * -1521134295) + EqualityComparer<Matrix>.Default.GetHashCode(this.transformation);
+            hashCode = (hashCode * -1521134295) + EqualityComparer<Tuple4D>.Default.GetHashCode(this.Origin);
+            hashCode = (hashCode * -1521134295) + this.Radius.GetHashCode();
+            return hashCode;
         }
     }
 }

@@ -28,7 +28,7 @@ namespace OnSubmit.RayTracerChallenge
             double specular = 0.9,
             double shininess = 200.0)
         {
-            this.Color = color ?? ColorTuple.Create(1, 1, 1);
+            this.Color = color ?? ColorTuple.White;
             this.Ambient = ambient;
             this.Diffuse = diffuse;
             this.Specular = specular;
@@ -36,35 +36,35 @@ namespace OnSubmit.RayTracerChallenge
         }
 
         /// <summary>
-        /// Gets the color of the material.
+        /// Gets or sets the color of the material.
         /// </summary>
-        public ColorTuple Color { get; private set; }
+        public ColorTuple Color { get; set; }
 
         /// <summary>
-        /// Gets the ambient value.
+        /// Gets or sets the ambient value.
         /// </summary>
-        public double Ambient { get; private set; }
+        public double Ambient { get; set; }
 
         /// <summary>
-        /// Gets the diffuse value.
+        /// Gets or sets the diffuse value.
         /// </summary>
-        public double Diffuse { get; private set; }
+        public double Diffuse { get; set; }
 
         /// <summary>
-        /// Gets the specular value.
+        /// Gets or sets the specular value.
         /// </summary>
-        public double Specular { get; private set; }
+        public double Specular { get; set; }
 
         /// <summary>
-        /// Gets the shininess value.
+        /// Gets or sets the shininess value.
         /// </summary>
-        public double Shininess { get; private set; }
+        public double Shininess { get; set; }
 
         /// <summary>
         /// Compares a <see cref="Material"/> with another object.
         /// </summary>
         /// <param name="obj">The object to compare against.</param>
-        /// <returns><c>crue</c> if the objects are piecewise equivalent, <c>false</c> otherwise.</returns>
+        /// <returns><c>true</c> if the objects are piecewise equivalent, <c>false</c> otherwise.</returns>
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))

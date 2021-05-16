@@ -64,7 +64,7 @@ namespace OnSubmit.RayTracerChallenge
         /// Compares a <see cref="BaseTuple"/> with another object.
         /// </summary>
         /// <param name="obj">The object to compare against.</param>
-        /// <returns><c>crue</c> if the objects are piecewise equivalent, <c>false</c> otherwise.</returns>
+        /// <returns><c>true</c> if the objects are piecewise equivalent, <c>false</c> otherwise.</returns>
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))

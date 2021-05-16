@@ -10,7 +10,7 @@
         public void PointLight()
         {
             Tuple4D position = Tuple4D.CreatePoint(0, 0, 0);
-            ColorTuple intensity = ColorTuple.Create(1, 1, 1);
+            ColorTuple intensity = ColorTuple.White;
             Light light = new Light(position, intensity);
             Assert.AreEqual(position, light.Position);
             Assert.AreEqual(intensity, light.Intensity);
@@ -20,7 +20,7 @@
         public void DefaultMaterial()
         {
             Material m = new Material();
-            Assert.AreEqual(ColorTuple.Create(1, 1, 1), m.Color);
+            Assert.AreEqual(ColorTuple.White, m.Color);
             Assert.AreEqual(0.1, m.Ambient);
             Assert.AreEqual(0.9, m.Diffuse);
             Assert.AreEqual(0.9, m.Specular);

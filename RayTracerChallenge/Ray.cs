@@ -6,6 +6,7 @@
 namespace OnSubmit.RayTracerChallenge
 {
     using System;
+    using System.Linq;
 
     /// <summary>
     /// Represents a ray.
@@ -78,6 +79,22 @@ namespace OnSubmit.RayTracerChallenge
             }
 
             return new Intersections();
+        }
+
+        /// <summary>
+        /// Gets the intersection distances along the ray with the world's objects.
+        /// </summary>
+        /// <param name="world">The world.</param>
+        /// <returns>The intersections along the ray.</returns>
+        public Intersections GetIntersectionsWith(World world)
+        {
+            if (world == null || !world.HasShapes)
+            {
+                return new Intersections();
+            }
+
+            Intersections[] allIntersections = world.GetShapes<Sphere>().Select(s => this.GetIntersectionsWith(s)).ToArray();
+            return new Intersections(allIntersections).SortedIntersections;
         }
 
         /// <summary>

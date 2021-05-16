@@ -15,6 +15,22 @@ namespace OnSubmit.RayTracerChallenge
         /// <summary>
         /// Calculates the lighting.
         /// </summary>
+        /// <param name="computation">The precomputation.</param>
+        /// <param name="light">The light source.</param>
+        /// <returns>The lighting.</returns>
+        public static ColorTuple Calculate(Computation computation, Light light)
+        {
+            return Calculate(
+                computation.Object.Material,
+                light,
+                computation.Point,
+                computation.EyeVector,
+                computation.NormalVector);
+        }
+
+        /// <summary>
+        /// Calculates the lighting.
+        /// </summary>
         /// <param name="material">The material.</param>
         /// <param name="light">The light source.</param>
         /// <param name="point">The point being illuminated.</param>
@@ -81,8 +97,8 @@ namespace OnSubmit.RayTracerChallenge
             // A negative number means then light is on the other side of the surface.
             double lightDotNormal = lightVector.GetDotProductWith(normalVector);
 
-            ColorTuple diffuse = ColorTuple.Create(0, 0, 0);
-            ColorTuple specular = ColorTuple.Create(0, 0, 0);
+            ColorTuple diffuse = ColorTuple.Black;
+            ColorTuple specular = ColorTuple.Black;
             if (lightDotNormal >= 0)
             {
                 // Compute the diffuse contribution

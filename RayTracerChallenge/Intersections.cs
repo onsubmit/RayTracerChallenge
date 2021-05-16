@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 namespace OnSubmit.RayTracerChallenge
 {
+    using System.Collections.Generic;
     using System.Linq;
 
     /// <summary>
@@ -35,10 +36,27 @@ namespace OnSubmit.RayTracerChallenge
         /// <summary>
         /// Initializes a new instance of the <see cref="Intersections"/> class.
         /// </summary>
+        public Intersections()
+        {
+            this.elements = new Intersection[0];
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Intersections"/> class.
+        /// </summary>
         /// <param name="intersections">The intersections.</param>
         public Intersections(params Intersection[] intersections)
         {
             this.elements = intersections;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Intersections"/> class.
+        /// </summary>
+        /// <param name="intersections">The intersections.</param>
+        public Intersections(params Intersections[] intersections)
+        {
+            this.elements = intersections.SelectMany(i => i.elements).ToArray();
         }
 
         /// <summary>
@@ -87,6 +105,45 @@ namespace OnSubmit.RayTracerChallenge
             }
 
             return this.hit;
+        }
+
+        /// <summary>
+        /// Compares a <see cref="Intersections"/> with another object.
+        /// </summary>
+        /// <param name="obj">The object to compare against.</param>
+        /// <returns><c>true</c> if the objects are piecewise equivalent, <c>false</c> otherwise.</returns>
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj is Intersections i)
+            {
+                if (this.Count != i.Count)
+                {
+                    return false;
+                }
+
+                return this.elements.All(e => i.elements.Any(x => x.Equals(e)));
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Generates a hash code for the current <see cref="Intersections"/>.
+        /// </summary>
+        /// <returns>The hash code.</returns>
+        public override int GetHashCode()
+        {
+            return 272633004 + EqualityComparer<Intersection[]>.Default.GetHashCode(this.elements);
         }
     }
 }

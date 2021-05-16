@@ -28,19 +28,44 @@ namespace OnSubmit.RayTracerChallenge
         }
 
         /// <summary>
+        /// Gets a new black color.
+        /// </summary>
+        public static ColorTuple Black => Create(0, 0, 0);
+
+        /// <summary>
+        /// Gets a new white color.
+        /// </summary>
+        public static ColorTuple White => Create(1, 1, 1);
+
+        /// <summary>
+        /// Gets a new red color.
+        /// </summary>
+        public static ColorTuple Red => Create(1, 0, 0);
+
+        /// <summary>
+        /// Gets a new green color.
+        /// </summary>
+        public static ColorTuple Green => Create(0, 1, 0);
+
+        /// <summary>
+        /// Gets a new blue color.
+        /// </summary>
+        public static ColorTuple Blue => Create(0, 0, 1);
+
+        /// <summary>
         /// Gets the red value.
         /// </summary>
-        public double Red => this[0];
+        public double RedValue => this[0];
 
         /// <summary>
         /// Gets the green value.
         /// </summary>
-        public double Green => this[1];
+        public double GreenValue => this[1];
 
         /// <summary>
         /// Gets the blue value.
         /// </summary>
-        public double Blue => this[2];
+        public double BlueValue => this[2];
 
         /// <summary>
         /// Computes the sum of two color tuples.
