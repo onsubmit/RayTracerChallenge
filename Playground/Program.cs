@@ -25,10 +25,14 @@ namespace Playground
         /// <param name="args">Command line arguments.</param>
         public static void Main(string[] args)
         {
+            /*
             DoChapters1And2();
             DoChapter3();
             DoChapter4();
             DoChapter5();
+            */
+
+            DoChapter6();
         }
 
         /// <summary>
@@ -181,6 +185,71 @@ namespace Playground
             }
 
             File.WriteAllText("sphere-shadow.ppm", c.ToPlainPortablePixmapString());
+        }
+
+        /// <summary>
+        /// Does the "Putting It Together" section for chapter 6.
+        /// </summary>
+        private static void DoChapter6()
+        {
+            const int CanvasSize = 201;
+            const double WallZ = 10;
+            const double WallSize = 8;
+
+            Canvas c = new Canvas(CanvasSize, CanvasSize);
+
+            Tuple4D rayOrigin = Tuple4D.CreatePoint(0, 0, -5);
+            double pixelSize = WallSize / CanvasSize;
+            double half = WallSize / 2;
+
+            Material material = new Material(
+                ColorTuple.Create(0, 0.5, 1),
+                ambient: 0.05,
+                diffuse: 0.9,
+                specular: 0.9,
+                shininess: 50);
+
+            Sphere sphere = new Sphere(material);
+
+            Tuple4D lightPosition = Tuple4D.CreatePoint(-10, 10, -10);
+            ColorTuple lightColor = ColorTuple.Create(1, 1, 1);
+            Light light = new Light(lightPosition, lightColor);
+
+            int count = 0;
+            int totalPixels = CanvasSize * CanvasSize;
+            int reportEach = totalPixels / 100;
+
+            for (int y = 0; y < CanvasSize; y++)
+            {
+                double worldY = half - (pixelSize * y);
+                for (int x = 0; x < CanvasSize; x++)
+                {
+                    if (count++ % reportEach == 0)
+                    {
+                        Console.WriteLine($"{count / reportEach}%");
+                    }
+
+                    double worldX = -half + (pixelSize * x);
+
+                    Tuple4D position = Tuple4D.CreatePoint(worldX, worldY, WallZ);
+                    Ray ray = new Ray(rayOrigin, (position - rayOrigin).Normalize());
+                    Intersections intersections = ray.GetIntersectionsWith(sphere);
+
+                    if (intersections.HasHit)
+                    {
+                        Intersection hit = intersections.GetHit();
+                        Tuple4D point = ray.GetPointOnRayAtDistance(hit.T);
+                        Tuple4D normal = hit.Object.As<Sphere>().GetNormalAtPoint(point);
+                        Tuple4D eye = -ray.Direction;
+                        ColorTuple color = Lighting.Calculate(hit.Object.Material, light, point, eye, normal);
+
+                        c.WritePixel(x, y, color);
+                    }
+                }
+            }
+
+            File.WriteAllText("sphere-with-lighting.ppm", c.ToPlainPortablePixmapString());
+            System.Diagnostics.Process.Start("sphere-with-lighting.ppm");
         }
 
         /// <summary>

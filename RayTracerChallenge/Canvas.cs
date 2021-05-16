@@ -154,7 +154,7 @@ namespace OnSubmit.RayTracerChallenge
             };
 
             StringBuilder lineBuilder = new StringBuilder();
-            for (int y = 0;  y < this.Height; y++)
+            for (int y = 0; y < this.Height; y++)
             {
                 for (int x = 0; x < this.Width; x++)
                 {

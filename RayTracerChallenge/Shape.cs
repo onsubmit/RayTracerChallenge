@@ -23,5 +23,16 @@ namespace OnSubmit.RayTracerChallenge
         /// Gets or sets the shape's material.
         /// </summary>
         public Material Material { get; protected set; }
+
+        /// <summary>
+        /// Casts the shape to a derived type.
+        /// </summary>
+        /// <typeparam name="T">Type of derived shape to cast to.</typeparam>
+        /// <returns>The derived shape.</returns>
+        public T As<T>()
+            where T : Shape
+        {
+            return (T)this;
+        }
     }
 }

@@ -8,6 +8,7 @@ namespace OnSubmit.RayTracerChallenge
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using OnSubmit.RayTracerChallenge.Extensions;
 
     /// <summary>
     /// Represents a 4 dimensional tuple of the form (x, y, z, w).
@@ -296,7 +297,7 @@ namespace OnSubmit.RayTracerChallenge
         /// Reflects the vector around the given normal vector.
         /// </summary>
         /// <param name="normalVector">The normal vector to reflect around.</param>
-        /// <returns>The reflected vector</returns>
+        /// <returns>The reflected vector.</returns>
         public Tuple4D ReflectVector(Tuple4D normalVector)
         {
             if (!this.IsVector)
@@ -304,7 +305,7 @@ namespace OnSubmit.RayTracerChallenge
                 throw new InvalidOperationException("Tuple must be a vector.");
             }
 
-            if (!normalVector.IsVector || normalVector.Magnitude != 1)
+            if (!normalVector.IsVector || !normalVector.Magnitude.Compare(1))
             {
                 throw new ArgumentException(nameof(normalVector), $"{nameof(normalVector)} must be a normal vector.");
             }
