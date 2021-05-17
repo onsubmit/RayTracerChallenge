@@ -20,8 +20,15 @@
             World world = World.CreateDefaultWorld();
 
             Light light = new Light(Tuple4D.CreatePoint(-10, 10, -10), ColorTuple.White);
-            Sphere s1 = new Sphere(new Material(ColorTuple.Create(0.8, 1.0, 0.6), diffuse: 0.7, specular: 0.2));
-            Sphere s2 = new Sphere(Matrix.GetScalingMatrix(0.5, 0.5, 0.5));
+            Sphere s1 = new Sphere()
+            {
+                Material = new Material(ColorTuple.Create(0.8, 1.0, 0.6), diffuse: 0.7, specular: 0.2),
+            };
+
+            Sphere s2 = new Sphere()
+            {
+                Transformation = Matrix.GetScalingMatrix(0.5, 0.5, 0.5),
+            };
 
             Assert.AreEqual(light, world.LightSource);
             Assert.IsTrue(world.ContainsShape(s1));

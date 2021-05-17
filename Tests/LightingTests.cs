@@ -116,7 +116,7 @@
             world.AddShape(s2);
 
             Ray ray = new Ray(Tuple4D.CreatePoint(0, 0, 5), Tuple4D.CreateVector(0, 0, 1));
-            Intersections intersections = ray.GetIntersectionsWith(s2);
+            Intersections intersections = s2.GetIntersectionsWith(ray);
             Computation computation = new Computation(intersections.GetHit(), ray);
             ColorTuple color = world.ShadeHit(computation);
             Assert.AreEqual(ColorTuple.Create(0.1, 0.1, 0.1), color);

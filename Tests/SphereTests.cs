@@ -8,22 +8,6 @@
     public class SphereTests
     {
         [TestMethod]
-        public void DefaultTransformation()
-        {
-            Sphere sphere = new Sphere();
-            Assert.AreEqual(Matrix.GetIdentityMatrix(4), sphere.Transformation);
-        }
-
-        [TestMethod]
-        public void CustomTransformation()
-        {
-            Sphere sphere = new Sphere();
-            Matrix transformation = Matrix.GetTranslationMatrix(2, 3, 4);
-            sphere.Transformation = transformation;
-            Assert.AreEqual(transformation, sphere.Transformation);
-        }
-
-        [TestMethod]
         public void NormalVectorOnXAxis()
         {
             Sphere sphere = new Sphere();
@@ -63,30 +47,6 @@
             Sphere sphere = new Sphere();
             Tuple4D normal = sphere.GetNormalAtPoint(Tuple4D.CreatePoint(root3over3, root3over3, root3over3));
             Assert.AreEqual(normal, normal.Normalize());
-        }
-
-        [TestMethod]
-        public void ComputeNormalOnTranslatedSphere()
-        {
-            Sphere sphere = new Sphere();
-            sphere.Transformation = Matrix.GetTranslationMatrix(0, 1, 0);
-            Tuple4D normal = sphere.GetNormalAtPoint(Tuple4D.CreatePoint(0, 1.70711, -0.70711));
-            Assert.AreEqual(Tuple4D.CreateVector(0, 0.70711, -0.70711), normal);
-        }
-
-        [TestMethod]
-        public void SphereHasDefaultMaterial()
-        {
-            Sphere sphere = new Sphere();
-            Assert.AreEqual(new Material(), sphere.Material);
-        }
-
-        [TestMethod]
-        public void SphereCanBeAssignedAMaterial()
-        {
-            Material material = new Material(ambient: 1);
-            Sphere sphere = new Sphere(material);
-            Assert.AreEqual(material, sphere.Material);
         }
     }
 }

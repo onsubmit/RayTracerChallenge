@@ -3,10 +3,10 @@
 //     Copyright (c) Andy Young. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
-using OnSubmit.RayTracerChallenge.Extensions;
-
 namespace OnSubmit.RayTracerChallenge
 {
+    using OnSubmit.RayTracerChallenge.Extensions;
+
     /// <summary>
     /// Represents a computation.
     /// </summary>
@@ -27,7 +27,7 @@ namespace OnSubmit.RayTracerChallenge
             this.intersection = intersection;
             this.Point = ray.GetPointOnRayAtDistance(intersection.T);
             this.EyeVector = -ray.Direction;
-            this.NormalVector = intersection.Object.As<Sphere>().GetNormalAtPoint(this.Point);
+            this.NormalVector = intersection.Object.GetNormalAtPoint(this.Point);
             this.OverPoint = this.Point + (this.NormalVector * DoubleExtensions.Epsilon);
 
             if (this.NormalVector.GetDotProductWith(this.EyeVector) < 0)

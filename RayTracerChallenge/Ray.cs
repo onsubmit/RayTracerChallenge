@@ -52,36 +52,6 @@ namespace OnSubmit.RayTracerChallenge
         public Tuple4D GetPointOnRayAtDistance(double t) => this.Origin + (this.Direction * t);
 
         /// <summary>
-        /// Gets the intersection distances along the ray with the sphere.
-        /// </summary>
-        /// <param name="sphere">The sphere.</param>
-        /// <returns>The intersections along the ray.</returns>
-        public Intersections GetIntersectionsWith(Sphere sphere)
-        {
-            Ray ray = sphere.HasTransformation ? this.TransformWith(sphere.Transformation.GetInverse()) : this;
-            Tuple4D sphereToRay = ray.Origin - sphere.Origin;
-
-            double a = ray.Direction.GetDotProductWith(ray.Direction);
-            double b = 2 * ray.Direction.GetDotProductWith(sphereToRay);
-            double c = sphereToRay.GetDotProductWith(sphereToRay) - 1;
-            double discriminant = (b * b) - (4 * a * c);
-
-            if (discriminant >= 0)
-            {
-                double sqrtDiscriminant = Math.Sqrt(discriminant);
-                double twoA = 2 * a;
-
-                return new Intersections(new Intersection[2]
-                {
-                    new Intersection((-b - sqrtDiscriminant) / twoA, sphere),
-                    new Intersection((-b + sqrtDiscriminant) / twoA, sphere),
-                });
-            }
-
-            return new Intersections();
-        }
-
-        /// <summary>
         /// Gets the intersection distances along the ray with the world's objects.
         /// </summary>
         /// <param name="world">The world.</param>
@@ -93,7 +63,7 @@ namespace OnSubmit.RayTracerChallenge
                 return new Intersections();
             }
 
-            Intersections[] allIntersections = world.GetShapes<Sphere>().Select(s => this.GetIntersectionsWith(s)).ToArray();
+            Intersections[] allIntersections = world.Shapes.Select(s => s.GetIntersectionsWith(this)).ToArray();
             return new Intersections(allIntersections).SortedIntersections;
         }
 

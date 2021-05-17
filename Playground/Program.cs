@@ -32,9 +32,10 @@ namespace Playground
             DoChapter5();
             DoChapter6();
             DoChapter7();
+            DoChapter8();
             */
 
-            DoChapter8();
+            DoChapter9();
         }
 
         /// <summary>
@@ -177,7 +178,7 @@ namespace Playground
 
                     Tuple4D position = Tuple4D.CreatePoint(worldX, worldY, WallZ);
                     Ray ray = new Ray(rayOrigin, (position - rayOrigin).Normalize());
-                    Intersections intersections = ray.GetIntersectionsWith(sphere);
+                    Intersections intersections = sphere.GetIntersectionsWith(ray);
 
                     if (intersections.HasHit)
                     {
@@ -211,7 +212,10 @@ namespace Playground
                 specular: 0.9,
                 shininess: 50);
 
-            Sphere sphere = new Sphere(material);
+            Sphere sphere = new Sphere()
+            {
+                Material = material,
+            };
 
             Tuple4D lightPosition = Tuple4D.CreatePoint(-10, 10, -10);
             ColorTuple lightColor = ColorTuple.White;
@@ -235,13 +239,13 @@ namespace Playground
 
                     Tuple4D position = Tuple4D.CreatePoint(worldX, worldY, WallZ);
                     Ray ray = new Ray(rayOrigin, (position - rayOrigin).Normalize());
-                    Intersections intersections = ray.GetIntersectionsWith(sphere);
+                    Intersections intersections = sphere.GetIntersectionsWith(ray);
 
                     if (intersections.HasHit)
                     {
                         Intersection hit = intersections.GetHit();
                         Tuple4D point = ray.GetPointOnRayAtDistance(hit.T);
-                        Tuple4D normal = hit.Object.As<Sphere>().GetNormalAtPoint(point);
+                        Tuple4D normal = hit.Object.GetNormalAtPoint(point);
                         Tuple4D eye = -ray.Direction;
                         ColorTuple color = Lighting.Calculate(hit.Object.Material, light, point, eye, normal);
 
@@ -262,12 +266,19 @@ namespace Playground
             Light light = new Light(Tuple4D.CreatePoint(-10, 10, -10), ColorTuple.White);
             World world = new World(light);
 
-            Sphere floor = new Sphere();
-            floor.Transformation = Matrix.GetScalingMatrix(10, 0.1, 10).Translate(0, -1, 0);
-            floor.Material = new Material(ColorTuple.Create(1, 0.9, 0.9), specular: 0);
+            Sphere floor = new Sphere()
+            {
+                Transformation = Matrix.GetScalingMatrix(10, 0.1, 10).Translate(0, -1, 0),
+                Material = new Material(ColorTuple.Create(1, 0.9, 0.9), specular: 0),
+            };
+
             world.AddShape(floor);
 
-            Sphere leftWall = new Sphere(floor.Material);
+            Sphere leftWall = new Sphere()
+            {
+                Material = floor.Material,
+            };
+
             leftWall.Transformation = Matrix.GetScalingMatrix(10, 0.01, 10)
                 .RotateX(Math.PI / 2)
                 .RotateY(-Math.PI / 4)
@@ -275,7 +286,11 @@ namespace Playground
 
             world.AddShape(leftWall);
 
-            Sphere rightWall = new Sphere(floor.Material);
+            Sphere rightWall = new Sphere()
+            {
+                Material = floor.Material,
+            };
+
             rightWall.Transformation = Matrix.GetScalingMatrix(10, 0.01, 10)
                 .RotateX(Math.PI / 2)
                 .RotateY(Math.PI / 4)
@@ -283,19 +298,28 @@ namespace Playground
 
             world.AddShape(rightWall);
 
-            Sphere middle = new Sphere();
-            middle.Transformation = Matrix.GetTranslationMatrix(-0.5, 1, 0.5);
-            middle.Material = new Material(ColorTuple.Create(0, 0.4, 1), diffuse: 0.9, specular: 1, shininess: 10);
+            Sphere middle = new Sphere
+            {
+                Transformation = Matrix.GetTranslationMatrix(-0.5, 1, 0.5),
+                Material = new Material(ColorTuple.Create(0, 0.4, 1), diffuse: 0.9, specular: 1, shininess: 10),
+            };
+
             world.AddShape(middle);
 
-            Sphere right = new Sphere();
-            right.Transformation = Matrix.GetScalingMatrix(0.5, 0.5, 0.5).Translate(1.5, 0.5, -0.5);
-            right.Material = new Material(ColorTuple.Create(0, 1, 0.4), diffuse: 0.9, specular: 0, shininess: 200);
+            Sphere right = new Sphere
+            {
+                Transformation = Matrix.GetScalingMatrix(0.5, 0.5, 0.5).Translate(1.5, 0.5, -0.5),
+                Material = new Material(ColorTuple.Create(0, 1, 0.4), diffuse: 0.9, specular: 0, shininess: 200),
+            };
+
             world.AddShape(right);
 
-            Sphere left = new Sphere();
-            left.Transformation = Matrix.GetScalingMatrix(0.33, 0.33, 0.33).Translate(-1.5, 0.33, -0.75);
-            left.Material = new Material(ColorTuple.Create(1, 0, 0.4), diffuse: 0.9, specular: 0.5, shininess: 500);
+            Sphere left = new Sphere
+            {
+                Transformation = Matrix.GetScalingMatrix(0.33, 0.33, 0.33).Translate(-1.5, 0.33, -0.75),
+                Material = new Material(ColorTuple.Create(1, 0, 0.4), diffuse: 0.9, specular: 0.5, shininess: 500),
+            };
+
             world.AddShape(left);
 
             Camera camera = new Camera(2000, 2000, Math.PI / 3);
@@ -310,60 +334,114 @@ namespace Playground
         }
 
         /// <summary>
-        /// Does the "Putting It Together" section for chapter 7.
+        /// Does the "Putting It Together" section for chapter 8.
         /// </summary>
         private static void DoChapter8()
         {
             Light light = new Light(Tuple4D.CreatePoint(-10, 10, -10), ColorTuple.White);
             World world = new World(light);
 
-            Sphere floor = new Sphere();
-            floor.Transformation = Matrix.GetScalingMatrix(10, 0.1, 10).Translate(0, -0.1, 0);
-            floor.Material = new Material(ColorTuple.Create(1, 0.8, 0.8), specular: 50);
+            Sphere floor = new Sphere()
+            {
+                Transformation = Matrix.GetScalingMatrix(10, 0.1, 10).Translate(0, -0.1, 0),
+                Material = new Material(ColorTuple.Create(1, 0.8, 0.8), specular: 50),
+            };
+
             world.AddShape(floor);
 
-            Sphere leftWall = new Sphere();
-            leftWall.Material = new Material(ColorTuple.Create(0.8, 1, 0.8), specular: 50);
-            leftWall.Transformation = Matrix.GetScalingMatrix(10, 0.01, 10)
-                .RotateX(Math.PI / 2)
-                .RotateY(-Math.PI / 4)
-                .Translate(0, 0, 5);
+            Sphere leftWall = new Sphere()
+            {
+                Material = new Material(ColorTuple.Create(0.8, 1, 0.8), specular: 50),
+                Transformation = Matrix.GetScalingMatrix(10, 0.01, 10)
+                    .RotateX(Math.PI / 2)
+                    .RotateY(-Math.PI / 4)
+                    .Translate(0, 0, 5),
+            };
 
             world.AddShape(leftWall);
 
-            Sphere rightWall = new Sphere();
-            rightWall.Material = new Material(ColorTuple.Create(0.8, 0.8, 1), specular: 50);
-            rightWall.Transformation = Matrix.GetScalingMatrix(10, 0.01, 10)
-                .RotateX(Math.PI / 2)
-                .RotateY(Math.PI / 4)
-                .Translate(0, 0, 5);
+            Sphere rightWall = new Sphere
+            {
+                Material = new Material(ColorTuple.Create(0.8, 0.8, 1), specular: 50),
+                Transformation = Matrix.GetScalingMatrix(10, 0.01, 10)
+                    .RotateX(Math.PI / 2)
+                    .RotateY(Math.PI / 4)
+                    .Translate(0, 0, 5),
+            };
 
             world.AddShape(rightWall);
 
-            Sphere s1 = new Sphere();
-            s1.Transformation = Matrix.GetTranslationMatrix(-0.5, 1, 0.5);
-            s1.Material = new Material(ColorTuple.Create(0, 0.4, 1), diffuse: 0.9, specular: 1, shininess: 10);
+            Sphere s1 = new Sphere
+            {
+                Transformation = Matrix.GetTranslationMatrix(-0.5, 1, 0.5),
+                Material = new Material(ColorTuple.Create(0, 0.4, 1), diffuse: 0.9, specular: 1, shininess: 10),
+            };
+
             world.AddShape(s1);
 
-            Sphere s2 = new Sphere();
-            s2.Transformation = Matrix.GetScalingMatrix(0.5, 0.5, 0.5).Translate(-1, 1, -1);
-            s2.Material = new Material(ColorTuple.Create(0, 1, 0.4), diffuse: 0.9, specular: 0, shininess: 200);
+            Sphere s2 = new Sphere
+            {
+                Transformation = Matrix.GetScalingMatrix(0.5, 0.5, 0.5).Translate(-1, 1, -1),
+                Material = new Material(ColorTuple.Create(0, 1, 0.4), diffuse: 0.9, specular: 0, shininess: 200),
+            };
+
             world.AddShape(s2);
 
-            Sphere s3 = new Sphere();
-            s3.Transformation = Matrix.GetScalingMatrix(0.33, 0.33, 0.33).Translate(-1.5, 1.33, -1.5);
-            s3.Material = new Material(ColorTuple.Create(1, 0, 0.4), diffuse: 0.9, specular: 0.5, shininess: 500);
+            Sphere s3 = new Sphere
+            {
+                Transformation = Matrix.GetScalingMatrix(0.33, 0.33, 0.33).Translate(-1.5, 1.33, -1.5),
+                Material = new Material(ColorTuple.Create(1, 0, 0.4), diffuse: 0.9, specular: 0.5, shininess: 500),
+            };
+
             world.AddShape(s3);
 
             Camera camera = new Camera(1000, 1000, Math.PI / 3);
             Tuple4D from = Tuple4D.CreatePoint(0, 1.5, -5);
-            Tuple4D to = s1.Transformation * s1.Origin;
+            Tuple4D to = s1.Transformation * Tuple4D.CreatePoint(0, 0, 0);
             Tuple4D up = Tuple4D.CreateVector(0, 1, 0);
             camera.Transform = Matrix.GetViewTransformationMatrix(from, to, up);
 
             Canvas canvas = camera.Render(world);
             File.WriteAllText("spheres-with-shadows.ppm", canvas.ToPlainPortablePixmapString());
             System.Diagnostics.Process.Start("spheres-with-shadows.ppm");
+        }
+
+        /// <summary>
+        /// Does the "Putting It Together" section for chapter 9.
+        /// </summary>
+        private static void DoChapter9()
+        {
+            Light light = new Light(Tuple4D.CreatePoint(-10, 10, -10), ColorTuple.White);
+            World world = new World(light);
+
+            Plane plane = new Plane();
+            world.AddShape(plane);
+
+            const int NumSpheres = 20;
+            for (int i = 0; i < NumSpheres; i++)
+            {
+                Sphere sphere = new Sphere()
+                {
+                    Material = new Material(ColorTuple.Create(0, (double)(NumSpheres - i) / NumSpheres, (double)i / NumSpheres), diffuse: 0.9, specular: 1, shininess: 10),
+                    Transformation = Matrix.GetScalingMatrix(2.5 / NumSpheres, 2.5 / NumSpheres, 2.5 / NumSpheres)
+                    .Translate(
+                        Math.Cos(2 * Math.PI * i / NumSpheres),
+                        0.25,
+                        Math.Sin(2 * Math.PI * i / NumSpheres)),
+                };
+
+                world.AddShape(sphere);
+            }
+
+            Camera camera = new Camera(1000, 1000, Math.PI / 4);
+            Tuple4D from = Tuple4D.CreatePoint(-3, 2, -2);
+            Tuple4D to = Tuple4D.CreatePoint(0, 0, 0);
+            Tuple4D up = Tuple4D.CreateVector(0, 1, 0);
+            camera.Transform = Matrix.GetViewTransformationMatrix(from, to, up);
+
+            Canvas canvas = camera.Render(world);
+            File.WriteAllText("plane.ppm", canvas.ToPlainPortablePixmapString());
+            System.Diagnostics.Process.Start("plane.ppm");
         }
 
         /// <summary>

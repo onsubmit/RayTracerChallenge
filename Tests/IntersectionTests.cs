@@ -25,7 +25,7 @@
             Ray ray = new Ray(origin, direction);
 
             Sphere sphere = new Sphere();
-            Intersections intersections = ray.GetIntersectionsWith(sphere);
+            Intersections intersections = sphere.GetIntersectionsWith(ray);
             Assert.AreEqual(2, intersections.Count);
             Assert.AreEqual(4, intersections[0].T);
             Assert.AreEqual(6, intersections[1].T);
@@ -39,7 +39,7 @@
             Ray ray = new Ray(origin, direction);
 
             Sphere sphere = new Sphere();
-            Intersections intersectionPoints = ray.GetIntersectionsWith(sphere);
+            Intersections intersectionPoints = sphere.GetIntersectionsWith(ray);
             Assert.AreEqual(2, intersectionPoints.Count);
             Assert.AreEqual(5, intersectionPoints[0].T);
             Assert.AreEqual(5, intersectionPoints[1].T);
@@ -53,7 +53,7 @@
             Ray ray = new Ray(origin, direction);
 
             Sphere sphere = new Sphere();
-            Intersections intersections = ray.GetIntersectionsWith(sphere);
+            Intersections intersections = sphere.GetIntersectionsWith(ray);
             Assert.AreEqual(0, intersections.Count);
         }
 
@@ -65,7 +65,7 @@
             Ray ray = new Ray(origin, direction);
 
             Sphere sphere = new Sphere();
-            Intersections intersections = ray.GetIntersectionsWith(sphere);
+            Intersections intersections = sphere.GetIntersectionsWith(ray);
             Assert.AreEqual(2, intersections.Count);
             Assert.AreEqual(-1, intersections[0].T);
             Assert.AreEqual(1, intersections[1].T);
@@ -79,7 +79,7 @@
             Ray ray = new Ray(origin, direction);
 
             Sphere sphere = new Sphere();
-            Intersections intersections = ray.GetIntersectionsWith(sphere);
+            Intersections intersections = sphere.GetIntersectionsWith(ray);
             Assert.AreEqual(2, intersections.Count);
             Assert.AreEqual(-6, intersections[0].T);
             Assert.AreEqual(-4, intersections[1].T);
@@ -106,7 +106,7 @@
             Ray ray = new Ray(origin, direction);
 
             Sphere sphere = new Sphere();
-            Intersections intersections = ray.GetIntersectionsWith(sphere);
+            Intersections intersections = sphere.GetIntersectionsWith(ray);
             Assert.AreEqual(2, intersections.Count);
             Assert.AreEqual(sphere, intersections[0].Object);
             Assert.AreEqual(sphere, intersections[1].Object);
@@ -155,33 +155,37 @@
         }
 
         [TestMethod]
-        public void IntersectScaledSphereWithRay()
+        public void IntersectScaledShapeWithRay()
         {
             Tuple4D origin = Tuple4D.CreatePoint(0, 0, -5);
             Tuple4D direction = Tuple4D.CreateVector(0, 0, 1);
             Ray ray = new Ray(origin, direction);
 
-            Sphere sphere = new Sphere();
-            sphere.Transformation = Matrix.GetScalingMatrix(2, 2, 2);
-            Intersections intersections = ray.GetIntersectionsWith(sphere);
+            TestShape shape = new TestShape()
+            {
+                Transformation = Matrix.GetScalingMatrix(2, 2, 2)
+            };
 
-            Assert.AreEqual(2, intersections.Count);
-            Assert.AreEqual(3, intersections[0].T);
-            Assert.AreEqual(7, intersections[1].T);
+            _ = shape.GetIntersectionsWith(ray);
+            Assert.AreEqual(Tuple4D.CreatePoint(0, 0, -2.5), shape.ObjectSpaceRay.Origin);
+            Assert.AreEqual(Tuple4D.CreateVector(0, 0, 0.5), shape.ObjectSpaceRay.Direction);
         }
 
         [TestMethod]
-        public void IntersectTranslatedSphereWithRay()
+        public void IntersectTranslatedShapeWithRay()
         {
             Tuple4D origin = Tuple4D.CreatePoint(0, 0, -5);
             Tuple4D direction = Tuple4D.CreateVector(0, 0, 1);
             Ray ray = new Ray(origin, direction);
 
-            Sphere sphere = new Sphere();
-            sphere.Transformation = Matrix.GetTranslationMatrix(5, 0, 0);
-            Intersections intersections = ray.GetIntersectionsWith(sphere);
+            TestShape shape = new TestShape()
+            {
+                Transformation = Matrix.GetTranslationMatrix(5, 0, 0)
+            };
 
-            Assert.AreEqual(0, intersections.Count);
+            _ = shape.GetIntersectionsWith(ray);
+            Assert.AreEqual(Tuple4D.CreatePoint(-5, 0, -5), shape.ObjectSpaceRay.Origin);
+            Assert.AreEqual(Tuple4D.CreateVector(0, 0, 1), shape.ObjectSpaceRay.Direction);
         }
 
         [TestMethod]
@@ -190,7 +194,7 @@
             Ray ray = new Ray(Tuple4D.CreatePoint(0, 0, -5), Tuple4D.CreateVector(0, 0, 1));
             Sphere sphere = new Sphere();
             sphere.Transformation = Matrix.GetTranslationMatrix(0, 0, 1);
-            Intersections intersections = ray.GetIntersectionsWith(sphere);
+            Intersections intersections = sphere.GetIntersectionsWith(ray);
             Intersection hit = intersections.GetHit();
             Computation computation = new Computation(hit, ray);
             Assert.IsTrue(computation.OverPoint.Z < -DoubleExtensions.Epsilon / 2);

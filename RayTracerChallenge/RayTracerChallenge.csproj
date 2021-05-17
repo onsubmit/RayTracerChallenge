@@ -58,9 +58,11 @@
     <Compile Include="Lighting.cs" />
     <Compile Include="Material.cs" />
     <Compile Include="Matrix.cs" />
+    <Compile Include="Plane.cs" />
     <Compile Include="Ray.cs" />
     <Compile Include="Shape.cs" />
     <Compile Include="Sphere.cs" />
+    <Compile Include="TestShape.cs" />
     <Compile Include="Tuple4D.cs" />
     <Compile Include="BaseTuple.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

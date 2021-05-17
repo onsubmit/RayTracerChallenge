@@ -26,7 +26,7 @@
         {
             Ray ray = new Ray(Tuple4D.CreatePoint(0, 0, -5), Tuple4D.CreateVector(0, 0, 1));
             Sphere sphere = new Sphere();
-            Intersections intersections = ray.GetIntersectionsWith(sphere);
+            Intersections intersections = sphere.GetIntersectionsWith(ray);
             Intersection hit = intersections.GetHit();
             Assert.AreEqual(new Intersection(4, sphere), hit);
             Computation computation = new Computation(hit, ray);
@@ -38,7 +38,7 @@
         {
             Ray ray = new Ray(Tuple4D.CreatePoint(0, 0, 0), Tuple4D.CreateVector(0, 0, 1));
             Sphere sphere = new Sphere();
-            Intersections intersections = ray.GetIntersectionsWith(sphere);
+            Intersections intersections = sphere.GetIntersectionsWith(ray);
             Intersection hit = intersections.GetHit();
             Assert.AreEqual(new Intersection(1, sphere), hit);
             Computation computation = new Computation(hit, ray);

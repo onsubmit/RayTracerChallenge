@@ -6,8 +6,6 @@
 namespace OnSubmit.RayTracerChallenge
 {
     using System;
-    using System.Collections.Generic;
-    using OnSubmit.RayTracerChallenge.Extensions;
 
     /// <summary>
     /// Represents a sphere.
@@ -15,93 +13,32 @@ namespace OnSubmit.RayTracerChallenge
     public class Sphere : Shape
     {
         /// <summary>
-        /// The sphere's transformation.
+        /// Gets the intersection distances along the ray with the sphere.
         /// </summary>
-        private Matrix transformation;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Sphere"/> class.
-        /// </summary>
-        /// <param name="transformation">The sphere's transformation matrix.</param>
-        public Sphere(Matrix transformation)
-            : this(Tuple4D.CreatePoint(0, 0, 0), 1, transformation, null)
+        /// <param name="ray">The ray.</param>
+        /// <returns>The intersections along the ray.</returns>
+        public override Intersections GetIntersectionsWithImpl(Ray ray)
         {
-        }
+            Tuple4D sphereToRay = ray.Origin - Tuple4D.CreatePoint(0, 0, 0);
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Sphere"/> class.
-        /// </summary>
-        /// <param name="material">The sphere's material.</param>
-        public Sphere(Material material)
-            : this(Tuple4D.CreatePoint(0, 0, 0), 1, null, material)
-        {
-        }
+            double a = ray.Direction.GetDotProductWith(ray.Direction);
+            double b = 2 * ray.Direction.GetDotProductWith(sphereToRay);
+            double c = sphereToRay.GetDotProductWith(sphereToRay) - 1;
+            double discriminant = (b * b) - (4 * a * c);
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Sphere"/> class.
-        /// Creates the unit sphere.
-        /// </summary>
-        /// <param name="transformation">The sphere's transformation matrix.</param>
-        /// <param name="material">The sphere's material.</param>
-        public Sphere(Matrix transformation = null, Material material = null)
-            : this(Tuple4D.CreatePoint(0, 0, 0), 1, transformation, material)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Sphere"/> class.
-        /// </summary>
-        /// <param name="origin">The sphere's origin point.</param>
-        /// <param name="radius">The sphere's radius.</param>
-        /// <param name="transformation">The sphere's transformation matrix.</param>
-        /// <param name="material">The sphere's material.</param>
-        public Sphere(Tuple4D origin, double radius, Matrix transformation = null, Material material = null)
-            : base(material)
-        {
-            if (!origin.IsPoint)
+            if (discriminant >= 0)
             {
-                throw new ArgumentException(nameof(origin), $"{nameof(origin)} must be a point.");
-            }
+                double sqrtDiscriminant = Math.Sqrt(discriminant);
+                double twoA = 2 * a;
 
-            this.Origin = origin;
-            this.Radius = radius;
-            this.Transformation = transformation;
-        }
-
-        /// <summary>
-        /// Gets the origin point.
-        /// </summary>
-        public Tuple4D Origin { get; private set; }
-
-        /// <summary>
-        /// Gets the sphere radius.
-        /// </summary>
-        public double Radius { get; private set; }
-
-        /// <summary>
-        /// Gets a value indicating whether the sphere has a transformation defined.
-        /// </summary>
-        public bool HasTransformation => this.transformation != null;
-
-        /// <summary>
-        /// Gets or sets the sphere's transformation.
-        /// </summary>
-        public Matrix Transformation
-        {
-            get
-            {
-                if (this.transformation == null)
+                return new Intersections(new Intersection[2]
                 {
-                    this.transformation = Matrix.GetIdentityMatrix(4);
-                }
-
-                return this.transformation;
+                    new Intersection((-b - sqrtDiscriminant) / twoA, this),
+                    new Intersection((-b + sqrtDiscriminant) / twoA, this),
+                });
             }
 
-            set
-            {
-                this.transformation = value;
-            }
+            return new Intersections();
         }
 
         /// <summary>
@@ -109,62 +46,9 @@ namespace OnSubmit.RayTracerChallenge
         /// </summary>
         /// <param name="point">The point.</param>
         /// <returns>The surface normal vector.</returns>
-        public Tuple4D GetNormalAtPoint(Tuple4D point)
+        public override Tuple4D GetNormalAtPointImpl(Tuple4D point)
         {
-            if (!point.IsPoint)
-            {
-                throw new ArgumentException(nameof(point), $"{nameof(point)} must be a point.");
-            }
-
-            Tuple4D objectPoint = this.Transformation.GetInverse() * point;
-            Tuple4D objectNormal = objectPoint - this.Origin;
-            Tuple4D worldNormal = this.Transformation.GetInverse().Transpose() * objectNormal;
-            worldNormal.ToVector();
-
-            return worldNormal.Normalize();
-        }
-
-        /// <summary>
-        /// Compares a <see cref="Sphere"/> with another object.
-        /// </summary>
-        /// <param name="obj">The object to compare against.</param>
-        /// <returns><c>true</c> if the objects are piecewise equivalent, <c>false</c> otherwise.</returns>
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-
-            if (obj is Sphere s)
-            {
-                return base.Equals(s)
-                    && this.Origin.Equals(s.Origin)
-                    && this.Radius.Compare(s.Radius)
-                    && this.Transformation.Equals(s.Transformation);
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Generates a hash code for the current <see cref="Sphere"/>.
-        /// </summary>
-        /// <returns>The hash code.</returns>
-        public override int GetHashCode()
-        {
-            int hashCode = -715739984;
-            hashCode = (hashCode * -1521134295) + base.GetHashCode();
-            hashCode = (hashCode * -1521134295) + EqualityComparer<Material>.Default.GetHashCode(this.Material);
-            hashCode = (hashCode * -1521134295) + EqualityComparer<Matrix>.Default.GetHashCode(this.transformation);
-            hashCode = (hashCode * -1521134295) + EqualityComparer<Tuple4D>.Default.GetHashCode(this.Origin);
-            hashCode = (hashCode * -1521134295) + this.Radius.GetHashCode();
-            return hashCode;
+            return point - Tuple4D.CreatePoint(0, 0, 0);
         }
     }
 }
