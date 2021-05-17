@@ -15,7 +15,7 @@ namespace OnSubmit.RayTracerChallenge.Extensions
         /// <summary>
         /// Maximum amount the two doubles can vary by to still be equivalent.
         /// </summary>
-        private const double Epsilon = 10e-4;
+        public const double Epsilon = 10e-4;
 
         /// <summary>
         /// Compares two doubles within a margin of error to account for floating point arithmetic.

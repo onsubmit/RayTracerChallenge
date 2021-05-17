@@ -69,5 +69,57 @@
             ColorTuple result = Lighting.Calculate(this.Material, light, this.Position, eyeVector, normalVector);
             Assert.AreEqual(ColorTuple.Create(0.1, 0.1, 0.1), result);
         }
+
+        [TestMethod]
+        public void NoShadowWhenNothingIsCollinearWithPointAndLight()
+        {
+            World world = World.CreateDefaultWorld();
+            Tuple4D point = Tuple4D.CreatePoint(0, 10, 0);
+            Assert.IsFalse(world.IsShadowed(point));
+        }
+
+        [TestMethod]
+        public void ShadowWhenObjectExistsBetweenPointAndLight()
+        {
+            World world = World.CreateDefaultWorld();
+            Tuple4D point = Tuple4D.CreatePoint(10, -10, 10);
+            Assert.IsTrue(world.IsShadowed(point));
+        }
+
+        [TestMethod]
+        public void NoShadowWhenObjectBehindLight()
+        {
+            World world = World.CreateDefaultWorld();
+            Tuple4D point = Tuple4D.CreatePoint(-20, 20, -20);
+            Assert.IsFalse(world.IsShadowed(point));
+        }
+
+        [TestMethod]
+        public void NoShadowWhenObjectBehindPoint()
+        {
+            World world = World.CreateDefaultWorld();
+            Tuple4D point = Tuple4D.CreatePoint(-2, 2, -2);
+            Assert.IsFalse(world.IsShadowed(point));
+        }
+
+        [TestMethod]
+        public void IntersectionInShadow()
+        {
+            World world = new World();
+            world.LightSource = new Light(Tuple4D.CreatePoint(0, 0, -10), ColorTuple.White);
+
+            Sphere s1 = new Sphere();
+            world.AddShape(s1);
+
+            Sphere s2 = new Sphere();
+            s2.Transformation = Matrix.GetTranslationMatrix(0, 0, 20);
+            world.AddShape(s2);
+
+            Ray ray = new Ray(Tuple4D.CreatePoint(0, 0, 5), Tuple4D.CreateVector(0, 0, 1));
+            Intersections intersections = ray.GetIntersectionsWith(s2);
+            Computation computation = new Computation(intersections.GetHit(), ray);
+            ColorTuple color = world.ShadeHit(computation);
+            Assert.AreEqual(ColorTuple.Create(0.1, 0.1, 0.1), color);
+        }
     }
 }

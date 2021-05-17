@@ -17,15 +17,17 @@ namespace OnSubmit.RayTracerChallenge
         /// </summary>
         /// <param name="computation">The precomputation.</param>
         /// <param name="light">The light source.</param>
+        /// <param name="inShadow"><c>true</c> if the point is in the shadow.</param>
         /// <returns>The lighting.</returns>
-        public static ColorTuple Calculate(Computation computation, Light light)
+        public static ColorTuple Calculate(Computation computation, Light light, bool inShadow = false)
         {
             return Calculate(
                 computation.Object.Material,
                 light,
                 computation.Point,
                 computation.EyeVector,
-                computation.NormalVector);
+                computation.NormalVector,
+                inShadow);
         }
 
         /// <summary>
@@ -36,13 +38,15 @@ namespace OnSubmit.RayTracerChallenge
         /// <param name="point">The point being illuminated.</param>
         /// <param name="eyeVector">The eye vector from the Phong reflection model.</param>
         /// <param name="normalVector">The normal vector from the Phong reflection model.</param>
+        /// <param name="inShadow"><c>true</c> if the point is in the shadow.</param>
         /// <returns>The lighting.</returns>
         public static ColorTuple Calculate(
             Material material,
             Light light,
             Tuple4D point,
             Tuple4D eyeVector,
-            Tuple4D normalVector)
+            Tuple4D normalVector,
+            bool inShadow = false)
         {
             if (material == null)
             {
@@ -92,6 +96,11 @@ namespace OnSubmit.RayTracerChallenge
 
             // Compute the ambient contribution
             ColorTuple ambient = effectiveColor * material.Ambient;
+
+            if (inShadow)
+            {
+                return ambient;
+            }
 
             // Get the cosine of the angle between the light vector and the normal vector.
             // A negative number means then light is on the other side of the surface.

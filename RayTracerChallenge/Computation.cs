@@ -3,6 +3,8 @@
 //     Copyright (c) Andy Young. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
+using OnSubmit.RayTracerChallenge.Extensions;
+
 namespace OnSubmit.RayTracerChallenge
 {
     /// <summary>
@@ -26,6 +28,7 @@ namespace OnSubmit.RayTracerChallenge
             this.Point = ray.GetPointOnRayAtDistance(intersection.T);
             this.EyeVector = -ray.Direction;
             this.NormalVector = intersection.Object.As<Sphere>().GetNormalAtPoint(this.Point);
+            this.OverPoint = this.Point + (this.NormalVector * DoubleExtensions.Epsilon);
 
             if (this.NormalVector.GetDotProductWith(this.EyeVector) < 0)
             {
@@ -38,6 +41,11 @@ namespace OnSubmit.RayTracerChallenge
         /// Gets the point.
         /// </summary>
         public Tuple4D Point { get; private set; }
+
+        /// <summary>
+        /// Gets a slightly adjusted copy of <see cref="Point"/>.
+        /// </summary>
+        public Tuple4D OverPoint { get; private set; }
 
         /// <summary>
         /// Gets the eye vect4or.

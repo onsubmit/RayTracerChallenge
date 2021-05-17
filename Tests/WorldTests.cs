@@ -72,7 +72,7 @@
 
             Computation computation = new Computation(hit, ray);
             ColorTuple color = world.ShadeHit(computation);
-            Assert.AreEqual(ColorTuple.Create(0.90498, 0.90498, 0.90498), color);
+            Assert.AreEqual(ColorTuple.Create(0.1, 0.1, 0.1), color);
         }
 
         [TestMethod]

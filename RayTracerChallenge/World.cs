@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 namespace OnSubmit.RayTracerChallenge
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -29,13 +30,9 @@ namespace OnSubmit.RayTracerChallenge
         {
             this.LightSource = lightSource;
 
-            if (shapes == null || shapes.Length == 0)
+            if (shapes?.Any() == true)
             {
-                this.Shapes = new List<Shape>();
-            }
-            else
-            {
-                this.Shapes = new List<Shape>(shapes);
+                this.Shapes.AddRange(shapes);
             }
         }
 
@@ -52,7 +49,7 @@ namespace OnSubmit.RayTracerChallenge
         /// <summary>
         /// Gets the world's shapes.
         /// </summary>
-        public List<Shape> Shapes { get; private set; }
+        public List<Shape> Shapes { get; private set; } = new List<Shape>();
 
         /// <summary>
         /// Gets or sets the world's light source.
@@ -103,7 +100,7 @@ namespace OnSubmit.RayTracerChallenge
         /// </summary>
         /// <param name="computation">The precomputation.</param>
         /// <returns>The color at the intersection encapsulated by the precomputation.</returns>
-        public ColorTuple ShadeHit(Computation computation) => Lighting.Calculate(computation, this.LightSource);
+        public ColorTuple ShadeHit(Computation computation) => Lighting.Calculate(computation, this.LightSource, this.IsShadowed(computation.OverPoint));
 
         /// <summary>
         /// Intersects the world with the given ray and returns the color at the resulting intersection.
@@ -122,6 +119,40 @@ namespace OnSubmit.RayTracerChallenge
             Intersection hit = intersections.GetHit();
             Computation computation = new Computation(hit, ray);
             return this.ShadeHit(computation);
+        }
+
+        /// <summary>
+        /// Determines if the point is inside a shadow.
+        /// </summary>
+        /// <param name="point">The point.</param>
+        /// <returns><c>true</c> if the point is inside a shadow, <c>false</c> otherwise.</returns>
+        public bool IsShadowed(Tuple4D point)
+        {
+            if (point == null)
+            {
+                throw new ArgumentNullException(nameof(point));
+            }
+
+            if (!point.IsPoint)
+            {
+                throw new ArgumentException(nameof(point), $"{nameof(point)} must be a point.");
+            }
+
+            Tuple4D pointToLight = this.LightSource.Position - point;
+            double distanceFromLight = pointToLight.Magnitude;
+            Ray ray = new Ray(point, pointToLight.Normalize());
+            Intersections intersections = ray.GetIntersectionsWith(this);
+
+            if (intersections.HasHit)
+            {
+                Intersection hit = intersections.GetHit();
+                if (hit.T < distanceFromLight)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

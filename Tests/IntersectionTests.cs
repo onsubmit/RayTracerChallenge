@@ -2,6 +2,7 @@
 {
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using OnSubmit.RayTracerChallenge;
+    using OnSubmit.RayTracerChallenge.Extensions;
 
     [TestClass]
     public class IntersectionTests
@@ -181,6 +182,19 @@
             Intersections intersections = ray.GetIntersectionsWith(sphere);
 
             Assert.AreEqual(0, intersections.Count);
+        }
+
+        [TestMethod]
+        public void HitShouldOffsetPoint()
+        {
+            Ray ray = new Ray(Tuple4D.CreatePoint(0, 0, -5), Tuple4D.CreateVector(0, 0, 1));
+            Sphere sphere = new Sphere();
+            sphere.Transformation = Matrix.GetTranslationMatrix(0, 0, 1);
+            Intersections intersections = ray.GetIntersectionsWith(sphere);
+            Intersection hit = intersections.GetHit();
+            Computation computation = new Computation(hit, ray);
+            Assert.IsTrue(computation.OverPoint.Z < -DoubleExtensions.Epsilon / 2);
+            Assert.IsTrue(computation.Point.Z > computation.OverPoint.Z);
         }
     }
 }
