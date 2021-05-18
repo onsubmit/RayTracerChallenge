@@ -16,8 +16,8 @@
         public void CreateStripePattern()
         {
             StripePattern pattern = new StripePattern(white, black);
-            Assert.AreEqual(white, pattern[0]);
-            Assert.AreEqual(black, pattern[1]);
+            Assert.AreEqual(new SolidPattern(white), pattern[0]);
+            Assert.AreEqual(new SolidPattern(black), pattern[1]);
         }
 
         [TestMethod]

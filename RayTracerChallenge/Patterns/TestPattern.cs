@@ -19,13 +19,13 @@ namespace OnSubmit.RayTracerChallenge.Patterns
         }
 
         /// <summary>
-        /// Gets the pattern's color for the provided point.
+        /// Gets the pattern's nested pattern for the provided point.
         /// </summary>
         /// <param name="point">The point.</param>
-        /// <returns>The pattern's color.</returns>
-        protected override ColorTuple GetColorAtPointImpl(Tuple4D point)
+        /// <returns>The pattern's nested pattern.</returns>
+        protected override Pattern GetPatternAtPoint(Tuple4D point)
         {
-            return ColorTuple.Create(point.X, point.Y, point.Z);
+            return new SolidPattern(ColorTuple.Create(point.X, point.Y, point.Z));
         }
     }
 }

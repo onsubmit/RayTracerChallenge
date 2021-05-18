@@ -8,6 +8,7 @@ namespace Playground
     using System;
     using System.IO;
     using OnSubmit.RayTracerChallenge;
+    using OnSubmit.RayTracerChallenge.Patterns;
     using OnSubmit.RayTracerChallenge.Shapes;
 
     /// <summary>
@@ -34,9 +35,10 @@ namespace Playground
             DoChapter6();
             DoChapter7();
             DoChapter8();
+            DoChapter9();
             */
 
-            DoChapter9();
+            DoChapter10();
         }
 
         /// <summary>
@@ -443,6 +445,79 @@ namespace Playground
             Canvas canvas = camera.Render(world);
             File.WriteAllText("plane.ppm", canvas.ToPlainPortablePixmapString());
             System.Diagnostics.Process.Start("plane.ppm");
+        }
+
+        /// <summary>
+        /// Does the "Putting It Together" section for chapter 10.
+        /// </summary>
+        private static void DoChapter10()
+        {
+            Light light = new Light(Tuple4D.CreatePoint(-5, 3, -5), ColorTuple.White);
+            World world = new World(light);
+
+            Pattern floorPattern1 = new StripePattern()
+            {
+                Transformation = Matrix.GetScalingMatrix(0.25, 0.25, 0.25),
+            };
+
+            Pattern floorPattern2 = new StripePattern(ColorTuple.Red, ColorTuple.Blue)
+            {
+                Transformation = floorPattern1.Transformation.RotateY(Math.PI / 8),
+            };
+
+            Pattern floorPattern = new CheckersPattern(
+                new StripePattern(
+                    ColorTuple.Red * 0.2,
+                    ColorTuple.Create(1, 0.5, 0.5))
+                    {
+                        Transformation = Matrix.GetScalingMatrix(0.25, 0.25, 0.25).RotateY(Math.PI / 4),
+                    },
+                new StripePattern(
+                    ColorTuple.White * 0.2,
+                    ColorTuple.White * 0.5)
+                    {
+                        Transformation = Matrix.GetScalingMatrix(0.25, 0.25, 0.25).RotateY(-Math.PI / 4),
+                    });
+
+            Plane floor = new Plane()
+            {
+                Material = new Material() { Pattern = floorPattern },
+            };
+
+            world.AddShape(floor);
+
+            Pattern spherePattern = new GradientPattern(new SolidPattern(ColorTuple.Create(0, 0.5, 1)), new CheckersPattern());
+
+            Sphere sphere = new Sphere()
+            {
+                Transformation = Matrix.GetTranslationMatrix(0, 1.25, 0),
+                Material = new Material() { Pattern = spherePattern },
+            };
+
+            world.AddShape(sphere);
+
+            Pattern sphere2Pattern = new GradientPattern(new StripePattern(ColorTuple.Blue, ColorTuple.Green), new SolidPattern(ColorTuple.White))
+            {
+                Transformation = Matrix.GetScalingMatrix(1, 1, 1).RotateY(-0.5).RotateX(0.5),
+            };
+
+            Sphere sphere2 = new Sphere()
+            {
+                Transformation = Matrix.GetScalingMatrix(0.25, 0.25, 0.25).Translate(-1, 2.25, -1),
+                Material = new Material() { Pattern = sphere2Pattern },
+            };
+
+            world.AddShape(sphere2);
+
+            Camera camera = new Camera(1000, 1000, Math.PI / 4);
+            Tuple4D from = Tuple4D.CreatePoint(-4, 2, -6);
+            Tuple4D to = Tuple4D.CreatePoint(0, 1.5, 0);
+            Tuple4D up = Tuple4D.CreateVector(0, 1, 0);
+            camera.Transform = Matrix.GetViewTransformationMatrix(from, to, up);
+
+            Canvas canvas = camera.Render(world);
+            File.WriteAllText("patterns.ppm", canvas.ToPlainPortablePixmapString());
+            System.Diagnostics.Process.Start("patterns.ppm");
         }
 
         /// <summary>

@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="Checkers.cs" company="Andy Young">
+// <copyright file="CheckersPattern.cs" company="Andy Young">
 //     Copyright (c) Andy Young. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
@@ -12,6 +12,14 @@ namespace OnSubmit.RayTracerChallenge.Patterns
     /// </summary>
     public class CheckersPattern : Pattern
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CheckersPattern" /> class.
+        /// </summary>
+        public CheckersPattern()
+            : this(ColorTuple.White, ColorTuple.Black)
+        {
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="CheckersPattern" /> class.
         /// </summary>
@@ -32,11 +40,30 @@ namespace OnSubmit.RayTracerChallenge.Patterns
         }
 
         /// <summary>
-        /// Gets the pattern's color for the provided point.
+        /// Initializes a new instance of the <see cref="CheckersPattern" /> class.
+        /// </summary>
+        /// <param name="pattern1">The first nested pattern in the checkers pattern.</param>
+        /// <param name="pattern2">The second nested pattern in the checkers pattern.</param>
+        public CheckersPattern(Pattern pattern1, Pattern pattern2)
+            : base(pattern1, pattern2)
+        {
+            if (pattern1 == null)
+            {
+                throw new ArgumentNullException(nameof(pattern1));
+            }
+
+            if (pattern2 == null)
+            {
+                throw new ArgumentNullException(nameof(pattern2));
+            }
+        }
+
+        /// <summary>
+        /// Gets the pattern's nested pattern for the provided point.
         /// </summary>
         /// <param name="point">The point.</param>
-        /// <returns>The pattern's color.</returns>
-        protected override ColorTuple GetColorAtPointImpl(Tuple4D point)
+        /// <returns>The pattern's nested pattern.</returns>
+        protected override Pattern GetPatternAtPoint(Tuple4D point)
         {
             if ((Math.Floor(point.X) + Math.Floor(point.Y) + Math.Floor(point.Z)) % 2 == 0)
             {

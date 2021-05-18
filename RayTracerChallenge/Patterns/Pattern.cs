@@ -23,10 +23,26 @@ namespace OnSubmit.RayTracerChallenge.Patterns
         /// <summary>
         /// Initializes a new instance of the <see cref="Pattern" /> class.
         /// </summary>
+        public Pattern()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Pattern" /> class.
+        /// </summary>
         /// <param name="colors">The colors used in the pattern.</param>
         public Pattern(params ColorTuple[] colors)
         {
-            this.Colors = colors;
+            this.Patterns = colors.Select(c => new SolidPattern(c)).ToArray();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Pattern" /> class.
+        /// </summary>
+        /// <param name="patterns">The nested patterns.</param>
+        public Pattern(params Pattern[] patterns)
+        {
+            this.Patterns = patterns;
         }
 
         /// <summary>
@@ -61,30 +77,35 @@ namespace OnSubmit.RayTracerChallenge.Patterns
         public bool HasTransformation => this.transformation != null;
 
         /// <summary>
+        /// Gets a value indicating whether the pattern has any nested patterns.
+        /// </summary>
+        public bool HasNestedPattern => this.Patterns?.Any() ?? false;
+
+        /// <summary>
         /// Gets the colors used in the pattern.
         /// </summary>
-        protected ColorTuple[] Colors { get; private set; }
+        protected Pattern[] Patterns { get; private set; }
 
         /// <summary>
         /// Indexer for the pattern.
         /// </summary>
         /// <param name="i">The index.</param>
-        /// <returns>The color at the provided index.</returns>
-        public ColorTuple this[int i] => this.Colors?[i];
+        /// <returns>The pattern at the provided index.</returns>
+        public Pattern this[int i] => this.Patterns?[i];
 
         /// <summary>
         /// Gets the pattern's color for the provided point.
         /// </summary>
         /// <param name="point">The point.</param>
         /// <returns>The pattern's color.</returns>
-        public ColorTuple GetColorAtPoint(Tuple4D point)
+        public virtual ColorTuple GetColorAtPoint(Tuple4D point)
         {
             if (!point.IsPoint)
             {
                 throw new ArgumentException(nameof(point), $"{nameof(point)} must be a point.");
             }
 
-            return this.GetColorAtPointImpl(point);
+            return this.GetPatternAtPoint(point).GetColorAtPoint(point);
         }
 
         /// <summary>
@@ -102,6 +123,11 @@ namespace OnSubmit.RayTracerChallenge.Patterns
 
             Tuple4D objectPoint = shape.HasTransformation ? shape.Transformation.GetInverse() * worldPoint : worldPoint;
             Tuple4D patternPoint = this.HasTransformation ? this.Transformation.GetInverse() * objectPoint : objectPoint;
+
+            if (this.HasNestedPattern)
+            {
+                return this.GetPatternAtPoint(patternPoint).GetColorAtShape(shape, patternPoint);
+            }
 
             return this.GetColorAtPoint(patternPoint);
         }
@@ -130,7 +156,24 @@ namespace OnSubmit.RayTracerChallenge.Patterns
                     return false;
                 }
 
-                return this.Colors.All(c => p.Colors.Any(x => x.Equals(c)));
+                if (this.HasTransformation && p.HasTransformation)
+                {
+                    if (!this.Transformation.Equals(p.Transformation))
+                    {
+                        return false;
+                    }
+                }
+                else if (this.HasTransformation || p.HasTransformation)
+                {
+                    return false;
+                }
+
+                if (!this.HasNestedPattern && p is SolidPattern s)
+                {
+                    return s.Equals(this);
+                }
+
+                return this.Patterns.All(c => p.Patterns.Any(x => x.Equals(c)));
             }
 
             return false;
@@ -142,14 +185,14 @@ namespace OnSubmit.RayTracerChallenge.Patterns
         /// <returns>The hash code.</returns>
         public override int GetHashCode()
         {
-            return 479200377 + EqualityComparer<ColorTuple[]>.Default.GetHashCode(this.Colors);
+            return 479200377 + EqualityComparer<Pattern[]>.Default.GetHashCode(this.Patterns);
         }
 
         /// <summary>
-        /// Gets the pattern's color for the provided point.
+        /// Gets the pattern's nested pattern for the provided point.
         /// </summary>
         /// <param name="point">The point.</param>
-        /// <returns>The pattern's color.</returns>
-        protected abstract ColorTuple GetColorAtPointImpl(Tuple4D point);
+        /// <returns>The pattern's nested pattern.</returns>
+        protected abstract Pattern GetPatternAtPoint(Tuple4D point);
     }
 }
