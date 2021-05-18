@@ -6,6 +6,7 @@
 namespace OnSubmit.RayTracerChallenge
 {
     using System;
+    using OnSubmit.RayTracerChallenge.Shapes;
 
     /// <summary>
     /// Static class used to calculate lighting.
@@ -23,6 +24,7 @@ namespace OnSubmit.RayTracerChallenge
         {
             return Calculate(
                 computation.Object.Material,
+                computation.Object,
                 light,
                 computation.Point,
                 computation.EyeVector,
@@ -34,6 +36,7 @@ namespace OnSubmit.RayTracerChallenge
         /// Calculates the lighting.
         /// </summary>
         /// <param name="material">The material.</param>
+        /// <param name="shape">The shape.</param>
         /// <param name="light">The light source.</param>
         /// <param name="point">The point being illuminated.</param>
         /// <param name="eyeVector">The eye vector from the Phong reflection model.</param>
@@ -42,6 +45,7 @@ namespace OnSubmit.RayTracerChallenge
         /// <returns>The lighting.</returns>
         public static ColorTuple Calculate(
             Material material,
+            Shape shape,
             Light light,
             Tuple4D point,
             Tuple4D eyeVector,
@@ -88,8 +92,10 @@ namespace OnSubmit.RayTracerChallenge
                 throw new ArgumentException(nameof(normalVector), $"{nameof(normalVector)} must be a vector.");
             }
 
+            ColorTuple color = material.HasPattern ? material.Pattern.GetColorAtShape(shape, point) : material.Color;
+
             // Combine the surface color with the light's intensity
-            ColorTuple effectiveColor = material.Color * light.Intensity;
+            ColorTuple effectiveColor = color * light.Intensity;
 
             // Find the direction to the light source
             Tuple4D lightVector = (light.Position - point).Normalize();

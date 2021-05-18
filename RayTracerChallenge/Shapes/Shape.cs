@@ -31,7 +31,7 @@ namespace OnSubmit.RayTracerChallenge.Shapes
         public Material Material { get; set; } = new Material();
 
         /// <summary>
-        /// Gets or sets the shaoe's transformation.
+        /// Gets or sets the shape's transformation.
         /// </summary>
         public Matrix Transformation
         {

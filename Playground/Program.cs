@@ -248,7 +248,7 @@ namespace Playground
                         Tuple4D point = ray.GetPointOnRayAtDistance(hit.T);
                         Tuple4D normal = hit.Object.GetNormalAtPoint(point);
                         Tuple4D eye = -ray.Direction;
-                        ColorTuple color = Lighting.Calculate(hit.Object.Material, light, point, eye, normal);
+                        ColorTuple color = Lighting.Calculate(hit.Object.Material, sphere, light, point, eye, normal);
 
                         c.WritePixel(x, y, color);
                     }

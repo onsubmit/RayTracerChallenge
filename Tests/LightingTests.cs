@@ -25,7 +25,8 @@
             Tuple4D eyeVector = Tuple4D.CreateVector(0, 0, -1);
             Tuple4D normalVector = Tuple4D.CreateVector(0, 0, -1);
             Light light = new Light(Tuple4D.CreatePoint(0, 0, -10), ColorTuple.White);
-            ColorTuple result = Lighting.Calculate(this.Material, light, this.Position, eyeVector, normalVector);
+            Sphere sphere = new Sphere();
+            ColorTuple result = Lighting.Calculate(this.Material, sphere, light, this.Position, eyeVector, normalVector);
             Assert.AreEqual(ColorTuple.Create(1.9, 1.9, 1.9), result);
         }
 
@@ -36,7 +37,8 @@
             Tuple4D eyeVector = Tuple4D.CreateVector(0, root2over2, -root2over2);
             Tuple4D normalVector = Tuple4D.CreateVector(0, 0, -1);
             Light light = new Light(Tuple4D.CreatePoint(0, 0, -10), ColorTuple.White);
-            ColorTuple result = Lighting.Calculate(this.Material, light, this.Position, eyeVector, normalVector);
+            Sphere sphere = new Sphere();
+            ColorTuple result = Lighting.Calculate(this.Material, sphere, light, this.Position, eyeVector, normalVector);
             Assert.AreEqual(ColorTuple.Create(1.0, 1.0, 1.0), result);
         }
 
@@ -46,7 +48,8 @@
             Tuple4D eyeVector = Tuple4D.CreateVector(0, 0, -1);
             Tuple4D normalVector = Tuple4D.CreateVector(0, 0, -1);
             Light light = new Light(Tuple4D.CreatePoint(0, 10, -10), ColorTuple.White);
-            ColorTuple result = Lighting.Calculate(this.Material, light, this.Position, eyeVector, normalVector);
+            Sphere sphere = new Sphere();
+            ColorTuple result = Lighting.Calculate(this.Material, sphere, light, this.Position, eyeVector, normalVector);
             Assert.AreEqual(ColorTuple.Create(0.7364, 0.7364, 0.7364), result);
         }
 
@@ -57,7 +60,8 @@
             Tuple4D eyeVector = Tuple4D.CreateVector(0, -root2over2, -root2over2);
             Tuple4D normalVector = Tuple4D.CreateVector(0, 0, -1);
             Light light = new Light(Tuple4D.CreatePoint(0, 10, -10), ColorTuple.White);
-            ColorTuple result = Lighting.Calculate(this.Material, light, this.Position, eyeVector, normalVector);
+            Sphere sphere = new Sphere();
+            ColorTuple result = Lighting.Calculate(this.Material, sphere, light, this.Position, eyeVector, normalVector);
             Assert.AreEqual(ColorTuple.Create(1.6364, 1.6364, 1.6364), result);
         }
 
@@ -67,7 +71,8 @@
             Tuple4D eyeVector = Tuple4D.CreateVector(0, 0, -1);
             Tuple4D normalVector = Tuple4D.CreateVector(0, 0, -1);
             Light light = new Light(Tuple4D.CreatePoint(0, 0, 10), ColorTuple.White);
-            ColorTuple result = Lighting.Calculate(this.Material, light, this.Position, eyeVector, normalVector);
+            Sphere sphere = new Sphere();
+            ColorTuple result = Lighting.Calculate(this.Material, sphere, light, this.Position, eyeVector, normalVector);
             Assert.AreEqual(ColorTuple.Create(0.1, 0.1, 0.1), result);
         }
 

@@ -7,6 +7,7 @@ namespace OnSubmit.RayTracerChallenge
 {
     using System.Collections.Generic;
     using OnSubmit.RayTracerChallenge.Extensions;
+    using OnSubmit.RayTracerChallenge.Patterns;
 
     /// <summary>
     /// Represents a material.
@@ -41,6 +42,11 @@ namespace OnSubmit.RayTracerChallenge
         public ColorTuple Color { get; set; }
 
         /// <summary>
+        /// Gets or sets the pattern of the material.
+        /// </summary>
+        public Pattern Pattern { get; set; }
+
+        /// <summary>
         /// Gets or sets the ambient value.
         /// </summary>
         public double Ambient { get; set; }
@@ -59,6 +65,11 @@ namespace OnSubmit.RayTracerChallenge
         /// Gets or sets the shininess value.
         /// </summary>
         public double Shininess { get; set; }
+
+        /// <summary>
+        /// Gets a value indicating whether the material has a pattern defined.
+        /// </summary>
+        public bool HasPattern => this.Pattern != null;
 
         /// <summary>
         /// Compares a <see cref="Material"/> with another object.
@@ -80,6 +91,7 @@ namespace OnSubmit.RayTracerChallenge
             if (obj is Material m)
             {
                 return this.Color.Equals(m.Color)
+                    && (!this.HasPattern || this.Pattern.Equals(m.Pattern))
                     && this.Ambient.Compare(m.Ambient)
                     && this.Diffuse.Compare(m.Diffuse)
                     && this.Specular.Compare(m.Specular)

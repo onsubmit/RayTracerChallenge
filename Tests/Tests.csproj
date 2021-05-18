@@ -60,6 +60,7 @@
     <Compile Include="LightingTests.cs" />
     <Compile Include="MatrixTests.cs" />
     <Compile Include="MatrixTransformationTests.cs" />
+    <Compile Include="PatternTests.cs" />
     <Compile Include="PlaneTests.cs" />
     <Compile Include="ReflectionTests.cs" />
     <Compile Include="ShapeTests.cs" />
