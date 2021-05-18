@@ -132,5 +132,52 @@
 
             Assert.AreEqual(transformation, pattern.Transformation);
         }
+
+        [TestMethod]
+        public void GradientPatternLinearlyInterpolatesBetweenColors()
+        {
+            GradientPattern pattern = new GradientPattern(white, black);
+            Assert.AreEqual(white, pattern.GetColorAtPoint(Tuple4D.CreatePoint(0, 0, 0)));
+            Assert.AreEqual(ColorTuple.Create(0.75, 0.75, 0.75), pattern.GetColorAtPoint(Tuple4D.CreatePoint(0.25, 0, 0)));
+            Assert.AreEqual(ColorTuple.Create(0.5, 0.5, 0.5), pattern.GetColorAtPoint(Tuple4D.CreatePoint(0.5, 0, 0)));
+            Assert.AreEqual(ColorTuple.Create(0.25, 0.25, 0.25), pattern.GetColorAtPoint(Tuple4D.CreatePoint(0.75, 0, 0)));
+        }
+
+        [TestMethod]
+        public void RingPatternExtendsInBothXAndZ()
+        {
+            RingPattern pattern = new RingPattern(white, black);
+            Assert.AreEqual(white, pattern.GetColorAtPoint(Tuple4D.CreatePoint(0, 0, 0)));
+            Assert.AreEqual(black, pattern.GetColorAtPoint(Tuple4D.CreatePoint(1, 0, 0)));
+            Assert.AreEqual(black, pattern.GetColorAtPoint(Tuple4D.CreatePoint(0, 0, 1)));
+            Assert.AreEqual(black, pattern.GetColorAtPoint(Tuple4D.CreatePoint(0.708, 0, 0.708)));
+        }
+
+        [TestMethod]
+        public void CheckersPatternRepeatsInX()
+        {
+            CheckersPattern pattern = new CheckersPattern(white, black);
+            Assert.AreEqual(white, pattern.GetColorAtPoint(Tuple4D.CreatePoint(0, 0, 0)));
+            Assert.AreEqual(white, pattern.GetColorAtPoint(Tuple4D.CreatePoint(0.99, 0, 0)));
+            Assert.AreEqual(black, pattern.GetColorAtPoint(Tuple4D.CreatePoint(1.01, 0, 0)));
+        }
+
+        [TestMethod]
+        public void CheckersPatternRepeatsInY()
+        {
+            CheckersPattern pattern = new CheckersPattern(white, black);
+            Assert.AreEqual(white, pattern.GetColorAtPoint(Tuple4D.CreatePoint(0, 0, 0)));
+            Assert.AreEqual(white, pattern.GetColorAtPoint(Tuple4D.CreatePoint(0, 0.99, 0)));
+            Assert.AreEqual(black, pattern.GetColorAtPoint(Tuple4D.CreatePoint(0, 1.01, 0)));
+        }
+
+        [TestMethod]
+        public void CheckersPatternRepeatsInZ()
+        {
+            CheckersPattern pattern = new CheckersPattern(white, black);
+            Assert.AreEqual(white, pattern.GetColorAtPoint(Tuple4D.CreatePoint(0, 0, 0)));
+            Assert.AreEqual(white, pattern.GetColorAtPoint(Tuple4D.CreatePoint(0, 0, 0.99)));
+            Assert.AreEqual(black, pattern.GetColorAtPoint(Tuple4D.CreatePoint(0, 0, 1.01)));
+        }
     }
 }

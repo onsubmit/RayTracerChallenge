@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="StripePattern.cs" company="Andy Young">
+// <copyright file="Checkers.cs" company="Andy Young">
 //     Copyright (c) Andy Young. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
@@ -8,16 +8,16 @@ namespace OnSubmit.RayTracerChallenge.Patterns
     using System;
 
     /// <summary>
-    /// Represents a stripe pattern.
+    /// Represents a checkers pattern.
     /// </summary>
-    public class StripePattern : Pattern
+    public class CheckersPattern : Pattern
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="StripePattern" /> class.
+        /// Initializes a new instance of the <see cref="CheckersPattern" /> class.
         /// </summary>
-        /// <param name="color1">The first color in the stripe pattern.</param>
-        /// <param name="color2">The second color in the stripe pattern.</param>
-        public StripePattern(ColorTuple color1, ColorTuple color2)
+        /// <param name="color1">The first color in the checkers pattern.</param>
+        /// <param name="color2">The second color in the checkers pattern.</param>
+        public CheckersPattern(ColorTuple color1, ColorTuple color2)
             : base(color1, color2)
         {
             if (color1 == null)
@@ -38,12 +38,12 @@ namespace OnSubmit.RayTracerChallenge.Patterns
         /// <returns>The pattern's color.</returns>
         protected override ColorTuple GetColorAtPointImpl(Tuple4D point)
         {
-            if (Math.Floor(point.X) % 2 == 0)
+            if ((Math.Floor(point.X) + Math.Floor(point.Y) + Math.Floor(point.Z)) % 2 == 0)
             {
-                return this.Colors[0];
+                return this[0];
             }
 
-            return this.Colors[1];
+            return this[1];
         }
     }
 }
