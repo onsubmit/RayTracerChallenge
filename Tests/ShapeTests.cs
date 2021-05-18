@@ -3,6 +3,7 @@
     using System;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using OnSubmit.RayTracerChallenge;
+    using OnSubmit.RayTracerChallenge.Shapes;
 
     [TestClass]
     public class ShapeTests
@@ -18,7 +19,7 @@
         public void CustomTransformation()
         {
             Matrix transformation = Matrix.GetTranslationMatrix(2, 3, 4);
-            TestShape shape = new TestShape
+            TestShape shape = new TestShape()
             {
                 Transformation = transformation
             };

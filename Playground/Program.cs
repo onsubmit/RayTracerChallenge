@@ -8,6 +8,7 @@ namespace Playground
     using System;
     using System.IO;
     using OnSubmit.RayTracerChallenge;
+    using OnSubmit.RayTracerChallenge.Shapes;
 
     /// <summary>
     /// Playground program.

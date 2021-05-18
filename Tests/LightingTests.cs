@@ -3,6 +3,7 @@
     using System;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using OnSubmit.RayTracerChallenge;
+    using OnSubmit.RayTracerChallenge.Shapes;
 
     [TestClass]
     public class LightingTests

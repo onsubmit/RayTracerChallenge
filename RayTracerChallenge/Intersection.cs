@@ -7,6 +7,7 @@ namespace OnSubmit.RayTracerChallenge
 {
     using System.Collections.Generic;
     using OnSubmit.RayTracerChallenge.Extensions;
+    using OnSubmit.RayTracerChallenge.Shapes;
 
     /// <summary>
     /// Represents a intersection.

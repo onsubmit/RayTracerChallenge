@@ -6,6 +6,7 @@
 namespace OnSubmit.RayTracerChallenge
 {
     using OnSubmit.RayTracerChallenge.Extensions;
+    using OnSubmit.RayTracerChallenge.Shapes;
 
     /// <summary>
     /// Represents a computation.
