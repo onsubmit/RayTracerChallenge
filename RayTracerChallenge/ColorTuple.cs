@@ -112,6 +112,17 @@ namespace OnSubmit.RayTracerChallenge
         }
 
         /// <summary>
+        /// Divides a color tuple by a scalar.
+        /// </summary>
+        /// <param name="c">The color tuple.</param>
+        /// <param name="k">The scalar to divide by.</param>
+        /// <returns>The tuple divided by the scalar.</returns>
+        public static ColorTuple operator /(ColorTuple c, double k)
+        {
+            return c.DivideByScalar<ColorTuple>(k);
+        }
+
+        /// <summary>
         /// Computes the product of two color tuples.
         /// </summary>
         /// <param name="a">First color tuple.</param>

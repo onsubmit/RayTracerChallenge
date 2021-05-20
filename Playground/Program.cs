@@ -455,33 +455,21 @@ namespace Playground
             Light light = new Light(Tuple4D.CreatePoint(-5, 3, -5), ColorTuple.White);
             World world = new World(light);
 
-            Pattern floorPattern1 = new StripePattern()
-            {
-                Transformation = Matrix.GetScalingMatrix(0.25, 0.25, 0.25),
-            };
+            Pattern floorPattern1 = new BlendedPattern(
+                new StripePattern(),
+                new StripePattern() { Transformation = Matrix.GetRotationMatrixY(Math.PI / 2) });
 
-            Pattern floorPattern2 = new StripePattern(ColorTuple.Red, ColorTuple.Blue)
-            {
-                Transformation = floorPattern1.Transformation.RotateY(Math.PI / 8),
-            };
+            Pattern floorPattern2 = new RingPattern(
+                new RandomPattern(),
+                new SolidPattern(ColorTuple.Red));
 
-            Pattern floorPattern = new CheckersPattern(
-                new StripePattern(
-                    ColorTuple.Red * 0.2,
-                    ColorTuple.Create(1, 0.5, 0.5))
-                    {
-                        Transformation = Matrix.GetScalingMatrix(0.25, 0.25, 0.25).RotateY(Math.PI / 4),
-                    },
-                new StripePattern(
-                    ColorTuple.White * 0.2,
-                    ColorTuple.White * 0.5)
-                    {
-                        Transformation = Matrix.GetScalingMatrix(0.25, 0.25, 0.25).RotateY(-Math.PI / 4),
-                    });
+            Pattern floorPattern3 = new SpottedPattern(ColorTuple.Black, ColorTuple.Blue);
+
+            Pattern floorPattern = new BlendedPattern(floorPattern1, floorPattern2, floorPattern3);
 
             Plane floor = new Plane()
             {
-                Material = new Material() { Pattern = floorPattern },
+                Material = new Material() { Pattern = floorPattern3 },
             };
 
             world.AddShape(floor);
@@ -509,7 +497,7 @@ namespace Playground
 
             world.AddShape(sphere2);
 
-            Camera camera = new Camera(1000, 1000, Math.PI / 4);
+            Camera camera = new Camera(500, 500, Math.PI / 4);
             Tuple4D from = Tuple4D.CreatePoint(-4, 2, -6);
             Tuple4D to = Tuple4D.CreatePoint(0, 1.5, 0);
             Tuple4D up = Tuple4D.CreateVector(0, 1, 0);

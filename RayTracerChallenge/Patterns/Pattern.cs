@@ -105,7 +105,18 @@ namespace OnSubmit.RayTracerChallenge.Patterns
                 throw new ArgumentException(nameof(point), $"{nameof(point)} must be a point.");
             }
 
+            point = this.GetTransformedPoint(point);
             return this.GetPatternAtPoint(point).GetColorAtPoint(point);
+        }
+
+        /// <summary>
+        /// Gets the point transformed by the pattern's transformation matrix.
+        /// </summary>
+        /// <param name="point">The point.</param>
+        /// <returns>The transformed point.</returns>
+        public Tuple4D GetTransformedPoint(Tuple4D point)
+        {
+            return this.HasTransformation ? this.Transformation.GetInverse() * point : point;
         }
 
         /// <summary>
@@ -122,14 +133,13 @@ namespace OnSubmit.RayTracerChallenge.Patterns
             }
 
             Tuple4D objectPoint = shape.HasTransformation ? shape.Transformation.GetInverse() * worldPoint : worldPoint;
-            Tuple4D patternPoint = this.HasTransformation ? this.Transformation.GetInverse() * objectPoint : objectPoint;
 
             if (this.HasNestedPattern)
             {
-                return this.GetPatternAtPoint(patternPoint).GetColorAtShape(shape, patternPoint);
+                return this.GetPatternAtPoint(objectPoint).GetColorAtShape(shape, objectPoint);
             }
 
-            return this.GetColorAtPoint(patternPoint);
+            return this.GetColorAtPoint(objectPoint);
         }
 
         /// <summary>
