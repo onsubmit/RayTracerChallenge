@@ -36,9 +36,10 @@ namespace Playground
             DoChapter7();
             DoChapter8();
             DoChapter9();
+            DoChapter10();
             */
 
-            DoChapter10();
+            DoChapter11();
         }
 
         /// <summary>
@@ -456,56 +457,104 @@ namespace Playground
             World world = new World(light);
 
             Pattern floorPattern1 = new BlendedPattern(
-                new StripePattern(),
-                new StripePattern() { Transformation = Matrix.GetRotationMatrixY(Math.PI / 2) });
+                new StripePattern(ColorTuple.Red, ColorTuple.Black),
+                new StripePattern(ColorTuple.Red, ColorTuple.Black) { Transformation = Matrix.GetRotationMatrixY(Math.PI / 2) });
 
-            Pattern floorPattern2 = new RingPattern(
-                new RandomPattern(),
-                new SolidPattern(ColorTuple.Red));
+            Pattern floorPattern2 = new RingPattern(ColorTuple.Red, ColorTuple.Black);
 
-            Pattern floorPattern3 = new SpottedPattern(ColorTuple.Black, ColorTuple.Blue);
+            Pattern floorPattern3 = new SpottedPattern(ColorTuple.Red, ColorTuple.Black);
 
             Pattern floorPattern = new BlendedPattern(floorPattern1, floorPattern2, floorPattern3);
 
             Plane floor = new Plane()
             {
-                Material = new Material() { Pattern = floorPattern3 },
+                Material = new Material() { Pattern = floorPattern },
             };
 
             world.AddShape(floor);
 
-            Pattern spherePattern = new GradientPattern(new SolidPattern(ColorTuple.Create(0, 0.5, 1)), new CheckersPattern());
-
-            Sphere sphere = new Sphere()
+            const int NumSpheres = 20;
+            for (int i = 0; i < NumSpheres; i++)
             {
-                Transformation = Matrix.GetTranslationMatrix(0, 1.25, 0),
-                Material = new Material() { Pattern = spherePattern },
-            };
+                Sphere sphere = new Sphere()
+                {
+                    Material = new Material(ColorTuple.Create(0, (double)(NumSpheres - i) / NumSpheres, (double)i / NumSpheres), diffuse: 0.9, specular: 1, shininess: 10),
+                    Transformation = Matrix.GetScalingMatrix(2.5 / NumSpheres, 2.5 / NumSpheres, 2.5 / NumSpheres)
+                    .Translate(
+                        Math.Cos(2 * Math.PI * i / NumSpheres),
+                        0.25,
+                        Math.Sin(2 * Math.PI * i / NumSpheres)),
+                };
 
-            world.AddShape(sphere);
+                world.AddShape(sphere);
+            }
 
-            Pattern sphere2Pattern = new GradientPattern(new StripePattern(ColorTuple.Blue, ColorTuple.Green), new SolidPattern(ColorTuple.White))
-            {
-                Transformation = Matrix.GetScalingMatrix(1, 1, 1).RotateY(-0.5).RotateX(0.5),
-            };
-
-            Sphere sphere2 = new Sphere()
-            {
-                Transformation = Matrix.GetScalingMatrix(0.25, 0.25, 0.25).Translate(-1, 2.25, -1),
-                Material = new Material() { Pattern = sphere2Pattern },
-            };
-
-            world.AddShape(sphere2);
-
-            Camera camera = new Camera(500, 500, Math.PI / 4);
-            Tuple4D from = Tuple4D.CreatePoint(-4, 2, -6);
-            Tuple4D to = Tuple4D.CreatePoint(0, 1.5, 0);
+            Camera camera = new Camera(1000, 1000, Math.PI / 4);
+            Tuple4D from = Tuple4D.CreatePoint(-3, 2, -2);
+            Tuple4D to = Tuple4D.CreatePoint(0, 0, 0);
             Tuple4D up = Tuple4D.CreateVector(0, 1, 0);
             camera.Transform = Matrix.GetViewTransformationMatrix(from, to, up);
 
             Canvas canvas = camera.Render(world);
             File.WriteAllText("patterns.ppm", canvas.ToPlainPortablePixmapString());
             System.Diagnostics.Process.Start("patterns.ppm");
+        }
+
+        private static void DoChapter11()
+        {
+            Light light = new Light(Tuple4D.CreatePoint(0, 3, -3), ColorTuple.White);
+            World world = new World(light);
+
+            Plane floor = new Plane()
+            {
+                Transformation = Matrix.GetTranslationMatrix(0, -1, 0),
+            };
+
+            floor.Material.Pattern = new CheckersPattern(ColorTuple.Red, ColorTuple.Black);
+            floor.Material.Reflective = 0.25;
+
+            Plane ceiling = new Plane()
+            {
+                Transformation = Matrix.GetTranslationMatrix(0, 10, 0),
+            };
+
+            ceiling.Material.Pattern = new CheckersPattern(ColorTuple.Blue, ColorTuple.Black);
+            ceiling.Material.Reflective = 0.25;
+
+            Shape sphere = new Sphere();
+            sphere.Material.Color = ColorTuple.Black;
+            sphere.Material.Reflective = 0.75;
+
+            Sphere s1 = new Sphere
+            {
+                Transformation = Matrix.GetTranslationMatrix(-0.5, 0, 0.5),
+                Material = new Material(ColorTuple.Black, diffuse: 0.9, specular: 1, shininess: 200) { Reflective = 0.75 },
+            };
+
+            world.AddShape(s1);
+
+            double scale = 0.5;
+            Sphere s2 = new Sphere
+            {
+                Transformation = Matrix.GetScalingMatrix(scale, scale, scale).RotateZ(Math.PI / 2).Translate(0, -0.5, -1),
+                Material = new Material(ColorTuple.Black, diffuse: 0.9, specular: 1, shininess: 200)
+                {
+                    Reflective = 0.75,
+                    Pattern = new GradientPattern(),
+                },
+            };
+
+            world.AddShapes(floor, s1, s2);
+
+            Camera camera = new Camera(200, 200, Math.PI / 4);
+            Tuple4D from = Tuple4D.CreatePoint(-3, 2, -2);
+            Tuple4D to = Tuple4D.CreatePoint(-0.3, 0, 0);
+            Tuple4D up = Tuple4D.CreateVector(0, 1, 0);
+            camera.Transform = Matrix.GetViewTransformationMatrix(from, to, up);
+
+            Canvas canvas = camera.Render(world);
+            File.WriteAllText("reflection.ppm", canvas.ToPlainPortablePixmapString());
+            System.Diagnostics.Process.Start("reflection.ppm");
         }
 
         /// <summary>

@@ -36,6 +36,8 @@ namespace OnSubmit.RayTracerChallenge
                 this.Inside = true;
                 this.NormalVector = -this.NormalVector;
             }
+
+            this.ReflectionVector = ray.Direction.ReflectVector(this.NormalVector);
         }
 
         /// <summary>
@@ -57,6 +59,11 @@ namespace OnSubmit.RayTracerChallenge
         /// Gets the normal vector.
         /// </summary>
         public Tuple4D NormalVector { get; private set; }
+
+        /// <summary>
+        /// Gets the reflection vector.
+        /// </summary>
+        public Tuple4D ReflectionVector { get; private set; }
 
         /// <summary>
         /// Gets the 't' value of the intersection.

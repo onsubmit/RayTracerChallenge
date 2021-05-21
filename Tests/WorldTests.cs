@@ -12,7 +12,7 @@
         {
             World world = new World();
             Assert.IsFalse(world.HasLightSource);
-            Assert.IsFalse(world.HasLightSource);
+            Assert.IsFalse(world.HasShapes);
         }
 
         [TestMethod]

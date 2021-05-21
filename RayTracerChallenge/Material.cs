@@ -67,6 +67,11 @@ namespace OnSubmit.RayTracerChallenge
         public double Shininess { get; set; }
 
         /// <summary>
+        /// Gets or sets the reflective value.
+        /// </summary>
+        public double Reflective { get; set; }
+
+        /// <summary>
         /// Gets a value indicating whether the material has a pattern defined.
         /// </summary>
         public bool HasPattern => this.Pattern != null;

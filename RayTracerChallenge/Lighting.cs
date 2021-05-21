@@ -26,7 +26,7 @@ namespace OnSubmit.RayTracerChallenge
                 computation.Object.Material,
                 computation.Object,
                 light,
-                computation.Point,
+                computation.OverPoint,
                 computation.EyeVector,
                 computation.NormalVector,
                 inShadow);

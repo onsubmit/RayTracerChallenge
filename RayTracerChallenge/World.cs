@@ -8,6 +8,7 @@ namespace OnSubmit.RayTracerChallenge
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using OnSubmit.RayTracerChallenge.Extensions;
     using OnSubmit.RayTracerChallenge.Shapes;
 
     /// <summary>
@@ -15,6 +16,11 @@ namespace OnSubmit.RayTracerChallenge
     /// </summary>
     public class World
     {
+        /// <summary>
+        /// The maximum recursion depth for relfection calculation.
+        /// </summary>
+        private const int MaxRecursionDepth = 5;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="World"/> class.
         /// </summary>
@@ -87,6 +93,18 @@ namespace OnSubmit.RayTracerChallenge
         }
 
         /// <summary>
+        /// Adds the shapes to the world.
+        /// </summary>
+        /// <param name="shapes">The shapes to add.</param>
+        public void AddShapes(params Shape[] shapes)
+        {
+            foreach (Shape shape in shapes)
+            {
+                this.AddShape(shape);
+            }
+        }
+
+        /// <summary>
         /// Determines if the world contains the given shape.
         /// </summary>
         /// <param name="shape">The shape.</param>
@@ -97,15 +115,23 @@ namespace OnSubmit.RayTracerChallenge
         /// Computes the color at the intersection encapsulated by the precomputation.
         /// </summary>
         /// <param name="computation">The precomputation.</param>
+        /// <param name="remaining">The number of allowed calculations remaining.</param>
         /// <returns>The color at the intersection encapsulated by the precomputation.</returns>
-        public ColorTuple ShadeHit(Computation computation) => Lighting.Calculate(computation, this.LightSource, this.IsShadowed(computation.OverPoint));
+        public ColorTuple ShadeHit(Computation computation, int remaining = MaxRecursionDepth)
+        {
+            bool isShadowed = this.IsShadowed(computation.OverPoint);
+            ColorTuple surfaceColor = Lighting.Calculate(computation, this.LightSource, isShadowed);
+            ColorTuple reflectedColor = this.GetReflectedColorAt(computation, remaining);
+            return surfaceColor + reflectedColor;
+        }
 
         /// <summary>
         /// Intersects the world with the given ray and returns the color at the resulting intersection.
         /// </summary>
         /// <param name="ray">The ray.</param>
+        /// <param name="remaining">The number of allowed calculations remaining.</param>
         /// <returns>The color at the ray's intersection.</returns>
-        public ColorTuple GetColorAt(Ray ray)
+        public ColorTuple GetColorAt(Ray ray, int remaining = MaxRecursionDepth)
         {
             Intersections intersections = ray.GetIntersectionsWith(this);
 
@@ -116,7 +142,25 @@ namespace OnSubmit.RayTracerChallenge
 
             Intersection hit = intersections.GetHit();
             Computation computation = new Computation(hit, ray);
-            return this.ShadeHit(computation);
+            return this.ShadeHit(computation, remaining);
+        }
+
+        /// <summary>
+        /// Gets the reflected color for the given pre computation.
+        /// </summary>
+        /// <param name="computation">The computation.</param>
+        /// <param name="remaining">The number of allowed calculations remaining.</param>
+        /// <returns>The reflected color.</returns>
+        public ColorTuple GetReflectedColorAt(Computation computation, int remaining = MaxRecursionDepth)
+        {
+            if (remaining <= 0 || computation.Object.Material.Reflective.Compare(0))
+            {
+                return ColorTuple.Black;
+            }
+
+            Ray reflectionRay = new Ray(computation.OverPoint, computation.ReflectionVector);
+            ColorTuple color = this.GetColorAt(reflectionRay, remaining - 1);
+            return color * computation.Object.Material.Reflective;
         }
 
         /// <summary>
