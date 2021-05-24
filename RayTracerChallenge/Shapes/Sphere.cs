@@ -13,6 +13,12 @@ namespace OnSubmit.RayTracerChallenge.Shapes
     public class Sphere : Shape
     {
         /// <summary>
+        /// Creates a new glass sphere.
+        /// </summary>
+        /// <returns>A new glass sphere.</returns>
+        public static Sphere CreateGlassSphere() => new Sphere() { Material = new Material(transparency: 1, refractiveIndex: 1.5) };
+
+        /// <summary>
         /// Gets the intersection distances along the ray with the sphere.
         /// </summary>
         /// <param name="ray">The ray.</param>

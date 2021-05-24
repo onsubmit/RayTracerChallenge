@@ -125,18 +125,16 @@
         [TestMethod]
         public void RotatePointAroundXAxis()
         {
-            double sqrt2Over2 = Math.Sqrt(2) / 2;
-
             Tuple4D point = Tuple4D.CreatePoint(0, 1, 0);
-            Matrix halfQuarter = Matrix.GetRotationMatrixX(Math.PI / 4);
-            Matrix fullQuarter = Matrix.GetRotationMatrixX(Math.PI / 2);
+            Matrix halfQuarter = Matrix.GetRotationMatrixX(Constants.PiOver4);
+            Matrix fullQuarter = Matrix.GetRotationMatrixX(Constants.PiOver2);
 
             Assert.AreEqual(new Matrix(
                 new double[4, 4]
                 {
                     { 1, 0, 0, 0 },
-                    { 0, sqrt2Over2, -sqrt2Over2, 0 },
-                    { 0, sqrt2Over2, sqrt2Over2, 0 },
+                    { 0, Constants.Sqrt2Over2, -Constants.Sqrt2Over2, 0 },
+                    { 0, Constants.Sqrt2Over2, Constants.Sqrt2Over2, 0 },
                     { 0, 0, 0, 1 },
                 }),
                 halfQuarter);
@@ -151,55 +149,49 @@
                 }),
                 fullQuarter);
 
-            Assert.AreEqual(Tuple4D.CreatePoint(0, sqrt2Over2, sqrt2Over2), halfQuarter * point);
+            Assert.AreEqual(Tuple4D.CreatePoint(0, Constants.Sqrt2Over2, Constants.Sqrt2Over2), halfQuarter * point);
             Assert.AreEqual(Tuple4D.CreatePoint(0, 0, 1), fullQuarter * point);
         }
 
         [TestMethod]
         public void RotatePointAroundXAxisInverse()
         {
-            double sqrt2Over2 = Math.Sqrt(2) / 2;
-
             Tuple4D point = Tuple4D.CreatePoint(0, 1, 0);
-            Matrix halfQuarter = Matrix.GetRotationMatrixX(Math.PI / 4);
+            Matrix halfQuarter = Matrix.GetRotationMatrixX(Constants.PiOver4);
             Matrix inverse = halfQuarter.GetInverse();
 
             Assert.AreEqual(new Matrix(
                 new double[4, 4]
                 {
                     { 1, 0, 0, 0 },
-                    { 0, sqrt2Over2, sqrt2Over2, 0 },
-                    { 0, -sqrt2Over2, sqrt2Over2, 0 },
+                    { 0, Constants.Sqrt2Over2, Constants.Sqrt2Over2, 0 },
+                    { 0, -Constants.Sqrt2Over2, Constants.Sqrt2Over2, 0 },
                     { 0, 0, 0, 1 },
                 }),
                 inverse);
 
-            Assert.AreEqual(Tuple4D.CreatePoint(0, sqrt2Over2, -sqrt2Over2), inverse * point);
+            Assert.AreEqual(Tuple4D.CreatePoint(0, Constants.Sqrt2Over2, -Constants.Sqrt2Over2), inverse * point);
         }
 
         [TestMethod]
         public void RotatePointAroundYAxis()
         {
-            double sqrt2Over2 = Math.Sqrt(2) / 2;
-
             Tuple4D point = Tuple4D.CreatePoint(0, 0, 1);
-            Matrix halfQuarter = Matrix.GetRotationMatrixY(Math.PI / 4);
-            Matrix fullQuarter = Matrix.GetRotationMatrixY(Math.PI / 2);
+            Matrix halfQuarter = Matrix.GetRotationMatrixY(Constants.PiOver4);
+            Matrix fullQuarter = Matrix.GetRotationMatrixY(Constants.PiOver2);
 
-            Assert.AreEqual(Tuple4D.CreatePoint(sqrt2Over2, 0, sqrt2Over2), halfQuarter * point);
+            Assert.AreEqual(Tuple4D.CreatePoint(Constants.Sqrt2Over2, 0, Constants.Sqrt2Over2), halfQuarter * point);
             Assert.AreEqual(Tuple4D.CreatePoint(1, 0, 0), fullQuarter * point);
         }
 
         [TestMethod]
         public void RotatePointAroundZAxis()
         {
-            double sqrt2Over2 = Math.Sqrt(2) / 2;
-
             Tuple4D point = Tuple4D.CreatePoint(0, 1, 0);
-            Matrix halfQuarter = Matrix.GetRotationMatrixZ(Math.PI / 4);
-            Matrix fullQuarter = Matrix.GetRotationMatrixZ(Math.PI / 2);
+            Matrix halfQuarter = Matrix.GetRotationMatrixZ(Constants.PiOver4);
+            Matrix fullQuarter = Matrix.GetRotationMatrixZ(Constants.PiOver2);
 
-            Assert.AreEqual(Tuple4D.CreatePoint(-sqrt2Over2, sqrt2Over2, 0), halfQuarter * point);
+            Assert.AreEqual(Tuple4D.CreatePoint(-Constants.Sqrt2Over2, Constants.Sqrt2Over2, 0), halfQuarter * point);
             Assert.AreEqual(Tuple4D.CreatePoint(-1, 0, 0), fullQuarter * point);
         }
 
@@ -255,7 +247,7 @@
         public void IndividualTransformationsAppliedSequentially()
         {
             Tuple4D p = Tuple4D.CreatePoint(1, 0, 1);
-            Matrix a = Matrix.GetRotationMatrixX(Math.PI / 2);
+            Matrix a = Matrix.GetRotationMatrixX(Constants.PiOver2);
             Matrix b = Matrix.GetScalingMatrix(5, 5, 5);
             Matrix c = Matrix.GetTranslationMatrix(10, 5, 7);
 
@@ -276,7 +268,7 @@
         public void ChainedTransformationsAppliedInReverseOrder()
         {
             Tuple4D p = Tuple4D.CreatePoint(1, 0, 1);
-            Matrix a = Matrix.GetRotationMatrixX(Math.PI / 2);
+            Matrix a = Matrix.GetRotationMatrixX(Constants.PiOver2);
             Matrix b = Matrix.GetScalingMatrix(5, 5, 5);
             Matrix c = Matrix.GetTranslationMatrix(10, 5, 7);
 

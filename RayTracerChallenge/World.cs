@@ -122,7 +122,16 @@ namespace OnSubmit.RayTracerChallenge
             bool isShadowed = this.IsShadowed(computation.OverPoint);
             ColorTuple surfaceColor = Lighting.Calculate(computation, this.LightSource, isShadowed);
             ColorTuple reflectedColor = this.GetReflectedColorAt(computation, remaining);
-            return surfaceColor + reflectedColor;
+            ColorTuple refractedColor = this.GetRefractedColorAt(computation, remaining);
+
+            Material material = computation.Object.Material;
+            if (material.Reflective > 0 && material.Transparency > 0)
+            {
+                double reflectance = computation.GetSchlickApproximation();
+                return surfaceColor + (reflectedColor * reflectance) + (refractedColor * (1 - reflectance));
+            }
+
+            return surfaceColor + reflectedColor + refractedColor;
         }
 
         /// <summary>
@@ -141,7 +150,7 @@ namespace OnSubmit.RayTracerChallenge
             }
 
             Intersection hit = intersections.GetHit();
-            Computation computation = new Computation(hit, ray);
+            Computation computation = new Computation(hit, ray, intersections);
             return this.ShadeHit(computation, remaining);
         }
 
@@ -161,6 +170,40 @@ namespace OnSubmit.RayTracerChallenge
             Ray reflectionRay = new Ray(computation.OverPoint, computation.ReflectionVector);
             ColorTuple color = this.GetColorAt(reflectionRay, remaining - 1);
             return color * computation.Object.Material.Reflective;
+        }
+
+        /// <summary>
+        /// Gets the refracted color for the given pre computation.
+        /// </summary>
+        /// <param name="computation">The computation.</param>
+        /// <param name="remaining">The number of allowed calculations remaining.</param>
+        /// <returns>The refracted color.</returns>
+        public ColorTuple GetRefractedColorAt(Computation computation, int remaining = MaxRecursionDepth)
+        {
+            if (remaining <= 0 || computation.Object.Material.Transparency.Compare(0))
+            {
+                return ColorTuple.Black;
+            }
+
+            double ratio = computation.N1 / computation.N2;
+            double cosineThetaI = computation.EyeVector.GetDotProductWith(computation.NormalVector);
+            double sineSquaredThetaT = ratio * ratio * (1.0 - (cosineThetaI * cosineThetaI));
+
+            if (sineSquaredThetaT > 1)
+            {
+                // Total internal reflection.
+                return ColorTuple.Black;
+            }
+
+            double cosineThetaT = Math.Sqrt(1.0 - sineSquaredThetaT);
+
+            // Direction of refracted ray.
+            Tuple4D direction = (computation.NormalVector * ((ratio * cosineThetaI) - cosineThetaT)) - (computation.EyeVector * ratio);
+            Ray refractedRay = new Ray(computation.UnderPoint, direction);
+
+            // Find the color of the refracted ray, accounting for opacity.
+            ColorTuple color = this.GetColorAt(refractedRay, remaining - 1);
+            return color * computation.Object.Material.Transparency;
         }
 
         /// <summary>

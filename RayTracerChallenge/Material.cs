@@ -22,18 +22,27 @@ namespace OnSubmit.RayTracerChallenge
         /// <param name="diffuse">The diffuse value.</param>
         /// <param name="specular">The specular value.</param>
         /// <param name="shininess">The shininess value.</param>
+        /// <param name="reflective">The reflective value.</param>
+        /// <param name="transparency">The transparency value.</param>
+        /// <param name="refractiveIndex">The refractive index.</param>
         public Material(
             ColorTuple color = null,
             double ambient = 0.1,
             double diffuse = 0.9,
             double specular = 0.9,
-            double shininess = 200.0)
+            double shininess = 200.0,
+            double reflective = 0.0,
+            double transparency = 0.0,
+            double refractiveIndex = 1.0)
         {
             this.Color = color ?? ColorTuple.White;
             this.Ambient = ambient;
             this.Diffuse = diffuse;
             this.Specular = specular;
             this.Shininess = shininess;
+            this.Reflective = reflective;
+            this.Transparency = transparency;
+            this.RefractiveIndex = refractiveIndex;
         }
 
         /// <summary>
@@ -70,6 +79,16 @@ namespace OnSubmit.RayTracerChallenge
         /// Gets or sets the reflective value.
         /// </summary>
         public double Reflective { get; set; }
+
+        /// <summary>
+        /// Gets or sets the transparency value.
+        /// </summary>
+        public double Transparency { get; set; }
+
+        /// <summary>
+        /// Gets or sets the refractive index.
+        /// </summary>
+        public double RefractiveIndex { get; set; }
 
         /// <summary>
         /// Gets a value indicating whether the material has a pattern defined.

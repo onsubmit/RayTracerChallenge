@@ -61,14 +61,12 @@
         [TestMethod]
         public void ComputeNormalOnTransformedShape()
         {
-            double root2over2 = Math.Sqrt(2) / 2;
-
             TestShape shape = new TestShape()
             {
                 Transformation = Matrix.GetRotationMatrixZ(Math.PI / 5).Scale(1, 0.5, 1),
             };
 
-            Tuple4D normal = shape.GetNormalAtPoint(Tuple4D.CreatePoint(0, root2over2, -root2over2));
+            Tuple4D normal = shape.GetNormalAtPoint(Tuple4D.CreatePoint(0, Constants.Sqrt2Over2, -Constants.Sqrt2Over2));
             Assert.AreEqual(Tuple4D.CreateVector(0, 0.97014, -0.24254), normal);
         }
     }

@@ -198,8 +198,61 @@
             Intersections intersections = sphere.GetIntersectionsWith(ray);
             Intersection hit = intersections.GetHit();
             Computation computation = new Computation(hit, ray);
-            Assert.IsTrue(computation.OverPoint.Z < -DoubleExtensions.Epsilon / 2);
+            Assert.IsTrue(computation.OverPoint.Z < -Constants.Epsilon / 2);
             Assert.IsTrue(computation.Point.Z > computation.OverPoint.Z);
+        }
+
+        [TestMethod]
+        public void UnderPointOffsetBelowSurface()
+        {
+            Ray ray = new Ray(Tuple4D.CreatePoint(0, 0, -5), Tuple4D.CreateVector(0, 0, 1));
+            Sphere sphere = Sphere.CreateGlassSphere();
+            sphere.Transformation = Matrix.GetTranslationMatrix(0, 0, 1);
+            Intersections intersections = sphere.GetIntersectionsWith(ray);
+            Intersection hit = intersections.GetHit();
+            Computation computation = new Computation(hit, ray, intersections);
+            Assert.IsTrue(computation.UnderPoint.Z > Constants.Epsilon / 2);
+            Assert.IsTrue(computation.Point.Z < computation.UnderPoint.Z);
+        }
+
+        [TestMethod]
+        public void ShlickApproximationUnderTotalInternalReflection()
+        {
+            Sphere sphere = Sphere.CreateGlassSphere();
+            Ray ray = new Ray(Tuple4D.CreatePoint(0, 0, Constants.Sqrt2Over2), Tuple4D.CreateVector(0, 1, 0));
+            Intersections intersections = new Intersections(
+                new Intersection(-Constants.Sqrt2Over2, sphere),
+                new Intersection(Constants.Sqrt2Over2, sphere));
+
+            Computation computation = new Computation(intersections[1], ray, intersections);
+            double reflectance = computation.GetSchlickApproximation();
+            Assert.IsTrue(reflectance.Compare(1.0));
+        }
+
+        [TestMethod]
+        public void ShlickApproximationWithPerpendicularViewingAngle()
+        {
+            Sphere sphere = Sphere.CreateGlassSphere();
+            Ray ray = new Ray(Tuple4D.CreatePoint(0, 0, 0), Tuple4D.CreateVector(0, 1, 0));
+            Intersections intersections = new Intersections(
+                new Intersection(-1, sphere),
+                new Intersection(1, sphere));
+
+            Computation computation = new Computation(intersections[1], ray, intersections);
+            double reflectance = computation.GetSchlickApproximation();
+            Assert.IsTrue(reflectance.Compare(0.04));
+        }
+
+        [TestMethod]
+        public void ShlickApproximationWithSmallAngleAndN2GreaterThanN1()
+        {
+            Sphere sphere = Sphere.CreateGlassSphere();
+            Ray ray = new Ray(Tuple4D.CreatePoint(0, 0.99, -2), Tuple4D.CreateVector(0, 0, 1));
+            Intersections intersections = new Intersections(new Intersection(1.8589, sphere));
+
+            Computation computation = new Computation(intersections[0], ray, intersections);
+            double reflectance = computation.GetSchlickApproximation();
+            Assert.IsTrue(reflectance.Compare(0.48873));
         }
     }
 }

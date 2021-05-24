@@ -33,8 +33,7 @@
         [TestMethod]
         public void EyeBetweenLightAndSurfaceEyeOffset45Degrees()
         {
-            double root2over2 = Math.Sqrt(2) / 2;
-            Tuple4D eyeVector = Tuple4D.CreateVector(0, root2over2, -root2over2);
+            Tuple4D eyeVector = Tuple4D.CreateVector(0, Constants.Sqrt2Over2, -Constants.Sqrt2Over2);
             Tuple4D normalVector = Tuple4D.CreateVector(0, 0, -1);
             Light light = new Light(Tuple4D.CreatePoint(0, 0, -10), ColorTuple.White);
             Sphere sphere = new Sphere();
@@ -56,8 +55,7 @@
         [TestMethod]
         public void EyeInPathOfReflectionVector()
         {
-            double root2over2 = Math.Sqrt(2) / 2;
-            Tuple4D eyeVector = Tuple4D.CreateVector(0, -root2over2, -root2over2);
+            Tuple4D eyeVector = Tuple4D.CreateVector(0, -Constants.Sqrt2Over2, -Constants.Sqrt2Over2);
             Tuple4D normalVector = Tuple4D.CreateVector(0, 0, -1);
             Light light = new Light(Tuple4D.CreatePoint(0, 10, -10), ColorTuple.White);
             Sphere sphere = new Sphere();

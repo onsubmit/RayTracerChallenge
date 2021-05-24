@@ -35,18 +35,16 @@
         [TestMethod]
         public void NormalVectorOnNonAxialPoint()
         {
-            double root3over3 = Math.Sqrt(3) / 3;
             Sphere sphere = new Sphere();
-            Tuple4D normal = sphere.GetNormalAtPoint(Tuple4D.CreatePoint(root3over3, root3over3, root3over3));
-            Assert.AreEqual(Tuple4D.CreateVector(root3over3, root3over3, root3over3), normal);
+            Tuple4D normal = sphere.GetNormalAtPoint(Tuple4D.CreatePoint(Constants.Sqrt3Over3, Constants.Sqrt3Over3, Constants.Sqrt3Over3));
+            Assert.AreEqual(Tuple4D.CreateVector(Constants.Sqrt3Over3, Constants.Sqrt3Over3, Constants.Sqrt3Over3), normal);
         }
 
         [TestMethod]
         public void NormalVectorIsNormal()
         {
-            double root3over3 = Math.Sqrt(3) / 3;
             Sphere sphere = new Sphere();
-            Tuple4D normal = sphere.GetNormalAtPoint(Tuple4D.CreatePoint(root3over3, root3over3, root3over3));
+            Tuple4D normal = sphere.GetNormalAtPoint(Tuple4D.CreatePoint(Constants.Sqrt3Over3, Constants.Sqrt3Over3, Constants.Sqrt3Over3));
             Assert.AreEqual(normal, normal.Normalize());
         }
     }

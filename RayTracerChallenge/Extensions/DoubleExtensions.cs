@@ -13,11 +13,6 @@ namespace OnSubmit.RayTracerChallenge.Extensions
     public static class DoubleExtensions
     {
         /// <summary>
-        /// Maximum amount the two doubles can vary by to still be equivalent.
-        /// </summary>
-        public const double Epsilon = 10e-4;
-
-        /// <summary>
         /// Compares two doubles within a margin of error to account for floating point arithmetic.
         /// </summary>
         /// <param name="d1">First double.</param>
@@ -25,7 +20,7 @@ namespace OnSubmit.RayTracerChallenge.Extensions
         /// <returns><c>True</c> if the two doubles are equivalent with a small margin of error, <c>false</c> otherwise.</returns>
         public static bool Compare(this double d1, double d2)
         {
-            if (Math.Abs(d1 - d2) < Epsilon)
+            if (Math.Abs(d1 - d2) < Constants.Epsilon)
             {
                 return true;
             }

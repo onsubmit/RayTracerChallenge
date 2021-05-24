@@ -110,13 +110,18 @@ namespace OnSubmit.RayTracerChallenge
             int totalPixels = this.CanvasWidth * this.CanvasHeight;
             int reportEach = totalPixels / 100;
 
+            DateTime start = DateTime.Now;
             for (int y = 0; y < this.CanvasHeight; y++)
             {
                 for (int x = 0; x < this.CanvasWidth; x++)
                 {
-                    if (count++ % reportEach == 0)
+                    if (++count % reportEach == 0)
                     {
-                        Console.WriteLine($"{count / reportEach}%");
+                        TimeSpan elapsed = DateTime.Now - start;
+                        int percent = count / reportEach;
+
+                        TimeSpan remaining = TimeSpan.FromTicks((long)(elapsed.Ticks * ((100.0 / percent) - 1)));
+                        Console.WriteLine($"{percent}% Elapsed: {this.GetTimeString(elapsed)} Remaining: {this.GetTimeString(remaining)}");
                     }
 
                     Ray ray = this.GetRayForPixel(x, y);
@@ -125,7 +130,15 @@ namespace OnSubmit.RayTracerChallenge
                 }
             }
 
+            Console.WriteLine($"{DateTime.Now - start}");
             return canvas;
         }
+
+        /// <summary>
+        /// Returns the timespan in a nice format.
+        /// </summary>
+        /// <param name="timespan">The timspan.</param>
+        /// <returns>The timespan in a nice format.</returns>
+        private string GetTimeString(TimeSpan timespan) => timespan.ToString(@"hh\:mm\:ss");
     }
 }

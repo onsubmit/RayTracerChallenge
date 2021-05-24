@@ -37,9 +37,10 @@ namespace Playground
             DoChapter8();
             DoChapter9();
             DoChapter10();
+            DoChapter11();
             */
 
-            DoChapter11();
+            DoChapter12();
         }
 
         /// <summary>
@@ -170,7 +171,7 @@ namespace Playground
             Sphere sphere = new Sphere();
             sphere.Transformation = Matrix.GetScalingMatrix(1, 0.5, 1);
             sphere.Transformation = Matrix.GetScalingMatrix(0.5, 1, 1);
-            sphere.Transformation = Matrix.GetScalingMatrix(0.5, 1, 1).RotateZ(Math.PI / 4);
+            sphere.Transformation = Matrix.GetScalingMatrix(0.5, 1, 1).RotateZ(Constants.PiOver4);
             sphere.Transformation = Matrix.GetScalingMatrix(0.5, 1, 1).Shear(xy: 1);
 
             for (int y = 0; y < CanvasSize; y++)
@@ -284,8 +285,8 @@ namespace Playground
             };
 
             leftWall.Transformation = Matrix.GetScalingMatrix(10, 0.01, 10)
-                .RotateX(Math.PI / 2)
-                .RotateY(-Math.PI / 4)
+                .RotateX(Constants.PiOver2)
+                .RotateY(-Constants.PiOver4)
                 .Translate(0, 0, 5);
 
             world.AddShape(leftWall);
@@ -296,8 +297,8 @@ namespace Playground
             };
 
             rightWall.Transformation = Matrix.GetScalingMatrix(10, 0.01, 10)
-                .RotateX(Math.PI / 2)
-                .RotateY(Math.PI / 4)
+                .RotateX(Constants.PiOver2)
+                .RotateY(Constants.PiOver4)
                 .Translate(0, 0, 5);
 
             world.AddShape(rightWall);
@@ -326,7 +327,7 @@ namespace Playground
 
             world.AddShape(left);
 
-            Camera camera = new Camera(2000, 2000, Math.PI / 3);
+            Camera camera = new Camera(2000, 2000, Constants.PiOver3);
             Tuple4D from = Tuple4D.CreatePoint(0, 1.5, -5);
             Tuple4D to = Tuple4D.CreatePoint(0, 1, 0);
             Tuple4D up = Tuple4D.CreateVector(0, 1, 0);
@@ -357,8 +358,8 @@ namespace Playground
             {
                 Material = new Material(ColorTuple.Create(0.8, 1, 0.8), specular: 50),
                 Transformation = Matrix.GetScalingMatrix(10, 0.01, 10)
-                    .RotateX(Math.PI / 2)
-                    .RotateY(-Math.PI / 4)
+                    .RotateX(Constants.PiOver2)
+                    .RotateY(-Constants.PiOver4)
                     .Translate(0, 0, 5),
             };
 
@@ -368,8 +369,8 @@ namespace Playground
             {
                 Material = new Material(ColorTuple.Create(0.8, 0.8, 1), specular: 50),
                 Transformation = Matrix.GetScalingMatrix(10, 0.01, 10)
-                    .RotateX(Math.PI / 2)
-                    .RotateY(Math.PI / 4)
+                    .RotateX(Constants.PiOver2)
+                    .RotateY(Constants.PiOver4)
                     .Translate(0, 0, 5),
             };
 
@@ -399,7 +400,7 @@ namespace Playground
 
             world.AddShape(s3);
 
-            Camera camera = new Camera(1000, 1000, Math.PI / 3);
+            Camera camera = new Camera(1000, 1000, Constants.PiOver3);
             Tuple4D from = Tuple4D.CreatePoint(0, 1.5, -5);
             Tuple4D to = s1.Transformation * Tuple4D.CreatePoint(0, 0, 0);
             Tuple4D up = Tuple4D.CreateVector(0, 1, 0);
@@ -429,15 +430,15 @@ namespace Playground
                     Material = new Material(ColorTuple.Create(0, (double)(NumSpheres - i) / NumSpheres, (double)i / NumSpheres), diffuse: 0.9, specular: 1, shininess: 10),
                     Transformation = Matrix.GetScalingMatrix(2.5 / NumSpheres, 2.5 / NumSpheres, 2.5 / NumSpheres)
                     .Translate(
-                        Math.Cos(2 * Math.PI * i / NumSpheres),
+                        Math.Cos(Constants.TwoPi * i / NumSpheres),
                         0.25,
-                        Math.Sin(2 * Math.PI * i / NumSpheres)),
+                        Math.Sin(Constants.TwoPi * i / NumSpheres)),
                 };
 
                 world.AddShape(sphere);
             }
 
-            Camera camera = new Camera(1000, 1000, Math.PI / 4);
+            Camera camera = new Camera(1000, 1000, Constants.PiOver4);
             Tuple4D from = Tuple4D.CreatePoint(-3, 2, -2);
             Tuple4D to = Tuple4D.CreatePoint(0, 0, 0);
             Tuple4D up = Tuple4D.CreateVector(0, 1, 0);
@@ -458,7 +459,7 @@ namespace Playground
 
             Pattern floorPattern1 = new BlendedPattern(
                 new StripePattern(ColorTuple.Red, ColorTuple.Black),
-                new StripePattern(ColorTuple.Red, ColorTuple.Black) { Transformation = Matrix.GetRotationMatrixY(Math.PI / 2) });
+                new StripePattern(ColorTuple.Red, ColorTuple.Black) { Transformation = Matrix.GetRotationMatrixY(Constants.PiOver2) });
 
             Pattern floorPattern2 = new RingPattern(ColorTuple.Red, ColorTuple.Black);
 
@@ -481,15 +482,15 @@ namespace Playground
                     Material = new Material(ColorTuple.Create(0, (double)(NumSpheres - i) / NumSpheres, (double)i / NumSpheres), diffuse: 0.9, specular: 1, shininess: 10),
                     Transformation = Matrix.GetScalingMatrix(2.5 / NumSpheres, 2.5 / NumSpheres, 2.5 / NumSpheres)
                     .Translate(
-                        Math.Cos(2 * Math.PI * i / NumSpheres),
+                        Math.Cos(Constants.TwoPi * i / NumSpheres),
                         0.25,
-                        Math.Sin(2 * Math.PI * i / NumSpheres)),
+                        Math.Sin(Constants.TwoPi * i / NumSpheres)),
                 };
 
                 world.AddShape(sphere);
             }
 
-            Camera camera = new Camera(1000, 1000, Math.PI / 4);
+            Camera camera = new Camera(1000, 1000, Constants.PiOver4);
             Tuple4D from = Tuple4D.CreatePoint(-3, 2, -2);
             Tuple4D to = Tuple4D.CreatePoint(0, 0, 0);
             Tuple4D up = Tuple4D.CreateVector(0, 1, 0);
@@ -507,7 +508,7 @@ namespace Playground
 
             Plane floor = new Plane()
             {
-                Transformation = Matrix.GetTranslationMatrix(0, -1, 0),
+                Transformation = Matrix.GetTranslationMatrix(0, -3, 0),
             };
 
             floor.Material.Pattern = new CheckersPattern(ColorTuple.Red, ColorTuple.Black);
@@ -525,28 +526,19 @@ namespace Playground
             sphere.Material.Color = ColorTuple.Black;
             sphere.Material.Reflective = 0.75;
 
-            Sphere s1 = new Sphere
-            {
-                Transformation = Matrix.GetTranslationMatrix(-0.5, 0, 0.5),
-                Material = new Material(ColorTuple.Black, diffuse: 0.9, specular: 1, shininess: 200) { Reflective = 0.75 },
-            };
+            Sphere s1 = Sphere.CreateGlassSphere();
+            //Sphere s2 = Sphere.CreateGlassSphere();
+            //s2.Transformation = Matrix.GetScalingMatrix(0.5, 0.5, 0.5);
 
-            world.AddShape(s1);
-
-            double scale = 0.5;
             Sphere s2 = new Sphere
             {
-                Transformation = Matrix.GetScalingMatrix(scale, scale, scale).RotateZ(Math.PI / 2).Translate(0, -0.5, -1),
-                Material = new Material(ColorTuple.Black, diffuse: 0.9, specular: 1, shininess: 200)
-                {
-                    Reflective = 0.75,
-                    Pattern = new GradientPattern(),
-                },
+                Transformation = Matrix.GetTranslationMatrix(2, 0, 3),
+                Material = new Material(ColorTuple.Blue, diffuse: 0.9, specular: 1, shininess: 200, reflective: 0, transparency: 1, refractiveIndex: 0.5),
             };
 
-            world.AddShapes(floor, s1, s2);
+            world.AddShapes(floor, Sphere.CreateGlassSphere(), s2);
 
-            Camera camera = new Camera(200, 200, Math.PI / 4);
+            Camera camera = new Camera(500, 500, Constants.PiOver4);
             Tuple4D from = Tuple4D.CreatePoint(-3, 2, -2);
             Tuple4D to = Tuple4D.CreatePoint(-0.3, 0, 0);
             Tuple4D up = Tuple4D.CreateVector(0, 1, 0);
@@ -555,6 +547,67 @@ namespace Playground
             Canvas canvas = camera.Render(world);
             File.WriteAllText("reflection.ppm", canvas.ToPlainPortablePixmapString());
             System.Diagnostics.Process.Start("reflection.ppm");
+        }
+
+        private static void DoChapter12()
+        {
+            Light light = new Light(Tuple4D.CreatePoint(-10, 2, 5), ColorTuple.White);
+            World world = new World(light);
+
+            Plane floor = new Plane()
+            {
+                Transformation = Matrix.GetTranslationMatrix(0, -3, 0),
+            };
+
+            floor.Material.Pattern = new CheckersPattern(ColorTuple.White, ColorTuple.Create(0, 0, 0.2));
+            floor.Material.Transparency = 0;
+            floor.Material.Reflective = 0.55;
+            floor.Material.Ambient = 0.1;
+            floor.Material.Diffuse = 0.4;
+            world.AddShape(floor);
+
+            Shape s1 = Sphere.CreateGlassSphere();
+            s1.Material.Color = ColorTuple.Create(0, 0, 0);
+            s1.Material.Transparency = 1;
+            s1.Material.Reflective = 1;
+            s1.Material.Ambient = 0;
+            s1.Material.Diffuse = 0.05;
+            s1.Material.Specular = 1;
+            s1.Material.Shininess = 400;
+            s1.Transformation = Matrix.GetScalingMatrix(3, 3, 3);
+            world.AddShape(s1);
+
+            const int NumSpheres = 40;
+            for (int i = 0; i < NumSpheres; i++)
+            {
+                double ratio = (double)i / NumSpheres;
+                double scale = 0.35;
+                Shape sphere = Sphere.CreateGlassSphere();
+                sphere.Material.Color = ColorTuple.Create(ratio, 1 - ratio, 1);
+                sphere.Material.Transparency = 0.8;
+                sphere.Material.Reflective = 1;
+                sphere.Material.Ambient = 0.1;
+                sphere.Material.Diffuse = 0.2;
+                sphere.Material.Specular = 1;
+                sphere.Material.Shininess = 400;
+                sphere.Transformation = Matrix
+                    .GetScalingMatrix(scale, scale, scale)
+                    .Translate(
+                        4 * Math.Cos(Constants.TwoPi * ratio),
+                        (1 - ratio) * Math.Sin(4 * Constants.TwoPi * ratio),
+                        4 * Math.Sin(Constants.TwoPi * ratio));
+                world.AddShape(sphere);
+            }
+
+            Camera camera = new Camera(1920, 1080, Constants.PiOver4);
+            Tuple4D from = Tuple4D.CreatePoint(-10, 4, -10);
+            Tuple4D to = Tuple4D.CreatePoint(0, -2, 0);
+            Tuple4D up = Tuple4D.CreateVector(0, 1, 0);
+            camera.Transform = Matrix.GetViewTransformationMatrix(from, to, up);
+
+            Canvas canvas = camera.Render(world);
+            File.WriteAllText("refraction.ppm", canvas.ToPlainPortablePixmapString());
+            System.Diagnostics.Process.Start("refraction.ppm");
         }
 
         /// <summary>

@@ -6,7 +6,6 @@
 namespace OnSubmit.RayTracerChallenge.Shapes
 {
     using System;
-    using OnSubmit.RayTracerChallenge.Extensions;
 
     /// <summary>
     /// Represents a test shape.
@@ -20,7 +19,7 @@ namespace OnSubmit.RayTracerChallenge.Shapes
         /// <returns>The intersections along the ray.</returns>
         public override Intersections GetIntersectionsWithImpl(Ray ray)
         {
-            if (Math.Abs(ray.Direction.Y) < DoubleExtensions.Epsilon)
+            if (Math.Abs(ray.Direction.Y) < Constants.Epsilon)
             {
                 return new Intersections();
             }

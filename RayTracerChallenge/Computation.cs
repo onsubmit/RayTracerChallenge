@@ -5,7 +5,9 @@
 //-----------------------------------------------------------------------
 namespace OnSubmit.RayTracerChallenge
 {
-    using OnSubmit.RayTracerChallenge.Extensions;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using OnSubmit.RayTracerChallenge.Shapes;
 
     /// <summary>
@@ -23,13 +25,14 @@ namespace OnSubmit.RayTracerChallenge
         /// </summary>
         /// <param name="intersection">The intersection.</param>
         /// <param name="ray">The ray.</param>
-        public Computation(Intersection intersection, Ray ray)
+        /// <param name="intersections">The collection of intersections, used to determine where a hit is relative to the other intersections.</param>
+        public Computation(Intersection intersection, Ray ray, Intersections intersections = null)
         {
             this.intersection = intersection;
             this.Point = ray.GetPointOnRayAtDistance(intersection.T);
             this.EyeVector = -ray.Direction;
             this.NormalVector = intersection.Object.GetNormalAtPoint(this.Point);
-            this.OverPoint = this.Point + (this.NormalVector * DoubleExtensions.Epsilon);
+            this.ReflectionVector = ray.Direction.ReflectVector(this.NormalVector);
 
             if (this.NormalVector.GetDotProductWith(this.EyeVector) < 0)
             {
@@ -37,7 +40,30 @@ namespace OnSubmit.RayTracerChallenge
                 this.NormalVector = -this.NormalVector;
             }
 
-            this.ReflectionVector = ray.Direction.ReflectVector(this.NormalVector);
+            Tuple4D normalTimesEpsilon = this.NormalVector * Constants.Epsilon;
+            this.OverPoint = this.Point + normalTimesEpsilon;
+            this.UnderPoint = this.Point - normalTimesEpsilon;
+
+            List<Shape> containers = new List<Shape>();
+            for (int j = 0; j < intersections?.Count; j++)
+            {
+                Intersection i = intersections[j];
+                if (i.Equals(intersection))
+                {
+                    this.N1 = containers.LastOrDefault()?.Material.RefractiveIndex ?? 1.0;
+                }
+
+                if (!containers.Remove(i.Object))
+                {
+                    containers.Add(i.Object);
+                }
+
+                if (i.Equals(intersection))
+                {
+                    this.N2 = containers.LastOrDefault()?.Material.RefractiveIndex ?? 1.0;
+                    break;
+                }
+            }
         }
 
         /// <summary>
@@ -51,7 +77,12 @@ namespace OnSubmit.RayTracerChallenge
         public Tuple4D OverPoint { get; private set; }
 
         /// <summary>
-        /// Gets the eye vect4or.
+        /// Gets a slightly adjusted copy of <see cref="Point"/>. Where a refracted ray typically originates.
+        /// </summary>
+        public Tuple4D UnderPoint { get; private set; }
+
+        /// <summary>
+        /// Gets the eye vector.
         /// </summary>
         public Tuple4D EyeVector { get; private set; }
 
@@ -64,6 +95,16 @@ namespace OnSubmit.RayTracerChallenge
         /// Gets the reflection vector.
         /// </summary>
         public Tuple4D ReflectionVector { get; private set; }
+
+        /// <summary>
+        /// Gets the refractive index of the material that the ray is passing from.
+        /// </summary>
+        public double N1 { get; private set; }
+
+        /// <summary>
+        /// Gets the refractive index of the material that the ray is passing to.
+        /// </summary>
+        public double N2 { get; private set; }
 
         /// <summary>
         /// Gets the 't' value of the intersection.
@@ -79,5 +120,32 @@ namespace OnSubmit.RayTracerChallenge
         /// Gets a value indicating whether the hit occurs on the inside of the shape.
         /// </summary>
         public bool Inside { get; private set; }
+
+        /// <summary>
+        /// Calculate the Schlick approximation to the Fresnel equations.
+        /// </summary>
+        /// <returns>The Schlick approximation to the Fresnel equations.</returns>
+        public double GetSchlickApproximation()
+        {
+            // Cosine of the angle between eye and normal vectors.
+            double cosine = this.EyeVector.GetDotProductWith(this.NormalVector);
+
+            if (this.N1 > this.N2)
+            {
+                // Total internal reflection.
+                double ratio = this.N1 / this.N2;
+                double sineSquaredTheta = ratio * ratio * (1.0 - (cosine * cosine));
+                if (sineSquaredTheta > 1)
+                {
+                    return 1.0;
+                }
+
+                double cosineTheta = Math.Sqrt(1.0 - sineSquaredTheta);
+                cosine = cosineTheta;
+            }
+
+            double r0 = Math.Pow((this.N1 - this.N2) / (this.N1 + this.N2), 2.0);
+            return r0 + ((1 - r0) * Math.Pow(1 - cosine, 5.0));
+        }
     }
 }
