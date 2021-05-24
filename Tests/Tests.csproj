@@ -56,6 +56,7 @@
     <Compile Include="CanvasTests.cs" />
     <Compile Include="ColorTupleTests.cs" />
     <Compile Include="ComputationTests.cs" />
+    <Compile Include="CubeTests.cs" />
     <Compile Include="IntersectionTests.cs" />
     <Compile Include="LightingTests.cs" />
     <Compile Include="MatrixTests.cs" />

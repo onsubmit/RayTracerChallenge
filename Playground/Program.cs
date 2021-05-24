@@ -38,6 +38,7 @@ namespace Playground
             DoChapter9();
             DoChapter10();
             DoChapter11();
+            DoChapter11Take2();
             */
 
             DoChapter12();
@@ -549,7 +550,7 @@ namespace Playground
             System.Diagnostics.Process.Start("reflection.ppm");
         }
 
-        private static void DoChapter12()
+        private static void DoChapter11Take2()
         {
             Light light = new Light(Tuple4D.CreatePoint(-10, 2, 5), ColorTuple.White);
             World world = new World(light);
@@ -608,6 +609,193 @@ namespace Playground
             Canvas canvas = camera.Render(world);
             File.WriteAllText("refraction.ppm", canvas.ToPlainPortablePixmapString());
             System.Diagnostics.Process.Start("refraction.ppm");
+        }
+
+        private static void DoChapter12()
+        {
+            Light light = new Light(Tuple4D.CreatePoint(200, 200, 0), ColorTuple.Create(0.7, 0.8, 0.9));
+            World world = new World(light);
+
+            Cube rightWall = new Cube();
+            rightWall.Transformation = Matrix.GetScalingMatrix(100, 100, 100).Translate(-200, 0, 0);
+            rightWall.Material.Specular = 0;
+            rightWall.Material.Ambient = 0;
+            rightWall.Material.Pattern = new StripePattern(ColorTuple.Create(0.1, 0.1, 0.1), ColorTuple.Create(0.2, 0.2, 0.2))
+            {
+                Transformation = Matrix.GetScalingMatrix(0.1, 0.1, 0.1).RotateY(Constants.PiOver2),
+            };
+
+            Cube leftWall = new Cube();
+            leftWall.Transformation = Matrix.GetScalingMatrix(100, 100, 100).Translate(0, 0, -200);
+            leftWall.Material.Specular = 0;
+            leftWall.Material.Ambient = 0;
+            leftWall.Material.Pattern = new StripePattern(ColorTuple.Create(0.1, 0.1, 0.1), ColorTuple.Create(0.2, 0.2, 0.2))
+            {
+                Transformation = Matrix.GetScalingMatrix(0.1, 0.1, 0.1),
+            };
+
+            Cube floor = new Cube();
+            floor.Transformation = Matrix.GetScalingMatrix(100, 100, 100).Translate(0, -200, 0);
+            floor.Material.Specular = 0;
+            floor.Material.Ambient = 0;
+            floor.Material.Pattern = new CheckersPattern(ColorTuple.Create(0.1, 0.1, 0.1), ColorTuple.Black)
+            {
+                Transformation = Matrix.GetScalingMatrix(0.1, 0.1, 0.1),
+            };
+
+            world.AddShapes(rightWall, leftWall, floor);
+
+            Cube table = new Cube();
+            table.Transformation = Matrix.GetScalingMatrix(40, 2, 60).Translate(0, -40, 0);
+            table.Material.Specular = 0;
+            table.Material.Ambient = 0;
+            table.Material.Pattern = new StripePattern(ColorTuple.Create(0.3, 0.3, 0.3), ColorTuple.Create(0.4, 0.4, 0.4))
+            {
+                Transformation = Matrix.GetScalingMatrix(0.05, 0.05, 0.05).RotateY(Constants.PiOver2),
+            };
+
+            Cube tableLeg1 = new Cube();
+            tableLeg1.Transformation = Matrix.GetScalingMatrix(2, 40, 2).Translate(35, -81, 55);
+            tableLeg1.Material.Color = ColorTuple.Create(0.2, 0.2, 0.2);
+            tableLeg1.Material.Specular = 0;
+            tableLeg1.Material.Ambient = 0;
+
+            Cube tableLeg2 = new Cube();
+            tableLeg2.Transformation = Matrix.GetScalingMatrix(2, 40, 2).Translate(35, -81, -55);
+            tableLeg2.Material = tableLeg1.Material;
+            tableLeg2.Material.Specular = 0;
+            tableLeg2.Material.Ambient = 0;
+
+            Cube tableLeg3 = new Cube();
+            tableLeg3.Transformation = Matrix.GetScalingMatrix(2, 40, 2).Translate(-35, -81, 55);
+            tableLeg3.Material = tableLeg1.Material;
+            tableLeg3.Material.Specular = 0;
+            tableLeg3.Material.Ambient = 0;
+
+            Cube tableLeg4 = new Cube();
+            tableLeg4.Transformation = Matrix.GetScalingMatrix(2, 40, 2).Translate(-35, -81, -55);
+            tableLeg4.Material = tableLeg1.Material;
+            tableLeg4.Material.Specular = 0;
+            tableLeg4.Material.Ambient = 0;
+
+            world.AddShapes(table, tableLeg1, tableLeg2, tableLeg3, tableLeg4);
+
+            Cube mirror = new Cube();
+            mirror.Transformation = Matrix.GetScalingMatrix(0.01, 70, 155).Translate(-99.99, 10, -99.99);
+            mirror.Material.Transparency = 0;
+            mirror.Material.Reflective = 0.99;
+            mirror.Material.RefractiveIndex = 1.52;
+            mirror.Material.Ambient = 0;
+            mirror.Material.Diffuse = 0.05;
+            mirror.Material.Specular = 1;
+            mirror.Material.Shininess = 400;
+            world.AddShape(mirror);
+
+            Cube painting1 = new Cube();
+            painting1.Transformation = Matrix.GetScalingMatrix(20, 20, 0.01).Translate(0, 10, -99.99);
+            painting1.Material.Color = ColorTuple.Red;
+            painting1.Material.Transparency = 0.5;
+            painting1.Material.Reflective = 0.99;
+            painting1.Material.RefractiveIndex = 1.1;
+            painting1.Material.Ambient = 0.2;
+            painting1.Material.Diffuse = 0.05;
+            painting1.Material.Specular = 0;
+            painting1.Material.Shininess = 200;
+            world.AddShape(painting1);
+
+            Cube painting2 = new Cube();
+            painting2.Transformation = Matrix.GetScalingMatrix(7.5, 7.5, 0.01).Translate(-32.5, 22.5, -99.99);
+            painting2.Material.Color = ColorTuple.Green;
+            painting2.Material.Transparency = 0.5;
+            painting2.Material.Reflective = 0.99;
+            painting2.Material.RefractiveIndex = 1.1;
+            painting2.Material.Ambient = 0.2;
+            painting2.Material.Diffuse = 0.05;
+            painting2.Material.Specular = 0;
+            painting2.Material.Shininess = 200;
+            world.AddShape(painting2);
+
+            Cube painting3 = new Cube();
+            painting3.Transformation = Matrix.GetScalingMatrix(7.5, 7.5, 0.01).Translate(-32.5, 0, -99.99);
+            painting3.Material.Color = ColorTuple.Blue;
+            painting3.Material.Transparency = 0.5;
+            painting3.Material.Reflective = 0.99;
+            painting3.Material.RefractiveIndex = 1.1;
+            painting3.Material.Ambient = 0.2;
+            painting3.Material.Diffuse = 0.05;
+            painting3.Material.Specular = 0;
+            painting3.Material.Shininess = 200;
+            world.AddShape(painting3);
+
+            Cube trinket1 = new Cube();
+            trinket1.Transformation = Matrix.GetScalingMatrix(8, 8, 8).Translate(0, -30, 0);
+            trinket1.Material.Color = ColorTuple.Red;
+            trinket1.Material.Transparency = 0.5;
+            trinket1.Material.Reflective = 0.99;
+            trinket1.Material.RefractiveIndex = 1.1;
+            trinket1.Material.Ambient = 0.2;
+            trinket1.Material.Diffuse = 0.05;
+            trinket1.Material.Specular = 0;
+            trinket1.Material.Shininess = 200;
+            world.AddShape(trinket1);
+
+            Cube trinket2 = new Cube();
+            trinket2.Transformation = Matrix.GetScalingMatrix(1, 8, 1).RotateY(Constants.PiOver4).Translate(-30, -30, 50);
+            trinket2.Material.Color = ColorTuple.Green;
+            trinket2.Material.Transparency = 0.5;
+            trinket2.Material.Reflective = 0.99;
+            trinket2.Material.RefractiveIndex = 1.1;
+            trinket2.Material.Ambient = 0.2;
+            trinket2.Material.Diffuse = 0.05;
+            trinket2.Material.Specular = 0;
+            trinket2.Material.Shininess = 200;
+            world.AddShape(trinket2);
+
+            Cube trinket3 = new Cube();
+            trinket3.Transformation = Matrix.GetScalingMatrix(4, 1, 4).RotateY(Constants.PiOver3).Translate(30, -37, 40);
+            trinket3.Material.Color = ColorTuple.Blue;
+            trinket3.Material.Transparency = 0.5;
+            trinket3.Material.Reflective = 0.99;
+            trinket3.Material.RefractiveIndex = 1.1;
+            trinket3.Material.Ambient = 0.2;
+            trinket3.Material.Diffuse = 0.05;
+            trinket3.Material.Specular = 0;
+            trinket3.Material.Shininess = 200;
+            world.AddShape(trinket3);
+
+            Cube trinket4 = new Cube();
+            trinket4.Transformation = Matrix.GetScalingMatrix(3, 2, 12).RotateY(Math.PI / 7).Translate(-10, -36, 30);
+            trinket4.Material.Color = ColorTuple.Create(0, 1, 1);
+            trinket4.Material.Transparency = 0.5;
+            trinket4.Material.Reflective = 0.99;
+            trinket4.Material.RefractiveIndex = 1.1;
+            trinket4.Material.Ambient = 0.2;
+            trinket4.Material.Diffuse = 0.05;
+            trinket4.Material.Specular = 0;
+            trinket4.Material.Shininess = 200;
+            world.AddShape(trinket4);
+
+            Cube trinket5 = new Cube();
+            trinket5.Transformation = Matrix.GetScalingMatrix(8, 2, 10).RotateY(Constants.PiOver4).Translate(20, -36, -10);
+            trinket5.Material.Color = ColorTuple.Create(1, 0, 1);
+            trinket5.Material.Transparency = 0.5;
+            trinket5.Material.Reflective = 0.99;
+            trinket5.Material.RefractiveIndex = 1.1;
+            trinket5.Material.Ambient = 0.2;
+            trinket5.Material.Diffuse = 0.05;
+            trinket5.Material.Specular = 0;
+            trinket5.Material.Shininess = 200;
+            world.AddShape(trinket5);
+
+            Camera camera = new Camera(500, 500, Constants.PiOver3);
+            Tuple4D from = Tuple4D.CreatePoint(99, 0, 99);
+            Tuple4D to = Tuple4D.CreatePoint(0, -40, 10);
+            Tuple4D up = Tuple4D.CreateVector(0, 1, 0);
+            camera.Transform = Matrix.GetViewTransformationMatrix(from, to, up);
+
+            Canvas canvas = camera.Render(world);
+            File.WriteAllText("cubes.ppm", canvas.ToPlainPortablePixmapString());
+            System.Diagnostics.Process.Start("cubes.ppm");
         }
 
         /// <summary>
