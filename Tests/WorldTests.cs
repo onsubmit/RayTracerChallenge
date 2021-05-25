@@ -173,7 +173,7 @@
 
             Computation computation = new Computation(intersections[2], ray, intersections);
             ColorTuple refactedColor = world.GetRefractedColorAt(computation);
-            Assert.AreEqual(ColorTuple.Create(0, 0.99787, 0.04747), refactedColor);
+            Assert.AreEqual(ColorTuple.Create(0, 0.99887, 0.04721), refactedColor);
         }
 
         [TestMethod]

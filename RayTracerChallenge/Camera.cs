@@ -121,7 +121,7 @@ namespace OnSubmit.RayTracerChallenge
                         int percent = count / reportEach;
 
                         TimeSpan remaining = TimeSpan.FromTicks((long)(elapsed.Ticks * ((100.0 / percent) - 1)));
-                        Console.WriteLine($"{percent}% Elapsed: {this.GetTimeString(elapsed)} Remaining: {this.GetTimeString(remaining)}");
+                        Console.WriteLine($"{percent}%\tElapsed: {this.GetTimeString(elapsed)}\tRemaining: {this.GetTimeString(remaining)}\tTotal: {this.GetTimeString(elapsed + remaining)}");
                     }
 
                     Ray ray = this.GetRayForPixel(x, y);

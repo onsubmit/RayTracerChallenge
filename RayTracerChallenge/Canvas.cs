@@ -7,6 +7,7 @@ namespace OnSubmit.RayTracerChallenge
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
     using System.Text;
     using OnSubmit.RayTracerChallenge;
@@ -146,12 +147,32 @@ namespace OnSubmit.RayTracerChallenge
         /// <returns>The set of lines used to write the PPM file.</returns>
         public IList<string> ToPlainPortablePixmapLines()
         {
-            IList<string> lines = new List<string>
+            IList<string> lines = new List<string>();
+            this.LineWriter(lines.Add);
+            return lines;
+        }
+
+        /// <summary>
+        /// Writes the canvas to a Portable Pixmap file.
+        /// </summary>
+        /// <param name="filename">The filename.</param>
+        public void WritePortablePixmapFile(string filename)
+        {
+            using (StreamWriter file = new StreamWriter(filename))
             {
-                "P3",
-                $"{this.Width} {this.Height}",
-                MaxColorValue.ToString(),
-            };
+                this.LineWriter(file.WriteLine);
+            }
+        }
+
+        /// <summary>
+        /// Helper method to handle each line of the PPM file.
+        /// </summary>
+        /// <param name="writeAction">The action to perform on each line.</param>
+        private void LineWriter(Action<string> writeAction)
+        {
+            writeAction.Invoke("P3");
+            writeAction.Invoke($"{this.Width} {this.Height}");
+            writeAction.Invoke(MaxColorValue.ToString());
 
             StringBuilder lineBuilder = new StringBuilder();
             for (int y = 0; y < this.Height; y++)
@@ -176,18 +197,16 @@ namespace OnSubmit.RayTracerChallenge
                         }
                         else
                         {
-                            lines.Add(lineBuilder.ToString());
+                            writeAction.Invoke(lineBuilder.ToString());
                             lineBuilder.Clear();
                             lineBuilder.Append(entry);
                         }
                     }
                 }
 
-                lines.Add(lineBuilder.ToString());
+                writeAction.Invoke(lineBuilder.ToString());
                 lineBuilder.Clear();
             }
-
-            return lines;
         }
     }
 }

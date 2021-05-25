@@ -16,7 +16,7 @@ namespace OnSubmit.RayTracerChallenge
         /// <summary>
         /// The set of intersections.
         /// </summary>
-        private readonly Intersection[] elements;
+        private readonly List<Intersection> elements;
 
         /// <summary>
         /// The sorted intersections by 't' value.
@@ -38,7 +38,7 @@ namespace OnSubmit.RayTracerChallenge
         /// </summary>
         public Intersections()
         {
-            this.elements = new Intersection[0];
+            this.elements = new List<Intersection>();
         }
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace OnSubmit.RayTracerChallenge
         /// <param name="intersections">The intersections.</param>
         public Intersections(params Intersection[] intersections)
         {
-            this.elements = intersections;
+            this.elements = new List<Intersection>(intersections);
         }
 
         /// <summary>
@@ -56,13 +56,13 @@ namespace OnSubmit.RayTracerChallenge
         /// <param name="intersections">The intersections.</param>
         public Intersections(params Intersections[] intersections)
         {
-            this.elements = intersections.SelectMany(i => i.elements).ToArray();
+            this.elements = intersections.SelectMany(i => i.elements).ToList();
         }
 
         /// <summary>
         /// Gets the count of intersections.
         /// </summary>
-        public int Count => this.elements?.Length ?? 0;
+        public int Count => this.elements?.Count ?? 0;
 
         /// <summary>
         /// Gets a value indicating whether the intersections contain a hit.
@@ -91,6 +91,15 @@ namespace OnSubmit.RayTracerChallenge
         /// <param name="i">The index.</param>
         /// <returns>The intersection corresponding to the given index.</returns>
         public Intersection this[int i] => this.elements[i];
+
+        /// <summary>
+        /// Adds an intersection to the list of intersections.
+        /// </summary>
+        /// <param name="intersection">The intersection to add.</param>
+        public void AddIntersection(Intersection intersection)
+        {
+            this.elements.Add(intersection);
+        }
 
         /// <summary>
         /// Get the hit from the intersections.
@@ -143,7 +152,7 @@ namespace OnSubmit.RayTracerChallenge
         /// <returns>The hash code.</returns>
         public override int GetHashCode()
         {
-            return 272633004 + EqualityComparer<Intersection[]>.Default.GetHashCode(this.elements);
+            return 272633004 + EqualityComparer<List<Intersection>>.Default.GetHashCode(this.elements);
         }
     }
 }

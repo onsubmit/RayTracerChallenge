@@ -15,7 +15,7 @@ namespace OnSubmit.RayTracerChallenge
         /// <summary>
         /// Maximum amount the two doubles can vary by to still be equivalent.
         /// </summary>
-        public const double Epsilon = 10e-4;
+        public const double Epsilon = 10e-6;
 
         /// <summary>
         /// Square root of 2.

@@ -74,7 +74,7 @@
             Intersection intersection = new Intersection(Constants.Sqrt2, plane);
             Computation computation = new Computation(intersection, ray);
             ColorTuple color = world.GetReflectedColorAt(computation);
-            Assert.AreEqual(ColorTuple.Create(0.19032, 0.2379, 0.14274), color);
+            Assert.AreEqual(ColorTuple.Create(0.19033, 0.23791, 0.14275), color);
         }
 
         [TestMethod]
@@ -93,7 +93,7 @@
             Intersection intersection = new Intersection(Constants.Sqrt2, plane);
             Computation computation = new Computation(intersection, ray);
             ColorTuple color = world.ShadeHit(computation);
-            Assert.AreEqual(ColorTuple.Create(0.87677, 0.92436, 0.82918), color);
+            Assert.AreEqual(ColorTuple.Create(0.87675, 0.92434, 0.82917), color);
         }
 
         [TestMethod]
