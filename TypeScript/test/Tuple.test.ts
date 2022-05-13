@@ -40,9 +40,9 @@ describe("Tuple", () => {
 
   it("Vector ctor creates Tuples with w=0", () => {
     const { x, y, z, w } = { x: 4, y: -4, z: 3, w: 0 };
-    const p = new Vector(x, y, z);
+    const v = new Vector(x, y, z);
     const t = new Tuple(x, y, z, w);
 
-    expect(p.compare(t)).toBe(true);
+    expect(v.compare(t)).toBe(true);
   });
 });
