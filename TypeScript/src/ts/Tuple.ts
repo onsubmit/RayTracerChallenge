@@ -13,6 +13,10 @@ export default class Tuple {
     this.w = w;
   }
 
+  static get zero() {
+    return new Tuple(0, 0, 0, 0);
+  }
+
   get isPoint(): boolean {
     return this.w === 1;
   }
@@ -43,4 +47,7 @@ export default class Tuple {
 
   add = (tuple: Tuple): Tuple => new Tuple(this.x + tuple.x, this.y + tuple.y, this.z + tuple.z, this.w + tuple.w);
   subtract = (tuple: Tuple): Tuple => new Tuple(this.x - tuple.x, this.y - tuple.y, this.z - tuple.z, this.w - tuple.w);
+  multiply = (scalar: number): Tuple => new Tuple(this.x * scalar, this.y * scalar, this.z * scalar, this.w * scalar);
+  divide = (scalar: number): Tuple => new Tuple(this.x / scalar, this.y / scalar, this.z / scalar, this.w / scalar);
+  negate = (): Tuple => Tuple.zero.subtract(this);
 }
