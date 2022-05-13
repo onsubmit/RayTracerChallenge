@@ -110,4 +110,34 @@ describe("Tuple", () => {
     const quotient = t.divide(2);
     expect(quotient.compare(new Tuple(0.5, -1, 1.5, -2))).toBe(true);
   });
+
+  it("Computing the magnitude of vector(1, 0, 0)", () => {
+    const v = new Vector(1, 0, 0);
+
+    expect(v.magnitude.compare(1)).toBe(true);
+  });
+
+  it("Computing the magnitude of vector(0, 1, 0)", () => {
+    const v = new Vector(0, 1, 0);
+
+    expect(v.magnitude.compare(1)).toBe(true);
+  });
+
+  it("Computing the magnitude of vector(0, 0, 1)", () => {
+    const v = new Vector(0, 0, 1);
+
+    expect(v.magnitude.compare(1)).toBe(true);
+  });
+
+  it("Computing the magnitude of vector(1, 2, 3)", () => {
+    const v = new Vector(1, 2, 3);
+
+    expect(v.magnitude.compare(Math.sqrt(14))).toBe(true);
+  });
+
+  it("Computing the magnitude of vector(-1, -2, -3)", () => {
+    const v = new Vector(-1, -2, -3);
+
+    expect(v.magnitude.compare(Math.sqrt(14))).toBe(true);
+  });
 });
