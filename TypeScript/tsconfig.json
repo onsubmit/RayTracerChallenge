@@ -6,7 +6,7 @@
     "target": "es6",
 
     "baseUrl": "src",
-    "outDir": "./dist",
+    "outDir": "dist",
     "paths": {
       "ts/*": ["ts/*"]
     },
@@ -24,6 +24,6 @@
     "sourceMap": true
   },
 
-  "include": ["./src/ts/**/*", "./test/**/*"],
+  "include": ["src/ts/**/*", "test/**/*"],
   "exclude": ["dist", "node_modules"]
 }

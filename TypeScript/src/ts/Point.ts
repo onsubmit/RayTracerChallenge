@@ -5,7 +5,9 @@ export default class Point extends Tuple {
     super(x, y, z, 1);
   }
 
-  static get zero() {
-    return new Point(0, 0, 0);
+  static fromTuple = (tuple: Tuple): Point => new Point(tuple.x, tuple.y, tuple.z);
+
+  static get zero(): Point {
+    return Point.fromTuple(Tuple.zero);
   }
 }

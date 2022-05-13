@@ -45,9 +45,17 @@ export default class Tuple {
     return true;
   };
 
+  protected static multiply = (tuple: Tuple, scalar: number): Tuple =>
+    new Tuple(tuple.x * scalar, tuple.y * scalar, tuple.z * scalar, tuple.w * scalar);
+
+  protected static divide = (tuple: Tuple, scalar: number): Tuple =>
+    new Tuple(tuple.x / scalar, tuple.y / scalar, tuple.z / scalar, tuple.w / scalar);
+
+  protected static negate = (tuple: Tuple): Tuple => Tuple.zero.subtract(tuple);
+
   add = (tuple: Tuple): Tuple => new Tuple(this.x + tuple.x, this.y + tuple.y, this.z + tuple.z, this.w + tuple.w);
   subtract = (tuple: Tuple): Tuple => new Tuple(this.x - tuple.x, this.y - tuple.y, this.z - tuple.z, this.w - tuple.w);
-  multiply = (scalar: number): Tuple => new Tuple(this.x * scalar, this.y * scalar, this.z * scalar, this.w * scalar);
-  divide = (scalar: number): Tuple => new Tuple(this.x / scalar, this.y / scalar, this.z / scalar, this.w / scalar);
-  negate = (): Tuple => Tuple.zero.subtract(this);
+  multiply = (scalar: number): Tuple => Tuple.multiply(this, scalar);
+  divide = (scalar: number): Tuple => Tuple.divide(this, scalar);
+  negate = (): Tuple => Tuple.negate(this);
 }
