@@ -1,10 +1,10 @@
 import "./extensions/NumberExtensions";
 
 export default class Tuple {
-  x: number;
-  y: number;
-  z: number;
-  w: number;
+  readonly x: number;
+  readonly y: number;
+  readonly z: number;
+  readonly w: number;
 
   constructor(x: number, y: number, z: number, w: number) {
     this.x = x;
