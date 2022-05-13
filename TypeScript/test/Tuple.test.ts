@@ -45,4 +45,32 @@ describe("Tuple", () => {
 
     expect(v.compare(t)).toBe(true);
   });
+
+  it("Adding two tuples", () => {
+    const t1 = new Tuple(3, -2, 5, 1);
+    const t2 = new Tuple(-2, 3, 1, 0);
+
+    expect(t1.add(t2).compare(new Tuple(1, 1, 6, 1))).toBe(true);
+  });
+
+  it("Subtracting two points", () => {
+    const p1 = new Point(3, 2, 1);
+    const p2 = new Point(5, 6, 7);
+
+    expect(p1.subtract(p2).compare(new Vector(-2, -4, -6))).toBe(true);
+  });
+
+  it("Subtracting a vector from a point", () => {
+    const p = new Point(3, 2, 1);
+    const v = new Vector(5, 6, 7);
+
+    expect(p.subtract(v).compare(new Point(-2, -4, -6))).toBe(true);
+  });
+
+  it("Subtracting two vectors", () => {
+    const v1 = new Vector(3, 2, 1);
+    const v2 = new Vector(5, 6, 7);
+
+    expect(v1.subtract(v2).compare(new Vector(-2, -4, -6))).toBe(true);
+  });
 });

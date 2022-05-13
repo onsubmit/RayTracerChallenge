@@ -21,7 +21,7 @@ export default class Tuple {
     return this.w === 0;
   }
 
-  compare(tuple: Tuple): boolean {
+  compare = (tuple: Tuple): boolean => {
     if (!this.x.compare(tuple.x)) {
       return false;
     }
@@ -39,5 +39,8 @@ export default class Tuple {
     }
 
     return true;
-  }
+  };
+
+  add = (tuple: Tuple): Tuple => new Tuple(this.x + tuple.x, this.y + tuple.y, this.z + tuple.z, this.w + tuple.w);
+  subtract = (tuple: Tuple): Tuple => new Tuple(this.x - tuple.x, this.y - tuple.y, this.z - tuple.z, this.w - tuple.w);
 }
