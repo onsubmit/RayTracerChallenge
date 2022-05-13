@@ -5,10 +5,10 @@
     "moduleResolution": "node",
     "target": "es6",
 
-    "baseUrl": "./",
+    "baseUrl": "src",
     "outDir": "./dist",
     "paths": {
-      "ts": ["./src/ts"]
+      "ts/*": ["ts/*"]
     },
 
     "strict": true,
@@ -24,6 +24,6 @@
     "sourceMap": true
   },
 
-  "include": ["./src/ts"],
+  "include": ["./src/ts/**/*", "./test/**/*"],
   "exclude": ["dist", "node_modules"]
 }
