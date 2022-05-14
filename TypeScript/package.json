@@ -16,12 +16,21 @@
     "@types/jest": "^27.5.1",
     "@typescript-eslint/eslint-plugin": "^5.23.0",
     "@typescript-eslint/parser": "^5.23.0",
+    "css-loader": "^6.7.1",
     "eslint": "^8.15.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.0.0",
+    "html-loader": "^3.1.0",
+    "html-webpack-plugin": "^5.5.0",
     "jest": "^28.1.0",
+    "less": "^4.1.2",
+    "less-loader": "^10.2.0",
     "prettier": "^2.6.2",
-    "typescript": "^4.6.4"
+    "style-loader": "^3.3.1",
+    "ts-loader": "^9.3.0",
+    "typescript": "^4.6.4",
+    "webpack": "^5.72.1",
+    "webpack-cli": "^4.9.2"
   },
   "jest": {
     "testMatch": [
