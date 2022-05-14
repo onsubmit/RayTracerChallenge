@@ -1,38 +1,39 @@
 import "ts/extensions/NumberExtensions";
 import Point from "ts/Point";
-import Tuple from "ts/Tuple";
+import Tuple4d from "ts/Tuple4d";
 import Vector from "ts/Vector";
 
 describe("Tuple", () => {
   describe("Basic", () => {
     it("A tuple with w=1.0 is a point", () => {
       const { x, y, z, w } = { x: 4.3, y: -4.2, z: 3.1, w: 1.0 };
-      const t = new Tuple(x, y, z, w);
+      const t = new Tuple4d(x, y, z, w);
 
       expect(t.x.compare(x)).toBe(true);
       expect(t.y.compare(y)).toBe(true);
       expect(t.z.compare(z)).toBe(true);
       expect(t.w.compare(w)).toBe(true);
-      expect(t.isPoint).toBe(true);
-      expect(t.isVector).toBe(false);
+
+      expect(t.compare(Point.fromTuple(t))).toBe(true);
+      expect(t.compare(Vector.fromTuple(t))).toBe(false);
     });
 
     it("A tuple with w=0 is a vector", () => {
       const { x, y, z, w } = { x: 4.3, y: -4.2, z: 3.1, w: 0.0 };
-      const t = new Tuple(x, y, z, w);
+      const t = new Tuple4d(x, y, z, w);
 
       expect(t.x.compare(x)).toBe(true);
       expect(t.y.compare(y)).toBe(true);
       expect(t.z.compare(z)).toBe(true);
       expect(t.w.compare(w)).toBe(true);
-      expect(t.isPoint).toBe(false);
-      expect(t.isVector).toBe(true);
+      expect(t.compare(Point.fromTuple(t))).toBe(false);
+      expect(t.compare(Vector.fromTuple(t))).toBe(true);
     });
 
     it("Point ctor creates Tuples with w=1", () => {
       const { x, y, z, w } = { x: 4, y: -4, z: 3, w: 1 };
       const p = new Point(x, y, z);
-      const t = new Tuple(x, y, z, w);
+      const t = new Tuple4d(x, y, z, w);
 
       expect(p.compare(t)).toBe(true);
     });
@@ -40,7 +41,7 @@ describe("Tuple", () => {
     it("Vector ctor creates Tuples with w=0", () => {
       const { x, y, z, w } = { x: 4, y: -4, z: 3, w: 0 };
       const v = new Vector(x, y, z);
-      const t = new Tuple(x, y, z, w);
+      const t = new Tuple4d(x, y, z, w);
 
       expect(v.compare(t)).toBe(true);
     });
@@ -48,11 +49,11 @@ describe("Tuple", () => {
 
   describe("Addition", () => {
     it("Adding two tuples", () => {
-      const t1 = new Tuple(3, -2, 5, 1);
-      const t2 = new Tuple(-2, 3, 1, 0);
+      const t1 = new Tuple4d(3, -2, 5, 1);
+      const t2 = new Tuple4d(-2, 3, 1, 0);
 
       const sum = t1.add(t2);
-      expect(sum.compare(new Tuple(1, 1, 6, 1))).toBe(true);
+      expect(sum.compare(new Tuple4d(1, 1, 6, 1))).toBe(true);
     });
   });
 
@@ -89,35 +90,35 @@ describe("Tuple", () => {
     });
 
     it("Negating a tuple", () => {
-      const t = new Tuple(1, -2, 3, -4);
+      const t = new Tuple4d(1, -2, 3, -4);
 
       const negated = t.negate();
-      expect(negated.compare(new Tuple(-1, 2, -3, 4))).toBe(true);
+      expect(negated.compare(new Tuple4d(-1, 2, -3, 4))).toBe(true);
     });
   });
 
   describe("Multiplication", () => {
     it("Multiplying a tuple by a scalar", () => {
-      const t = new Tuple(1, -2, 3, -4);
+      const t = new Tuple4d(1, -2, 3, -4);
 
       const product = t.multiply(3.5);
-      expect(product.compare(new Tuple(3.5, -7, 10.5, -14))).toBe(true);
+      expect(product.compare(new Tuple4d(3.5, -7, 10.5, -14))).toBe(true);
     });
 
     it("Multiplying a tuple by a fraction", () => {
-      const t = new Tuple(1, -2, 3, -4);
+      const t = new Tuple4d(1, -2, 3, -4);
 
       const product = t.multiply(0.5);
-      expect(product.compare(new Tuple(0.5, -1, 1.5, -2))).toBe(true);
+      expect(product.compare(new Tuple4d(0.5, -1, 1.5, -2))).toBe(true);
     });
   });
 
   describe("Division", () => {
     it("Dividing a tuple by a scalar", () => {
-      const t = new Tuple(1, -2, 3, -4);
+      const t = new Tuple4d(1, -2, 3, -4);
 
       const quotient = t.divide(2);
-      expect(quotient.compare(new Tuple(0.5, -1, 1.5, -2))).toBe(true);
+      expect(quotient.compare(new Tuple4d(0.5, -1, 1.5, -2))).toBe(true);
     });
   });
 

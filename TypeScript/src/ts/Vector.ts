@@ -1,23 +1,23 @@
-import Tuple from "./Tuple";
+import Tuple4d from "./Tuple4d";
 
-export default class Vector extends Tuple {
+export default class Vector extends Tuple4d {
   constructor(x: number, y: number, z: number) {
     super(x, y, z, 0);
   }
 
-  static fromTuple = (tuple: Tuple): Vector => new Vector(tuple.x, tuple.y, tuple.z);
+  static fromTuple = (tuple: Tuple4d): Vector => new Vector(tuple.x, tuple.y, tuple.z);
 
-  static get zero(): Vector {
-    return Vector.fromTuple(Tuple.zero);
+  static override get zero(): Vector {
+    return Vector.fromTuple(Tuple4d.zero);
   }
 
   get magnitude(): number {
     return Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
   }
 
-  override multiply = (scalar: number): Vector => Vector.fromTuple(Tuple.multiply(this, scalar));
-  override divide = (scalar: number): Vector => Vector.fromTuple(Tuple.divide(this, scalar));
-  override negate = (): Vector => Vector.fromTuple(Tuple.negate(this));
+  override multiply = (scalar: number): Vector => Vector.fromTuple(Tuple4d.multiply(this, scalar));
+  override divide = (scalar: number): Vector => Vector.fromTuple(Tuple4d.divide(this, scalar));
+  override negate = (): Vector => Vector.fromTuple(Tuple4d.negate(this));
 
   addVector = (vector: Vector): Vector => Vector.fromTuple(this.add(vector));
   subtractVector = (vector: Vector): Vector => Vector.fromTuple(this.subtract(vector));
