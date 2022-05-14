@@ -1,3 +1,7 @@
+# Chapter 2
+
+![Chapter 2](images/chpt02.png)
+
 # Chapter 1
 
 ```
