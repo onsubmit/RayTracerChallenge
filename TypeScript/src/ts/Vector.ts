@@ -20,4 +20,12 @@ export default class Vector extends Tuple {
   override negate = (): Vector => Vector.fromTuple(Tuple.negate(this));
 
   normalize = (): Vector => this.divide(this.magnitude);
+  dot = (vector: Vector): number => this.x * vector.x + this.y * vector.y + this.z * vector.z;
+  cross = (vector: Vector): Vector => {
+    const x = this.y * vector.z - this.z * vector.y;
+    const y = this.z * vector.x - this.x * vector.z;
+    const z = this.x * vector.y - this.y * vector.x;
+
+    return new Vector(x, y, z);
+  };
 }

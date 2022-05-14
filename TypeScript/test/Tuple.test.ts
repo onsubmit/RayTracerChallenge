@@ -174,4 +174,23 @@ describe("Tuple", () => {
       expect(normalized.magnitude.compare(1)).toBe(true);
     });
   });
+
+  describe("Vector dot and cross product", () => {
+    it("The dot product of two vectors", () => {
+      const v1 = new Vector(1, 2, 3);
+      const v2 = new Vector(2, 3, 4);
+
+      expect(v1.dot(v2)).toBe(20);
+    });
+
+    it("The cross product of two vectors", () => {
+      const v1 = new Vector(1, 2, 3);
+      const v2 = new Vector(2, 3, 4);
+
+      const cross12 = v1.cross(v2);
+      const cross21 = v2.cross(v1);
+      expect(cross12.compare(new Vector(-1, 2, -1))).toBe(true);
+      expect(cross21.compare(new Vector(1, -2, 1))).toBe(true);
+    });
+  });
 });
