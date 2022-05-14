@@ -58,4 +58,6 @@ export default class Tuple {
   multiply = (scalar: number): Tuple => Tuple.multiply(this, scalar);
   divide = (scalar: number): Tuple => Tuple.divide(this, scalar);
   negate = (): Tuple => Tuple.negate(this);
+
+  toString = (): string => `(${this.x.toFixed(2)}, ${this.y.toFixed(2)}, ${this.z.toFixed(2)}, ${this.w.toFixed(2)})`;
 }

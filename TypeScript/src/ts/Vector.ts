@@ -19,6 +19,9 @@ export default class Vector extends Tuple {
   override divide = (scalar: number): Vector => Vector.fromTuple(Tuple.divide(this, scalar));
   override negate = (): Vector => Vector.fromTuple(Tuple.negate(this));
 
+  addVector = (vector: Vector): Vector => Vector.fromTuple(this.add(vector));
+  subtractVector = (vector: Vector): Vector => Vector.fromTuple(this.subtract(vector));
+
   normalize = (): Vector => this.divide(this.magnitude);
   dot = (vector: Vector): number => this.x * vector.x + this.y * vector.y + this.z * vector.z;
   cross = (vector: Vector): Vector => {
@@ -28,4 +31,6 @@ export default class Vector extends Tuple {
 
     return new Vector(x, y, z);
   };
+
+  override toString = (): string => `(${this.x.toFixed(2)}, ${this.y.toFixed(2)}, ${this.z.toFixed(2)})`;
 }

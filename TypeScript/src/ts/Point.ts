@@ -1,4 +1,5 @@
 import Tuple from "./Tuple";
+import Vector from "./Vector";
 
 export default class Point extends Tuple {
   constructor(x: number, y: number, z: number) {
@@ -10,4 +11,9 @@ export default class Point extends Tuple {
   static get zero(): Point {
     return Point.fromTuple(Tuple.zero);
   }
+
+  addVector = (vector: Vector): Point => Point.fromTuple(this.add(vector));
+  subtractVector = (vector: Vector): Point => Point.fromTuple(this.subtract(vector));
+
+  override toString = (): string => `(${this.x.toFixed(2)}, ${this.y.toFixed(2)}, ${this.z.toFixed(2)})`;
 }
