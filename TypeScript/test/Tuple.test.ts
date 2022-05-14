@@ -1,3 +1,4 @@
+import Color from "ts/Color";
 import "ts/extensions/NumberExtensions";
 import Point from "ts/Point";
 import Tuple4d from "ts/Tuple4d";
@@ -192,6 +193,17 @@ describe("Tuple", () => {
       const cross21 = v2.cross(v1);
       expect(cross12.compare(new Vector(-1, 2, -1))).toBe(true);
       expect(cross21.compare(new Vector(1, -2, 1))).toBe(true);
+    });
+  });
+
+  describe("Colors", () => {
+    it("Colors are (red, green, blue) tuples", () => {
+      const { r, g, b } = { r: -0.5, g: 0.4, b: 1.7 };
+      const c = new Color(r, g, b);
+
+      expect(c.red).toBe(r);
+      expect(c.green).toBe(g);
+      expect(c.blue).toBe(b);
     });
   });
 });
