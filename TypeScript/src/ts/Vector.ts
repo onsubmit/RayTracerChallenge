@@ -9,9 +9,7 @@ export default class Vector extends Tuple4d {
   static override fromNumberTuple = (numberTuple: NumberTuple): Vector =>
     new Vector(numberTuple.at(0), numberTuple.at(1), numberTuple.at(2));
 
-  static override get zero(): Vector {
-    return Vector.fromNumberTuple(Tuple4d.zero);
-  }
+  static override readonly zero: Vector = Vector.fromNumberTuple(Tuple4d.zero);
 
   get magnitude(): number {
     return Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);

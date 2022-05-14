@@ -2,9 +2,7 @@ import "./extensions/NumberExtensions";
 import NumberTuple from "./NumberTuple";
 
 export default class Tuple4d extends NumberTuple {
-  static get zero() {
-    return new Tuple4d(0, 0, 0, 0);
-  }
+  static readonly zero = new Tuple4d(0, 0, 0, 0);
 
   static fromNumberTuple = (numberTuple: NumberTuple): Tuple4d =>
     new Tuple4d(numberTuple.at(0), numberTuple.at(1), numberTuple.at(2), numberTuple.at(3));

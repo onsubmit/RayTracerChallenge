@@ -1,6 +1,12 @@
 import NumberTuple from "./NumberTuple";
 
 export default class Color extends NumberTuple {
+  static readonly black = new Color(0, 0, 0);
+  static readonly white = new Color(1, 1, 1);
+  static readonly red = new Color(1, 0, 0);
+  static readonly green = new Color(0, 1, 0);
+  static readonly blue = new Color(0, 0, 1);
+
   constructor(r: number, g: number, b: number) {
     super(r, g, b);
   }
@@ -18,10 +24,6 @@ export default class Color extends NumberTuple {
 
   get blue(): number {
     return this.at(2);
-  }
-
-  static get black(): Color {
-    return new Color(0, 0, 0);
   }
 
   multiply = (scalar: number): Color => Color.fromNumberTuple(NumberTuple.multiply(this, scalar));
