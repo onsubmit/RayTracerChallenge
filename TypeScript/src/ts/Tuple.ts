@@ -7,7 +7,7 @@ export default abstract class Tuple<T> {
     this.values = values;
   }
 
-  protected at = (index: number): T => this.values[index];
+  public at = (index: number): T => this.values[index];
 
   abstract valueComparisonFn: (thisValue: T, valueToCompareAgainst: T) => boolean;
 

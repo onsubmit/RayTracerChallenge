@@ -15,8 +15,8 @@ describe("Tuple", () => {
       expect(t.z.compare(z)).toBe(true);
       expect(t.w.compare(w)).toBe(true);
 
-      expect(t.compare(Point.fromTuple(t))).toBe(true);
-      expect(t.compare(Vector.fromTuple(t))).toBe(false);
+      expect(t.compare(Point.fromNumberTuple(t))).toBe(true);
+      expect(t.compare(Vector.fromNumberTuple(t))).toBe(false);
     });
 
     it("A tuple with w=0 is a vector", () => {
@@ -27,8 +27,8 @@ describe("Tuple", () => {
       expect(t.y.compare(y)).toBe(true);
       expect(t.z.compare(z)).toBe(true);
       expect(t.w.compare(w)).toBe(true);
-      expect(t.compare(Point.fromTuple(t))).toBe(false);
-      expect(t.compare(Vector.fromTuple(t))).toBe(true);
+      expect(t.compare(Point.fromNumberTuple(t))).toBe(false);
+      expect(t.compare(Vector.fromNumberTuple(t))).toBe(true);
     });
 
     it("Point ctor creates Tuples with w=1", () => {
@@ -204,6 +204,37 @@ describe("Tuple", () => {
       expect(c.red).toBe(r);
       expect(c.green).toBe(g);
       expect(c.blue).toBe(b);
+    });
+
+    it("Adding colors", () => {
+      const c1 = new Color(0.9, 0.6, 0.75);
+      const c2 = new Color(0.7, 0.1, 0.25);
+
+      const sum = c1.addColor(c2);
+      expect(sum.compare(new Color(1.6, 0.7, 1.0))).toBe(true);
+    });
+
+    it("Subtracting colors", () => {
+      const c1 = new Color(0.9, 0.6, 0.75);
+      const c2 = new Color(0.7, 0.1, 0.25);
+
+      const difference = c1.subtractColor(c2);
+      expect(difference.compare(new Color(0.2, 0.5, 0.5))).toBe(true);
+    });
+
+    it("Multiplying a color by a scalar", () => {
+      const c = new Color(0.2, 0.3, 0.4);
+
+      const product = c.multiply(2);
+      expect(product.compare(new Color(0.4, 0.6, 0.8))).toBe(true);
+    });
+
+    it("Multiplying colors", () => {
+      const c1 = new Color(1, 0.2, 0.4);
+      const c2 = new Color(0.9, 1, 0.1);
+
+      const product = c1.getHadamardProductWith(c2);
+      expect(product.compare(new Color(0.9, 0.2, 0.04))).toBe(true);
     });
   });
 });
