@@ -15,24 +15,25 @@ export default class CanvasPainter {
       throw "Can't find canvas.";
     }
 
-    const ctx = canvas.getContext && canvas.getContext("2d");
+    canvas.width = this.canvas.width;
+    canvas.height = this.canvas.height;
 
+    const ctx = canvas.getContext && canvas.getContext("2d");
     if (!ctx) {
       throw "Can't get canvas context";
     }
-
     const imageData = ctx.createImageData(canvas.width, canvas.height);
 
     let index = 0;
-    for (let r = 0; r < canvas.height; r++) {
-      for (let c = 0; c < canvas.width; c++) {
-        imageData.data[index++] = Math.round(255 * this.canvas.at(r, c).red);
-        imageData.data[index++] = Math.round(255 * this.canvas.at(r, c).green);
-        imageData.data[index++] = Math.round(255 * this.canvas.at(r, c).blue);
+    for (let r = 0; r < this.canvas.height; r++) {
+      for (let c = 0; c < this.canvas.width; c++) {
+        imageData.data[index++] = Math.round(255 * this.canvas.at(c, r).red);
+        imageData.data[index++] = Math.round(255 * this.canvas.at(c, r).green);
+        imageData.data[index++] = Math.round(255 * this.canvas.at(c, r).blue);
         imageData.data[index++] = Math.round(255);
       }
     }
 
-    ctx.putImageData(imageData, canvas.width, canvas.height);
+    ctx.putImageData(imageData, 0, 0);
   };
 }

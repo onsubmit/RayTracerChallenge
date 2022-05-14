@@ -33,6 +33,7 @@ module.exports = {
   resolve: {
     extensions: [".ts", ".js"],
     alias: {
+      ts: path.resolve(__dirname, "src/ts/"),
       less: path.resolve(__dirname, "src/less/"),
     },
   },

@@ -6,16 +6,29 @@ export default class Canvas {
   width: number;
   height: number;
 
-  constructor(width: number, height: number) {
-    this.width = width;
-    this.height = height;
+  constructor(columns: number, rows: number) {
+    this.width = columns;
+    this.height = rows;
 
-    this.pixels = Array.from({ length: height }, () => Array.from({ length: width }, () => Color.black));
+    this.pixels = Array.from({ length: rows }, () => Array.from({ length: columns }, () => Color.black));
   }
 
-  at = (row: number, column: number): Color => this.pixels[row][column];
+  at = (column: number, row: number): Color => {
+    if (!this.pixels[row] || !this.pixels[row][column]) {
+      throw `Invalid coordinates @ (${row}, ${column})`;
+    }
 
-  writePixel = (row: number, column: number, color: Color): void => {
+    return this.pixels[row][column];
+  };
+
+  writePixel = (column: number, row: number, color: Color): void => {
+    column = Math.round(column);
+    row = Math.round(row);
+
+    if (!this.pixels[row] || !this.pixels[row][column]) {
+      throw `Invalid coordinates @ (${row}, ${column})`;
+    }
+
     this.pixels[row][column] = color;
   };
 }
