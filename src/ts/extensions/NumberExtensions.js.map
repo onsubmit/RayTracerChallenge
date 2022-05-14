@@ -1,0 +1,1 @@
+{"version":3,"file":"NumberExtensions.js","sourceRoot":"","sources":["../../../../src/ts/extensions/NumberExtensions.ts"],"names":[],"mappings":";AAAA,MAAM,CAAC,SAAS,CAAC,OAAO,GAAG,UAAU,QAAgB,EAAE,OAAO,GAAG,OAAO;IACtE,IAAI,IAAI,CAAC,GAAG,CAAC,QAAQ,GAAW,IAAI,CAAC,GAAG,OAAO,EAAE;QAC/C,OAAO,IAAI,CAAC;KACb;IAED,OAAO,KAAK,CAAC;AACf,CAAC,CAAC"}
