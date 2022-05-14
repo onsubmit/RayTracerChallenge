@@ -10,7 +10,8 @@
     "lint": "npx eslint --ext ts ./src/ts",
     "lint-fix": "npx eslint --ext ts ./src/ts --fix",
     "test": "tsc && jest",
-    "test-watch": "jest --watchAll"
+    "test-watch": "jest --watchAll",
+    "deploy": "gh-pages -d ./dist"
   },
   "devDependencies": {
     "@types/jest": "^27.5.1",
@@ -20,6 +21,7 @@
     "eslint": "^8.15.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.0.0",
+    "gh-pages": "^4.0.0",
     "html-loader": "^3.1.0",
     "html-webpack-plugin": "^5.5.0",
     "jest": "^28.1.0",
