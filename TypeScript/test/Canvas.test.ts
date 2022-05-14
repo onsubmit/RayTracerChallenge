@@ -10,15 +10,15 @@ describe("Canvas", () => {
 
     for (let r = 0; r < canvas.height; r++) {
       for (let c = 0; c < canvas.width; c++) {
-        expect(canvas.at(r, c).compare(Color.black)).toBe(true);
+        expect(canvas.at(c, r).compare(Color.black)).toBe(true);
       }
     }
   });
 
   it.only("Writing pixels to a canvas", () => {
     const c = new Canvas(10, 20);
-    c.writePixel(2, 3, Color.red);
+    c.writePixel(3, 2, Color.red);
 
-    expect(c.at(2, 3).compare(Color.red)).toBe(true);
+    expect(c.at(3, 2).compare(Color.red)).toBe(true);
   });
 });
