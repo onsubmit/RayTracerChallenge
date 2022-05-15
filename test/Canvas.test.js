@@ -12,14 +12,14 @@ describe("Canvas", () => {
         expect(canvas.height).toBe(20);
         for (let r = 0; r < canvas.height; r++) {
             for (let c = 0; c < canvas.width; c++) {
-                expect(canvas.at(r, c).compare(Color_1.default.black)).toBe(true);
+                expect(canvas.at(c, r).compare(Color_1.default.black)).toBe(true);
             }
         }
     });
-    it.only("Writing pixels to a canvas", () => {
+    it("Writing pixels to a canvas", () => {
         const c = new Canvas_1.default(10, 20);
-        c.writePixel(2, 3, Color_1.default.red);
-        expect(c.at(2, 3).compare(Color_1.default.red)).toBe(true);
+        c.writePixel(3, 2, Color_1.default.red);
+        expect(c.at(3, 2).compare(Color_1.default.red)).toBe(true);
     });
 });
 //# sourceMappingURL=Canvas.test.js.map

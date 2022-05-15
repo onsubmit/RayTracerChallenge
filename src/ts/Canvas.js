@@ -6,9 +6,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Color_1 = __importDefault(require("./Color"));
 class Canvas {
     constructor(width, height) {
-        this.at = (row, column) => this.pixels[row][column];
-        this.writePixel = (row, column, color) => {
-            this.pixels[row][column] = color;
+        this.at = (x, y) => {
+            if (!this.pixels[y] || !this.pixels[y][x]) {
+                throw `Invalid coordinates @ (${x}, ${y})`;
+            }
+            return this.pixels[y][x];
+        };
+        this.writePixel = (x, y, color) => {
+            x = Math.round(x);
+            y = Math.round(y);
+            if (!this.pixels[y] || !this.pixels[y][x]) {
+                throw `Invalid coordinates @ (${x}, ${y})`;
+            }
+            this.pixels[y][x] = color;
         };
         this.width = width;
         this.height = height;
