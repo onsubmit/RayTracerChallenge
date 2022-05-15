@@ -1,5 +1,8 @@
+import Constants from "ts/Constants";
 import Matrix from "ts/Matrix";
 import NumberTuple from "ts/NumberTuple";
+import Point from "ts/Point";
+import Vector from "ts/Vector";
 
 describe("Matrix", () => {
   describe("Basic", () => {
@@ -375,6 +378,184 @@ describe("Matrix", () => {
 
       const c = a.multiply(b);
       expect(c.multiply(b.inverse).compare(a)).toBe(true);
+    });
+  });
+
+  describe("Translation", () => {
+    it("Multiplying by a translation matrix", () => {
+      const t = Matrix.getTranslationMatrix(5, -3, 2);
+      const p = new Point(-3, 4, 5);
+
+      const product = t.multiplyByTuple(p);
+      expect(product.compare(new Point(2, 1, 7))).toBe(true);
+    });
+
+    it("Multiplying by the inverse of a translation matrix", () => {
+      const t = Matrix.getTranslationMatrix(5, -3, 2);
+      const p = new Point(-3, 4, 5);
+
+      const product = t.inverse.multiplyByTuple(p);
+      expect(product.compare(new Point(-8, 7, 3))).toBe(true);
+    });
+
+    it("Translation does not affect vectors", () => {
+      const t = Matrix.getTranslationMatrix(5, -3, 2);
+      const v = new Vector(-3, 4, 5);
+
+      const product = t.multiplyByTuple(v);
+      expect(product.compare(v)).toBe(true);
+    });
+  });
+
+  describe("Scaling", () => {
+    it("A scaling matrix applied to a point", () => {
+      const s = Matrix.getScalingMatrix(2, 3, 4);
+      const p = new Point(-4, 6, 8);
+
+      const product = s.multiplyByTuple(p);
+      expect(product.compare(new Point(-8, 18, 32))).toBe(true);
+    });
+
+    it("A scaling matrix applied to a vector", () => {
+      const s = Matrix.getScalingMatrix(2, 3, 4);
+      const v = new Vector(-4, 6, 8);
+
+      const product = s.multiplyByTuple(v);
+      expect(product.compare(new Vector(-8, 18, 32))).toBe(true);
+    });
+
+    it("Multiplying by the inverse of a scaling matrix", () => {
+      const s = Matrix.getScalingMatrix(2, 3, 4);
+      const v = new Vector(-4, 6, 8);
+
+      const product = s.inverse.multiplyByTuple(v);
+      expect(product.compare(new Vector(-2, 2, 2))).toBe(true);
+    });
+
+    it("Reflection is scaling by a negative value", () => {
+      const s = Matrix.getScalingMatrix(-1, 1, 1);
+      const p = new Point(2, 3, 4);
+
+      const product = s.multiplyByTuple(p);
+      expect(product.compare(new Point(-2, 3, 4))).toBe(true);
+    });
+  });
+
+  describe("Rotation", () => {
+    it("Rotating a point around the x axis", () => {
+      const p = new Point(0, 1, 0);
+      const halfQuarter = Matrix.getRotationMatrixX(Constants.pi_4);
+      const fullQuarter = Matrix.getRotationMatrixX(Constants.pi_2);
+
+      expect(halfQuarter.multiplyByTuple(p).compare(new Point(0, Constants.sqrt2_2, Constants.sqrt2_2))).toBe(true);
+      expect(fullQuarter.multiplyByTuple(p).compare(new Point(0, 0, 1))).toBe(true);
+    });
+
+    it("The inverse of an x-rotation rotates in the opposite direction", () => {
+      const p = new Point(0, 1, 0);
+      const halfQuarter = Matrix.getRotationMatrixX(Constants.pi_4);
+
+      const product = halfQuarter.inverse.multiplyByTuple(p);
+      expect(product.compare(new Point(0, Constants.sqrt2_2, -Constants.sqrt2_2))).toBe(true);
+    });
+
+    it("Rotating a point around the y axis", () => {
+      const p = new Point(0, 0, 1);
+      const halfQuarter = Matrix.getRotationMatrixY(Constants.pi_4);
+      const fullQuarter = Matrix.getRotationMatrixY(Constants.pi_2);
+
+      expect(halfQuarter.multiplyByTuple(p).compare(new Point(Constants.sqrt2_2, 0, Constants.sqrt2_2))).toBe(true);
+      expect(fullQuarter.multiplyByTuple(p).compare(new Point(1, 0, 0))).toBe(true);
+    });
+
+    it("Rotating a point around the z axis", () => {
+      const p = new Point(0, 1, 0);
+      const halfQuarter = Matrix.getRotationMatrixZ(Constants.pi_4);
+      const fullQuarter = Matrix.getRotationMatrixZ(Constants.pi_2);
+
+      expect(halfQuarter.multiplyByTuple(p).compare(new Point(-Constants.sqrt2_2, Constants.sqrt2_2, 0))).toBe(true);
+      expect(fullQuarter.multiplyByTuple(p).compare(new Point(-1, 0, 0))).toBe(true);
+    });
+  });
+
+  describe("Shearing", () => {
+    it("A shearing transformation moves x in proportion to y", () => {
+      const s = Matrix.getShearingMatrix(1, 0, 0, 0, 0, 0);
+      const p = new Point(2, 3, 4);
+
+      const product = s.multiplyByTuple(p);
+      expect(product.compare(new Point(5, 3, 4))).toBe(true);
+    });
+
+    it("A shearing transformation moves x in proportion to z", () => {
+      const s = Matrix.getShearingMatrix(0, 1, 0, 0, 0, 0);
+      const p = new Point(2, 3, 4);
+
+      const product = s.multiplyByTuple(p);
+      expect(product.compare(new Point(6, 3, 4))).toBe(true);
+    });
+
+    it("A shearing transformation moves y in proportion to x", () => {
+      const s = Matrix.getShearingMatrix(0, 0, 1, 0, 0, 0);
+      const p = new Point(2, 3, 4);
+
+      const product = s.multiplyByTuple(p);
+      expect(product.compare(new Point(2, 5, 4))).toBe(true);
+    });
+
+    it("A shearing transformation moves y in proportion to z", () => {
+      const s = Matrix.getShearingMatrix(0, 0, 0, 1, 0, 0);
+      const p = new Point(2, 3, 4);
+
+      const product = s.multiplyByTuple(p);
+      expect(product.compare(new Point(2, 7, 4))).toBe(true);
+    });
+
+    it("A shearing transformation moves z in proportion to x", () => {
+      const s = Matrix.getShearingMatrix(0, 0, 0, 0, 1, 0);
+      const p = new Point(2, 3, 4);
+
+      const product = s.multiplyByTuple(p);
+      expect(product.compare(new Point(2, 3, 6))).toBe(true);
+    });
+
+    it("A shearing transformation moves z in proportion to y", () => {
+      const s = Matrix.getShearingMatrix(0, 0, 0, 0, 0, 1);
+      const p = new Point(2, 3, 4);
+
+      const product = s.multiplyByTuple(p);
+      expect(product.compare(new Point(2, 3, 7))).toBe(true);
+    });
+  });
+
+  describe("Chaining transormations", () => {
+    it("Individual transformations are applied in sequence", () => {
+      const p = new Point(1, 0, 1);
+      const a = Matrix.getRotationMatrixX(Constants.pi_2);
+      const b = Matrix.getScalingMatrix(5, 5, 5);
+      const c = Matrix.getTranslationMatrix(10, 5, 7);
+
+      // Apply rotation first
+      const p2 = a.multiplyByTuple(p);
+      expect(p2.compare(new Point(1, -1, 0))).toBe(true);
+
+      // Apply scaling
+      const p3 = b.multiplyByTuple(p2);
+      expect(p3.compare(new Point(5, -5, 0))).toBe(true);
+
+      // Apply translation
+      const p4 = c.multiplyByTuple(p3);
+      expect(p4.compare(new Point(15, 0, 7))).toBe(true);
+    });
+
+    it("Chained transformations must be applied in reverse order", () => {
+      const p = new Point(1, 0, 1);
+      const a = Matrix.getRotationMatrixX(Constants.pi_2);
+      const b = Matrix.getScalingMatrix(5, 5, 5);
+      const c = Matrix.getTranslationMatrix(10, 5, 7);
+
+      const t = c.multiply(b).multiply(a);
+      expect(t.multiplyByTuple(p).compare(new Point(15, 0, 7))).toBe(true);
     });
   });
 });

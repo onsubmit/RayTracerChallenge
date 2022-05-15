@@ -24,10 +24,123 @@ export default class Matrix {
     return new Matrix(elements);
   }
 
-  static fromNumberTuple(tuple: NumberTuple): Matrix {
-    const valuesAsRow = [tuple.values];
-    const valuesAsColumn = valuesAsRow[0].map((_, c) => valuesAsRow.map((row) => row[c]));
-    return new Matrix(valuesAsColumn);
+  static getTranslationMatrix(...coordinates: number[]): Matrix {
+    const size = coordinates.length;
+    if (size < 1) {
+      ("At least one coordinate is required.");
+    }
+
+    const elements = Array.from({ length: size + 1 }, () => Array.from({ length: size + 1 }, () => 0));
+
+    for (let i = 0; i < size; i++) {
+      elements[i][i] = 1;
+      elements[i][size] = coordinates[i];
+    }
+
+    elements[size][size] = 1;
+
+    return new Matrix(elements);
+  }
+
+  static getScalingMatrix(...coordinates: number[]): Matrix {
+    const size = coordinates.length;
+    if (size < 1) {
+      ("At least one coordinate is required.");
+    }
+
+    const elements = Array.from({ length: size + 1 }, () => Array.from({ length: size + 1 }, () => 0));
+
+    for (let i = 0; i < size; i++) {
+      elements[i][i] = coordinates[i];
+    }
+
+    elements[size][size] = 1;
+
+    return new Matrix(elements);
+  }
+
+  static getRotationMatrixX(radians: number): Matrix {
+    if (radians.compare(0)) {
+      return Matrix.getIdentityMatrix(4);
+    }
+
+    const cos = Math.cos(radians);
+    const sin = Math.sin(radians);
+
+    const elements = Array.from({ length: 4 }, () => Array.from({ length: 4 }, () => 0));
+    elements[0][0] = 1;
+
+    elements[1][1] = cos;
+    elements[1][2] = -sin;
+
+    elements[2][1] = sin;
+    elements[2][2] = cos;
+
+    elements[3][3] = 1;
+
+    return new Matrix(elements);
+  }
+
+  static getRotationMatrixY(radians: number): Matrix {
+    if (radians.compare(0)) {
+      return Matrix.getIdentityMatrix(4);
+    }
+
+    const cos = Math.cos(radians);
+    const sin = Math.sin(radians);
+
+    const elements = Array.from({ length: 4 }, () => Array.from({ length: 4 }, () => 0));
+    elements[0][0] = cos;
+    elements[0][2] = sin;
+
+    elements[1][1] = 1;
+
+    elements[2][0] = -sin;
+    elements[2][2] = cos;
+
+    elements[3][3] = 1;
+
+    return new Matrix(elements);
+  }
+
+  static getRotationMatrixZ(radians: number): Matrix {
+    if (radians.compare(0)) {
+      return Matrix.getIdentityMatrix(4);
+    }
+
+    const cos = Math.cos(radians);
+    const sin = Math.sin(radians);
+
+    const elements = Array.from({ length: 4 }, () => Array.from({ length: 4 }, () => 0));
+    elements[0][0] = cos;
+    elements[0][1] = -sin;
+
+    elements[1][0] = sin;
+    elements[1][1] = cos;
+
+    elements[2][2] = 1;
+    elements[3][3] = 1;
+
+    return new Matrix(elements);
+  }
+
+  static getShearingMatrix(xy: number, xz: number, yx: number, yz: number, zx: number, zy: number): Matrix {
+    const elements = Array.from({ length: 4 }, () => Array.from({ length: 4 }, () => 0));
+    elements[0][0] = 1;
+    elements[1][1] = 1;
+    elements[2][2] = 1;
+    elements[3][3] = 1;
+
+    elements[0][1] = xy;
+    elements[0][2] = xz;
+
+    elements[1][0] = yx;
+    elements[1][2] = yz;
+
+    elements[2][0] = zx;
+    elements[2][1] = zy;
+
+    return new Matrix(elements);
   }
 
   get determinant(): number {
@@ -134,8 +247,17 @@ export default class Matrix {
   };
 
   multiplyByTuple = (tuple: NumberTuple): NumberTuple => {
-    const colMatrix = this.multiply(Matrix.fromNumberTuple(tuple));
-    const values = colMatrix.elements[0];
+    if (this.columns !== tuple.length) {
+      throw `Invalid dimensions. Cannot multiply by this tuple. ${this.columns} !== ${tuple.length}`;
+    }
+
+    const values = Array.from({ length: this.rows }, () => 0);
+    for (let r = 0; r < this.rows; r++) {
+      for (let c = 0; c < this.columns; c++) {
+        values[r] += this.elements[r][c] * tuple.at(c);
+      }
+    }
+
     return new NumberTuple(...values);
   };
 
