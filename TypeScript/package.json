@@ -4,7 +4,6 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "go": "node dist/src/ts/index.js",
     "build": "yarn run lint && tsc",
     "build-watch": "tsc -w",
     "lint": "npx eslint --ext ts ./src/ts",

@@ -1,13 +1,13 @@
 import "./extensions/NumberExtensions";
 
 export default abstract class Tuple<T> {
-  protected values: T[];
+  values: T[];
 
   constructor(...values: T[]) {
     this.values = values;
   }
 
-  public at = (index: number): T => this.values[index];
+  at = (index: number): T => this.values[index];
 
   abstract valueComparisonFn: (thisValue: T, valueToCompareAgainst: T) => boolean;
 
