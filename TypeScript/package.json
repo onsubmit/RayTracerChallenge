@@ -10,6 +10,8 @@
     "lint-fix": "npx eslint --ext ts ./src/ts --fix",
     "test": "tsc && jest",
     "test-watch": "jest --watchAll --verbose",
+    "wp": "webpack",
+    "wpw": "webpack --watch",
     "deploy": "gh-pages -d ./dist"
   },
   "devDependencies": {

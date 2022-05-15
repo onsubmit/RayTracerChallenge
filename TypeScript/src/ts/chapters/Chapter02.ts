@@ -17,7 +17,7 @@ class Chapter02 implements IChapter {
     const wind = new Vector(-0.01, 0, 0);
     const environment = new Environment(gravity, wind);
 
-    const canvas = new Canvas(900, 550);
+    const canvas = new Canvas(901, 551);
 
     while (projectile.position.y > 0) {
       canvas.writePixel(projectile.position.x, canvas.height - projectile.position.y, Color.white);

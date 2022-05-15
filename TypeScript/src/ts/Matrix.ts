@@ -283,4 +283,12 @@ export default class Matrix {
 
     return minor;
   };
+
+  rotateX = (radians: number): Matrix => Matrix.getRotationMatrixX(radians).multiply(this);
+  rotateY = (radians: number): Matrix => Matrix.getRotationMatrixY(radians).multiply(this);
+  rotateZ = (radians: number): Matrix => Matrix.getRotationMatrixZ(radians).multiply(this);
+
+  scale = (...coordinates: number[]): Matrix => Matrix.getScalingMatrix(...coordinates).multiply(this);
+
+  translate = (...coordinates: number[]): Matrix => Matrix.getTranslationMatrix(...coordinates).multiply(this);
 }

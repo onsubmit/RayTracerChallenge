@@ -31,4 +31,11 @@ export default class Canvas {
 
     this.pixels[y][x] = color;
   };
+
+  writePixelWithCenteredOrigin = (x: number, y: number, color: Color): void => {
+    const dx = this.width / 2;
+    const dy = this.height / 2;
+
+    this.writePixel(x + dx, -y + dy, color);
+  };
 }
