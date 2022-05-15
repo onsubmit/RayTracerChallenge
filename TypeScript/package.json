@@ -9,7 +9,7 @@
     "lint": "npx eslint --ext ts ./src/ts",
     "lint-fix": "npx eslint --ext ts ./src/ts --fix",
     "test": "tsc && jest",
-    "test-watch": "jest --watchAll",
+    "test-watch": "jest --watchAll --verbose",
     "deploy": "gh-pages -d ./dist"
   },
   "devDependencies": {

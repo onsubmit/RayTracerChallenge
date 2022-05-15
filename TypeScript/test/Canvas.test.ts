@@ -15,7 +15,7 @@ describe("Canvas", () => {
     }
   });
 
-  it.only("Writing pixels to a canvas", () => {
+  it("Writing pixels to a canvas", () => {
     const c = new Canvas(10, 20);
     c.writePixel(3, 2, Color.red);
 

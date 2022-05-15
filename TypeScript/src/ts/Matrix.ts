@@ -2,6 +2,8 @@ import NumberTuple from "./NumberTuple";
 
 export default class Matrix {
   private elements: number[][];
+  private cachedDeterminant?: number;
+  private cachedInverse?: Matrix;
 
   rows: number;
   columns: number;
@@ -29,15 +31,52 @@ export default class Matrix {
   }
 
   get determinant(): number {
+    if (this.cachedDeterminant !== undefined) {
+      return this.cachedDeterminant;
+    }
     if (this.rows !== this.columns) {
       throw "Matrix not square";
     }
 
-    if (this.rows === 2) {
-      return this.elements[0][0] * this.elements[1][1] - this.elements[0][1] * this.elements[1][0];
+    if (this.rows > 4) {
+      throw "Not implemented";
     }
 
-    throw "Not implemented";
+    if (this.rows === 2) {
+      this.cachedDeterminant = this.elements[0][0] * this.elements[1][1] - this.elements[0][1] * this.elements[1][0];
+    } else {
+      this.cachedDeterminant = 0;
+      for (let c = 0; c < this.columns; c++) {
+        this.cachedDeterminant += this.elements[0][c] * this.getCofactor(0, c);
+      }
+    }
+
+    return this.cachedDeterminant;
+  }
+
+  get isInvertible(): boolean {
+    return !this.determinant.compare(0);
+  }
+
+  get inverse(): Matrix {
+    if (this.cachedInverse !== undefined) {
+      return this.cachedInverse;
+    }
+
+    if (!this.isInvertible) {
+      throw "Matrix is not invertible";
+    }
+
+    const elements = Array.from({ length: this.rows }, () => Array.from({ length: this.columns }, () => 0));
+    for (let r = 0; r < this.rows; r++) {
+      for (let c = 0; c < this.columns; c++) {
+        // Note that [c, r] is intentional.
+        elements[c][r] = this.getCofactor(r, c) / this.determinant;
+      }
+    }
+
+    this.cachedInverse = new Matrix(elements);
+    return this.cachedInverse;
   }
 
   at = (row: number, column: number): number => {
@@ -59,7 +98,7 @@ export default class Matrix {
 
     for (let r = 0; r < this.rows; r++) {
       for (let c = 0; c < this.columns; c++) {
-        if (this.elements[r][c] !== matrix.elements[r][c]) {
+        if (!this.elements[r][c].compare(matrix.elements[r][c])) {
           return false;
         }
       }
@@ -101,26 +140,25 @@ export default class Matrix {
   };
 
   getSubMatrix = (rowToRemove: number, columnToRemove: number): Matrix => {
-    const elements = Array.from({ length: this.rows - 1 }, () => Array.from({ length: this.columns - 1 }, () => 0));
-
-    let rowAdjustment = 0;
-    for (let r = 0; r < this.rows; r++) {
-      if (r === rowToRemove) {
-        rowAdjustment = 1;
-        continue;
-      }
-
-      let colAdjustment = 0;
-      for (let c = 0; r < this.columns; c++) {
-        if (c === columnToRemove) {
-          colAdjustment = 1;
-          continue;
-        }
-
-        elements[r - rowAdjustment][c - colAdjustment] = this.elements[r][c];
-      }
-    }
+    const elements = this.elements
+      .filter((_, r) => r !== rowToRemove)
+      .map((row) => row.filter((_, c) => c !== columnToRemove));
 
     return new Matrix(elements);
+  };
+
+  getMinor = (row: number, column: number): number => {
+    const submatrix = this.getSubMatrix(row, column);
+    return submatrix.determinant;
+  };
+
+  getCofactor = (row: number, column: number): number => {
+    const minor = this.getMinor(row, column);
+
+    if ((row + column) % 2 === 1) {
+      return -minor;
+    }
+
+    return minor;
   };
 }
