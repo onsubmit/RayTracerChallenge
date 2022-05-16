@@ -290,5 +290,8 @@ export default class Matrix {
 
   scale = (...coordinates: number[]): Matrix => Matrix.getScalingMatrix(...coordinates).multiply(this);
 
+  shear = (xy: number, xz: number, yx: number, yz: number, zx: number, zy: number): Matrix =>
+    Matrix.getShearingMatrix(xy, xz, yx, yz, zx, zy).multiply(this);
+
   translate = (...coordinates: number[]): Matrix => Matrix.getTranslationMatrix(...coordinates).multiply(this);
 }

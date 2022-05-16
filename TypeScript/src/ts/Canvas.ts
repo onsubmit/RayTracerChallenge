@@ -22,6 +22,10 @@ export default class Canvas {
   };
 
   writePixel = (x: number, y: number, color: Color): void => {
+    if (x < 0 || y < 0 || x >= this.width || y >= this.height) {
+      return;
+    }
+
     x = Math.round(x);
     y = Math.round(y);
 

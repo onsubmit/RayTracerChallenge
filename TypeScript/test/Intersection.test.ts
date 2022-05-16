@@ -102,7 +102,7 @@ describe("Intersections", () => {
       expect(intersections.hit).toEqual(i1);
     });
 
-    it("The hit, when somes intersections have negative t", () => {
+    it("The hit, when some intersections have negative t", () => {
       const s = new Sphere();
       const i1 = new Intersection(-1, s);
       const i2 = new Intersection(1, s);
@@ -115,7 +115,7 @@ describe("Intersections", () => {
       const i1 = new Intersection(-2, s);
       const i2 = new Intersection(-1, s);
       const intersections = new Intersections(i1, i2);
-      expect(intersections.hit).toBeNull();
+      expect(intersections.hit).toBeUndefined();
     });
 
     it("The hit is always the lowest nonnegative intersection", () => {

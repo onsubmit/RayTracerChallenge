@@ -3,6 +3,7 @@ import Intersection from "./Intersection";
 export default class Intersections {
   private cachedHit?: Intersection;
   private cachedSortedIntersections?: Intersections;
+  private hitKnown: boolean = false;
   readonly intersections: Intersection[];
 
   constructor(...intersections: Intersection[]) {
@@ -20,18 +21,21 @@ export default class Intersections {
     );
   }
 
-  get hit(): Intersection | null {
-    if (this.cachedHit !== undefined) {
-      return this.cachedHit;
+  get hasHit(): boolean {
+    return !!this.hit;
+  }
+
+  get hit(): Intersection | undefined {
+    if (!this.cachedHit && !this.hitKnown) {
+      this.hitKnown = true;
+
+      const hits = this.sortedIntersections.intersections.filter((i) => i.t >= 0);
+      if (hits.length) {
+        this.cachedHit = hits[0];
+      }
     }
 
-    const hits = this.sortedIntersections.intersections.filter((i) => i.t >= 0);
-    if (hits.length) {
-      this.cachedHit = hits[0];
-      return this.cachedHit;
-    }
-
-    return null;
+    return this.cachedHit;
   }
 
   at = (index: number): Intersection => {
