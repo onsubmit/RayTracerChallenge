@@ -1,13 +1,22 @@
 import Intersection from "./Intersection";
+import Lazy from "./utils/Lazy";
 
 export default class Intersections {
-  private cachedHit?: Intersection;
-  private cachedSortedIntersections?: Intersections;
-  private hitKnown: boolean = false;
+  private lazyHit: Lazy<Intersection>;
+  private lazySortedIntersections: Lazy<Intersections>;
   readonly intersections: Intersection[];
 
   constructor(...intersections: Intersection[]) {
     this.intersections = intersections;
+
+    this.lazyHit = new Lazy<Intersection>(() => {
+      const hits = this.sortedIntersections.intersections.filter((i) => i.t >= 0);
+      return hits.length ? hits[0] : null;
+    });
+
+    this.lazySortedIntersections = new Lazy<Intersections>(
+      () => new Intersections(...this.intersections.sort((a, b) => (a.t > b.t ? 1 : -1)))
+    );
   }
 
   get length(): number {
@@ -15,10 +24,7 @@ export default class Intersections {
   }
 
   get sortedIntersections(): Intersections {
-    return (
-      this.cachedSortedIntersections ||
-      (this.cachedSortedIntersections = new Intersections(...this.intersections.sort((a, b) => (a.t > b.t ? 1 : -1))))
-    );
+    return this.lazySortedIntersections.value!;
   }
 
   get hasHit(): boolean {
@@ -26,20 +32,7 @@ export default class Intersections {
   }
 
   get hit(): Intersection | null {
-    if (!this.cachedHit && !this.hitKnown) {
-      const hits = this.sortedIntersections.intersections.filter((i) => i.t >= 0);
-      if (hits.length) {
-        this.cachedHit = hits[0];
-      }
-
-      this.hitKnown = true;
-    }
-
-    if (this.cachedHit) {
-      return this.cachedHit;
-    }
-
-    return null;
+    return this.lazyHit.value;
   }
 
   at = (index: number): Intersection => {

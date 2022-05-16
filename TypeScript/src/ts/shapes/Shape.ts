@@ -3,27 +3,30 @@ import Material from "ts/Material";
 import Matrix from "ts/Matrix";
 import Point from "ts/Point";
 import Ray from "ts/Ray";
+import Lazy from "ts/utils/Lazy";
 import Vector from "ts/Vector";
 
 export default abstract class Shape {
-  private cachedTransformation?: Matrix;
+  private _transformation: Lazy<Matrix>;
 
   material: Material;
 
   constructor(material: Material = new Material()) {
     this.material = material;
+
+    this._transformation = new Lazy<Matrix>(() => Matrix.getIdentityMatrix(4));
   }
 
   get hasTransformation(): boolean {
-    return !!this.cachedTransformation;
+    return !!this._transformation;
   }
 
   get transformation(): Matrix {
-    return this.cachedTransformation || (this.cachedTransformation = Matrix.getIdentityMatrix(4));
+    return this._transformation.value!;
   }
 
   set transformation(matrix: Matrix) {
-    this.cachedTransformation = matrix;
+    this._transformation.value = matrix;
   }
 
   protected abstract getIntersectionsWithImpl(ray: Ray): Intersections;
