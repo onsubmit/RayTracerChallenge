@@ -25,17 +25,21 @@ export default class Intersections {
     return !!this.hit;
   }
 
-  get hit(): Intersection | undefined {
+  get hit(): Intersection | null {
     if (!this.cachedHit && !this.hitKnown) {
-      this.hitKnown = true;
-
       const hits = this.sortedIntersections.intersections.filter((i) => i.t >= 0);
       if (hits.length) {
         this.cachedHit = hits[0];
       }
+
+      this.hitKnown = true;
     }
 
-    return this.cachedHit;
+    if (this.cachedHit) {
+      return this.cachedHit;
+    }
+
+    return null;
   }
 
   at = (index: number): Intersection => {

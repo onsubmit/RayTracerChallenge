@@ -11,7 +11,7 @@ export default class Ray {
     this.direction = direction;
   }
 
-  getPointOnRayAtDistance = (t: number) => this.origin.add(this.direction.multiply(t));
+  getPointOnRayAtDistance = (t: number) => this.origin.addVector(this.direction.multiply(t));
 
   translate = (...coordinates: number[]): Ray => this.transform(Matrix.getTranslationMatrix(...coordinates));
   scale = (...coordinates: number[]): Ray => this.transform(Matrix.getScalingMatrix(...coordinates));

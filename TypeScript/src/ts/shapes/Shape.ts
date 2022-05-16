@@ -1,4 +1,5 @@
 import Intersections from "ts/Intersections";
+import Material from "ts/Material";
 import Matrix from "ts/Matrix";
 import Point from "ts/Point";
 import Ray from "ts/Ray";
@@ -6,6 +7,12 @@ import Vector from "ts/Vector";
 
 export default abstract class Shape {
   private cachedTransformation?: Matrix;
+
+  material: Material;
+
+  constructor(material: Material = new Material()) {
+    this.material = material;
+  }
 
   get hasTransformation(): boolean {
     return !!this.cachedTransformation;

@@ -115,7 +115,7 @@ describe("Intersections", () => {
       const i1 = new Intersection(-2, s);
       const i2 = new Intersection(-1, s);
       const intersections = new Intersections(i1, i2);
-      expect(intersections.hit).toBeUndefined();
+      expect(intersections.hasHit).toBe(false);
     });
 
     it("The hit is always the lowest nonnegative intersection", () => {

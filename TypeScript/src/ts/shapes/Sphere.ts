@@ -10,14 +10,11 @@ export default class Sphere extends Shape {
   readonly origin: Point;
   readonly radius: number;
 
-  material: Material;
-
   constructor(material: Material = new Material()) {
-    super();
+    super(material);
 
     this.origin = new Point(0, 0, 0);
     this.radius = 1;
-    this.material = material;
   }
 
   protected getNormalAtImpl = (point: Point): Vector => point.subtractPoint(this.origin);
