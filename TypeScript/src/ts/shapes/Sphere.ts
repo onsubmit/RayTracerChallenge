@@ -17,6 +17,23 @@ export default class Sphere extends Shape {
     this.radius = 1;
   }
 
+  compare = (shape: Shape): boolean => {
+    if (!(shape instanceof Sphere)) {
+      return false;
+    }
+
+    const sphere = shape as Sphere;
+    if (!this.origin.compare(sphere.origin)) {
+      return false;
+    }
+
+    if (!this.radius.compare(sphere.radius)) {
+      return false;
+    }
+
+    return true;
+  };
+
   protected getNormalAtImpl = (point: Point): Vector => point.subtractPoint(this.origin);
 
   protected getIntersectionsWithImpl(ray: Ray): Intersections {

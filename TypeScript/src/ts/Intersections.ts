@@ -35,7 +35,7 @@ export default class Intersections {
     return this.lazyHit.value;
   }
 
-  at = (index: number): Intersection => {
+  get = (index: number): Intersection => {
     if (index < 0 || index >= this.intersections.length) {
       throw "Invalid index";
     }

@@ -1,3 +1,4 @@
+import Computation from "ts/Computation";
 import Intersection from "ts/Intersection";
 import Intersections from "ts/Intersections";
 import Matrix from "ts/Matrix";
@@ -17,8 +18,8 @@ describe("Intersections", () => {
 
       const intersections = s.getIntersectionsWith(ray);
       expect(intersections.length).toBe(2);
-      expect(intersections.at(0).t.compare(4)).toBe(true);
-      expect(intersections.at(1).t.compare(6)).toBe(true);
+      expect(intersections.get(0).t.compare(4)).toBe(true);
+      expect(intersections.get(1).t.compare(6)).toBe(true);
     });
 
     it("A ray intersects a sphere at a tangent", () => {
@@ -30,8 +31,8 @@ describe("Intersections", () => {
 
       const intersections = s.getIntersectionsWith(ray);
       expect(intersections.length).toBe(2);
-      expect(intersections.at(0).t.compare(5)).toBe(true);
-      expect(intersections.at(1).t.compare(5)).toBe(true);
+      expect(intersections.get(0).t.compare(5)).toBe(true);
+      expect(intersections.get(1).t.compare(5)).toBe(true);
     });
 
     it("A ray misses a sphere", () => {
@@ -54,8 +55,8 @@ describe("Intersections", () => {
 
       const intersections = s.getIntersectionsWith(ray);
       expect(intersections.length).toBe(2);
-      expect(intersections.at(0).t.compare(-1)).toBe(true);
-      expect(intersections.at(1).t.compare(1)).toBe(true);
+      expect(intersections.get(0).t.compare(-1)).toBe(true);
+      expect(intersections.get(1).t.compare(1)).toBe(true);
     });
 
     it("A sphere is behind a ray", () => {
@@ -67,8 +68,8 @@ describe("Intersections", () => {
 
       const intersections = s.getIntersectionsWith(ray);
       expect(intersections.length).toBe(2);
-      expect(intersections.at(0).t.compare(-6)).toBe(true);
-      expect(intersections.at(1).t.compare(-4)).toBe(true);
+      expect(intersections.get(0).t.compare(-6)).toBe(true);
+      expect(intersections.get(1).t.compare(-4)).toBe(true);
     });
   });
 
@@ -88,8 +89,8 @@ describe("Intersections", () => {
       const intersections = new Intersections(i1, i2);
 
       expect(intersections.length).toBe(2);
-      expect(intersections.at(0).shape).toEqual(s);
-      expect(intersections.at(1).shape).toEqual(s);
+      expect(intersections.get(0).shape).toEqual(s);
+      expect(intersections.get(1).shape).toEqual(s);
     });
   });
 
@@ -140,20 +141,58 @@ describe("Intersections", () => {
 
       const intersections = s.getIntersectionsWith(ray);
       expect(intersections.length).toBe(2);
-      expect(intersections.at(0).t).toBe(3);
-      expect(intersections.at(1).t).toBe(7);
+      expect(intersections.get(0).t).toBe(3);
+      expect(intersections.get(1).t).toBe(7);
+    });
+
+    it("Intersecting a translated sphere with a ray", () => {
+      const origin = new Point(0, 0, -5);
+      const direction = new Vector(0, 0, 1);
+      const ray = new Ray(origin, direction);
+
+      const s = new Sphere();
+      s.transformation = Matrix.getTranslationMatrix(5, 0, 0);
+
+      const intersections = s.getIntersectionsWith(ray);
+      expect(intersections.length).toBe(0);
+    });
+
+    it("The hit, when an intersection occurs on the outside", () => {
+      const ray = new Ray(new Point(0, 0, -5), new Vector(0, 0, 1));
+      const shape = new Sphere();
+      const intersection = new Intersection(4, shape);
+
+      const computation = Computation.prepare(intersection, ray);
+      expect(computation.inside).toBe(false);
+    });
+
+    it("The hit, when an intersection occurs on the inside", () => {
+      const ray = new Ray(new Point(0, 0, 0), new Vector(0, 0, 1));
+      const shape = new Sphere();
+      const intersection = new Intersection(1, shape);
+
+      const computation = Computation.prepare(intersection, ray);
+      expect(computation.t.compare(intersection.t)).toBe(true);
+      expect(computation.shape.compare(intersection.shape)).toBe(true);
+      expect(computation.point.compare(new Point(0, 0, 1))).toBe(true);
+      expect(computation.eye.compare(new Vector(0, 0, -1))).toBe(true);
+      expect(computation.normal.compare(new Vector(0, 0, -1))).toBe(true);
+      expect(computation.inside).toBe(true);
     });
   });
 
-  it("Intersecting a translated sphere with a ray", () => {
-    const origin = new Point(0, 0, -5);
-    const direction = new Vector(0, 0, 1);
-    const ray = new Ray(origin, direction);
+  describe("Computation", () => {
+    it("Precomputing the state of an intersection", () => {
+      const ray = new Ray(new Point(0, 0, -5), new Vector(0, 0, 1));
+      const shape = new Sphere();
+      const intersection = new Intersection(4, shape);
 
-    const s = new Sphere();
-    s.transformation = Matrix.getTranslationMatrix(5, 0, 0);
-
-    const intersections = s.getIntersectionsWith(ray);
-    expect(intersections.length).toBe(0);
+      const computation = Computation.prepare(intersection, ray);
+      expect(computation.t.compare(intersection.t)).toBe(true);
+      expect(computation.shape.compare(intersection.shape)).toBe(true);
+      expect(computation.point.compare(new Point(0, 0, -1))).toBe(true);
+      expect(computation.eye.compare(new Vector(0, 0, -1))).toBe(true);
+      expect(computation.normal.compare(new Vector(0, 0, -1))).toBe(true);
+    });
   });
 });

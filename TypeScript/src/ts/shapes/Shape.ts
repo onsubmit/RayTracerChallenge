@@ -32,6 +32,8 @@ export default abstract class Shape {
   protected abstract getIntersectionsWithImpl(ray: Ray): Intersections;
   protected abstract getNormalAtImpl(point: Point): Vector;
 
+  abstract compare(shape: Shape): boolean;
+
   getIntersectionsWith = (ray: Ray): Intersections => {
     if (this.hasTransformation) {
       ray = ray.transform(this.transformation.inverse);
