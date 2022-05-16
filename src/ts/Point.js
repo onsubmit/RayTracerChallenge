@@ -11,10 +11,17 @@ class Point extends Tuple4d_1.default {
         this.subtractVector = (vector) => Point.fromNumberTuple(this.subtract(vector));
         this.toString = () => `(${this.x.toFixed(2)}, ${this.y.toFixed(2)}, ${this.z.toFixed(2)})`;
     }
-    static get zero() {
-        return Point.fromNumberTuple(Tuple4d_1.default.zero);
-    }
 }
 exports.default = Point;
-Point.fromNumberTuple = (numberTuple) => new Point(numberTuple.at(0), numberTuple.at(1), numberTuple.at(2));
+Point.zero = new Point(0, 0, 0);
+Point.origin = Point.zero;
+Point.fromNumberTuple = (numberTuple) => {
+    if (numberTuple.length < 3) {
+        throw `Tuple not long enough. Its length is ${numberTuple.length}`;
+    }
+    if (numberTuple.length === 4 && !numberTuple.at(3).compare(1)) {
+        throw `Tuple is not a point. w=${numberTuple.at(3)}. Must be 1.`;
+    }
+    return new Point(numberTuple.at(0), numberTuple.at(1), numberTuple.at(2));
+};
 //# sourceMappingURL=Point.js.map

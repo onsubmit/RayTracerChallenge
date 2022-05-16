@@ -79,6 +79,12 @@ class Matrix {
             }
             return minor;
         };
+        this.rotateX = (radians) => Matrix.getRotationMatrixX(radians).multiply(this);
+        this.rotateY = (radians) => Matrix.getRotationMatrixY(radians).multiply(this);
+        this.rotateZ = (radians) => Matrix.getRotationMatrixZ(radians).multiply(this);
+        this.scale = (...coordinates) => Matrix.getScalingMatrix(...coordinates).multiply(this);
+        this.shear = (xy, xz, yx, yz, zx, zy) => Matrix.getShearingMatrix(xy, xz, yx, yz, zx, zy).multiply(this);
+        this.translate = (...coordinates) => Matrix.getTranslationMatrix(...coordinates).multiply(this);
         this.elements = elements;
         this.rows = elements.length;
         this.columns = (_b = (_a = elements[0]) === null || _a === void 0 ? void 0 : _a.length) !== null && _b !== void 0 ? _b : 0;

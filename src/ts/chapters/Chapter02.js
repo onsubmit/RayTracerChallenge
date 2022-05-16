@@ -19,7 +19,7 @@ class Chapter02 {
             const gravity = new Vector_1.default(0, -0.1, 0);
             const wind = new Vector_1.default(-0.01, 0, 0);
             const environment = new Environment_1.default(gravity, wind);
-            const canvas = new Canvas_1.default(900, 550);
+            const canvas = new Canvas_1.default(901, 551);
             while (projectile.position.y > 0) {
                 canvas.writePixel(projectile.position.x, canvas.height - projectile.position.y, Color_1.default.white);
                 projectile = this.tick(environment, projectile);

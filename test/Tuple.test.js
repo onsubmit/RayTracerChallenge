@@ -18,7 +18,6 @@ describe("Tuple", () => {
             expect(t.z.compare(z)).toBe(true);
             expect(t.w.compare(w)).toBe(true);
             expect(t.compare(Point_1.default.fromNumberTuple(t))).toBe(true);
-            expect(t.compare(Vector_1.default.fromNumberTuple(t))).toBe(false);
         });
         it("A tuple with w=0 is a vector", () => {
             const { x, y, z, w } = { x: 4.3, y: -4.2, z: 3.1, w: 0.0 };
@@ -27,7 +26,6 @@ describe("Tuple", () => {
             expect(t.y.compare(y)).toBe(true);
             expect(t.z.compare(z)).toBe(true);
             expect(t.w.compare(w)).toBe(true);
-            expect(t.compare(Point_1.default.fromNumberTuple(t))).toBe(false);
             expect(t.compare(Vector_1.default.fromNumberTuple(t))).toBe(true);
         });
         it("Point ctor creates Tuples with w=1", () => {

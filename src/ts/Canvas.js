@@ -13,12 +13,20 @@ class Canvas {
             return this.pixels[y][x];
         };
         this.writePixel = (x, y, color) => {
+            if (x < 0 || y < 0 || x >= this.width || y >= this.height) {
+                return;
+            }
             x = Math.round(x);
             y = Math.round(y);
             if (!this.pixels[y] || !this.pixels[y][x]) {
                 throw `Invalid coordinates @ (${x}, ${y})`;
             }
             this.pixels[y][x] = color;
+        };
+        this.writePixelWithCenteredOrigin = (x, y, color) => {
+            const dx = this.width / 2;
+            const dy = this.height / 2;
+            this.writePixel(x + dx, -y + dy, color);
         };
         this.width = width;
         this.height = height;

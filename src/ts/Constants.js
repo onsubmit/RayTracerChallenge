@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 class Constants {
     constructor() {
+        this.twoPi = Math.PI * 2;
         this.pi_4 = Math.PI / 4;
         this.pi_2 = Math.PI / 2;
         this.sqrt2 = Math.SQRT2;
