@@ -3,7 +3,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 require("./extensions/NumberExtensions");
 class Tuple {
     constructor(...values) {
-        this.at = (index) => this.values[index];
+        this.get = (index) => this.values[index];
+        this.set = (index, value) => {
+            this.values[index] = value;
+        };
         this.compare = (tuple) => {
             if (this.values.length !== tuple.values.length) {
                 throw `Tuples have different lengths. ${this.values.length} !== ${tuple.values.length}`;

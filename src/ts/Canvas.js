@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Color_1 = __importDefault(require("./Color"));
 class Canvas {
     constructor(width, height) {
-        this.at = (x, y) => {
+        this.get = (x, y) => {
             if (!this.pixels[y] || !this.pixels[y][x]) {
                 throw `Invalid coordinates @ (${x}, ${y})`;
             }

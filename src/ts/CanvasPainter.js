@@ -17,9 +17,9 @@ class CanvasPainter {
             let index = 0;
             for (let r = 0; r < this.canvas.height; r++) {
                 for (let c = 0; c < this.canvas.width; c++) {
-                    imageData.data[index++] = Math.round(255 * this.canvas.at(c, r).red);
-                    imageData.data[index++] = Math.round(255 * this.canvas.at(c, r).green);
-                    imageData.data[index++] = Math.round(255 * this.canvas.at(c, r).blue);
+                    imageData.data[index++] = Math.round(255 * this.canvas.get(c, r).red);
+                    imageData.data[index++] = Math.round(255 * this.canvas.get(c, r).green);
+                    imageData.data[index++] = Math.round(255 * this.canvas.get(c, r).blue);
                     imageData.data[index++] = Math.round(255);
                 }
             }

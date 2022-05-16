@@ -21,6 +21,7 @@ class Vector extends Tuple4d_1.default {
             const z = this.x * vector.y - this.y * vector.x;
             return new Vector(x, y, z);
         };
+        this.reflect = (normal) => this.subtractVector(normal.multiply(2 * this.dot(normal)));
         this.toString = () => `(${this.x.toFixed(2)}, ${this.y.toFixed(2)}, ${this.z.toFixed(2)})`;
     }
     get magnitude() {
@@ -28,14 +29,14 @@ class Vector extends Tuple4d_1.default {
     }
 }
 exports.default = Vector;
-Vector.fromNumberTuple = (numberTuple) => {
+Vector.fromNumberTuple = (numberTuple, force = false) => {
     if (numberTuple.length < 3) {
         throw `Tuple not long enough. Its length is ${numberTuple.length}`;
     }
-    if (numberTuple.length === 4 && !numberTuple.at(3).compare(0)) {
-        throw `Tuple is not a vector. w=${numberTuple.at(3)}. Must be 0.`;
+    if (!force && numberTuple.length === 4 && !numberTuple.get(3).compare(0)) {
+        throw `Tuple is not a vector. w=${numberTuple.get(3)}. Must be 0.`;
     }
-    return new Vector(numberTuple.at(0), numberTuple.at(1), numberTuple.at(2));
+    return new Vector(numberTuple.get(0), numberTuple.get(1), numberTuple.get(2));
 };
 Vector.zero = Vector.fromNumberTuple(Tuple4d_1.default.zero);
 //# sourceMappingURL=Vector.js.map

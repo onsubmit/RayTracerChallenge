@@ -57,7 +57,7 @@ class Matrix {
             const values = Array.from({ length: this.rows }, () => 0);
             for (let r = 0; r < this.rows; r++) {
                 for (let c = 0; c < this.columns; c++) {
-                    values[r] += this.elements[r][c] * tuple.at(c);
+                    values[r] += this.elements[r][c] * tuple.get(c);
                 }
             }
             return new NumberTuple_1.default(...values);
@@ -79,12 +79,12 @@ class Matrix {
             }
             return minor;
         };
-        this.rotateX = (radians) => Matrix.getRotationMatrixX(radians).multiply(this);
-        this.rotateY = (radians) => Matrix.getRotationMatrixY(radians).multiply(this);
-        this.rotateZ = (radians) => Matrix.getRotationMatrixZ(radians).multiply(this);
-        this.scale = (...coordinates) => Matrix.getScalingMatrix(...coordinates).multiply(this);
-        this.shear = (xy, xz, yx, yz, zx, zy) => Matrix.getShearingMatrix(xy, xz, yx, yz, zx, zy).multiply(this);
-        this.translate = (...coordinates) => Matrix.getTranslationMatrix(...coordinates).multiply(this);
+        this.rotateX = (radians) => this.multiply(Matrix.getRotationMatrixX(radians));
+        this.rotateY = (radians) => this.multiply(Matrix.getRotationMatrixY(radians));
+        this.rotateZ = (radians) => this.multiply(Matrix.getRotationMatrixZ(radians));
+        this.scale = (...coordinates) => this.multiply(Matrix.getScalingMatrix(...coordinates));
+        this.shear = (xy, xz, yx, yz, zx, zy) => this.multiply(Matrix.getShearingMatrix(xy, xz, yx, yz, zx, zy));
+        this.translate = (...coordinates) => this.multiply(Matrix.getTranslationMatrix(...coordinates));
         this.elements = elements;
         this.rows = elements.length;
         this.columns = (_b = (_a = elements[0]) === null || _a === void 0 ? void 0 : _a.length) !== null && _b !== void 0 ? _b : 0;

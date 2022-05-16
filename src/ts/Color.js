@@ -18,13 +18,13 @@ class Color extends NumberTuple_1.default {
         };
     }
     get red() {
-        return this.at(0);
+        return this.get(0);
     }
     get green() {
-        return this.at(1);
+        return this.get(1);
     }
     get blue() {
-        return this.at(2);
+        return this.get(2);
     }
 }
 exports.default = Color;
@@ -33,5 +33,5 @@ Color.white = new Color(1, 1, 1);
 Color.red = new Color(1, 0, 0);
 Color.green = new Color(0, 1, 0);
 Color.blue = new Color(0, 0, 1);
-Color.fromNumberTuple = (numberTuple) => new Color(numberTuple.at(0), numberTuple.at(1), numberTuple.at(2));
+Color.fromNumberTuple = (numberTuple) => new Color(numberTuple.get(0), numberTuple.get(1), numberTuple.get(2));
 //# sourceMappingURL=Color.js.map

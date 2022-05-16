@@ -16,11 +16,11 @@ class NumberTuple extends Tuple_1.default {
 }
 exports.default = NumberTuple;
 NumberTuple.add = (tuple1, tuple2) => {
-    const sums = tuple1.values.map((value, index) => value + tuple2.at(index));
+    const sums = tuple1.values.map((value, index) => value + tuple2.get(index));
     return new NumberTuple(...sums);
 };
 NumberTuple.subtract = (tuple1, tuple2) => {
-    const differences = tuple1.values.map((value, index) => value - tuple2.at(index));
+    const differences = tuple1.values.map((value, index) => value - tuple2.get(index));
     return new NumberTuple(...differences);
 };
 NumberTuple.multiply = (tuple, scalar) => {
