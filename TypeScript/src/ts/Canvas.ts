@@ -13,7 +13,7 @@ export default class Canvas {
     this.pixels = Array.from({ length: height }, () => Array.from({ length: width }, () => Color.black));
   }
 
-  at = (x: number, y: number): Color => {
+  get = (x: number, y: number): Color => {
     if (!this.pixels[y] || !this.pixels[y][x]) {
       throw `Invalid coordinates @ (${x}, ${y})`;
     }

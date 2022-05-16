@@ -10,7 +10,7 @@ describe("Canvas", () => {
 
     for (let r = 0; r < canvas.height; r++) {
       for (let c = 0; c < canvas.width; c++) {
-        expect(canvas.at(c, r).compare(Color.black)).toBe(true);
+        expect(canvas.get(c, r).compare(Color.black)).toBe(true);
       }
     }
   });
@@ -19,6 +19,6 @@ describe("Canvas", () => {
     const c = new Canvas(10, 20);
     c.writePixel(3, 2, Color.red);
 
-    expect(c.at(3, 2).compare(Color.red)).toBe(true);
+    expect(c.get(3, 2).compare(Color.red)).toBe(true);
   });
 });

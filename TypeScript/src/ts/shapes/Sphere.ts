@@ -16,8 +16,10 @@ export default class Sphere extends Shape {
     this.radius = 1;
   }
 
+  protected getNormalAtImpl = (point: Point): Vector => point.subtractPoint(this.origin);
+
   protected getIntersectionsWithImpl(ray: Ray): Intersections {
-    const sphereToRay = Vector.fromNumberTuple(ray.origin.subtract(Point.origin));
+    const sphereToRay = ray.origin.subtractPoint(Point.origin);
 
     const a = ray.direction.dot(ray.direction);
     const b = 2 * ray.direction.dot(sphereToRay);

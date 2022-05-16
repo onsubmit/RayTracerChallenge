@@ -4,23 +4,23 @@ import NumberTuple from "./NumberTuple";
 export default class Tuple4d extends NumberTuple {
   static readonly zero = new Tuple4d(0, 0, 0, 0);
 
-  static fromNumberTuple = (numberTuple: NumberTuple): Tuple4d =>
-    new Tuple4d(numberTuple.at(0), numberTuple.at(1), numberTuple.at(2), numberTuple.at(3));
+  static fromNumberTuple = (numberTuple: NumberTuple, _: boolean = false): Tuple4d =>
+    new Tuple4d(numberTuple.get(0), numberTuple.get(1), numberTuple.get(2), numberTuple.get(3));
 
   get x(): number {
-    return this.at(0);
+    return this.get(0);
   }
 
   get y(): number {
-    return this.at(1);
+    return this.get(1);
   }
 
   get z(): number {
-    return this.at(2);
+    return this.get(2);
   }
 
   get w(): number {
-    return this.at(3);
+    return this.get(3);
   }
 
   add = (tuple: Tuple4d): Tuple4d => Tuple4d.fromNumberTuple(NumberTuple.add(this, tuple));

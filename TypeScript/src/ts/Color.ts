@@ -12,18 +12,18 @@ export default class Color extends NumberTuple {
   }
 
   static fromNumberTuple = (numberTuple: NumberTuple): Color =>
-    new Color(numberTuple.at(0), numberTuple.at(1), numberTuple.at(2));
+    new Color(numberTuple.get(0), numberTuple.get(1), numberTuple.get(2));
 
   get red(): number {
-    return this.at(0);
+    return this.get(0);
   }
 
   get green(): number {
-    return this.at(1);
+    return this.get(1);
   }
 
   get blue(): number {
-    return this.at(2);
+    return this.get(2);
   }
 
   multiply = (scalar: number): Color => Color.fromNumberTuple(NumberTuple.multiply(this, scalar));

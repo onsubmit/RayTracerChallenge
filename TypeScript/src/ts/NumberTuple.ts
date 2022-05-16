@@ -7,12 +7,12 @@ export default class NumberTuple extends Tuple<number> {
   };
 
   protected static add = (tuple1: NumberTuple, tuple2: NumberTuple): NumberTuple => {
-    const sums = tuple1.values.map((value, index) => value + tuple2.at(index));
+    const sums = tuple1.values.map((value, index) => value + tuple2.get(index));
     return new NumberTuple(...sums);
   };
 
   protected static subtract = (tuple1: NumberTuple, tuple2: NumberTuple): NumberTuple => {
-    const differences = tuple1.values.map((value, index) => value - tuple2.at(index));
+    const differences = tuple1.values.map((value, index) => value - tuple2.get(index));
     return new NumberTuple(...differences);
   };
 

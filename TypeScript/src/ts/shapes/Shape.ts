@@ -1,6 +1,8 @@
 import Intersections from "ts/Intersections";
 import Matrix from "ts/Matrix";
+import Point from "ts/Point";
 import Ray from "ts/Ray";
+import Vector from "ts/Vector";
 
 export default abstract class Shape {
   private cachedTransformation?: Matrix;
@@ -18,6 +20,7 @@ export default abstract class Shape {
   }
 
   protected abstract getIntersectionsWithImpl(ray: Ray): Intersections;
+  protected abstract getNormalAtImpl(point: Point): Vector;
 
   getIntersectionsWith = (ray: Ray): Intersections => {
     if (this.hasTransformation) {
@@ -25,5 +28,15 @@ export default abstract class Shape {
     }
 
     return this.getIntersectionsWithImpl(ray);
+  };
+
+  getNormalAt = (point: Point): Vector => {
+    const objectPoint = Point.fromNumberTuple(this.transformation.inverse.multiplyByTuple(point));
+    const objectNormal = objectPoint.subtractPoint(Point.origin);
+    const worldNormal = Vector.fromNumberTuple(
+      this.transformation.inverse.transpose().multiplyByTuple(objectNormal),
+      true /* force */
+    );
+    return worldNormal.normalize();
   };
 }

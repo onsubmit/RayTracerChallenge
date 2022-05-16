@@ -6,7 +6,6 @@ import Matrix from "ts/Matrix";
 import Point from "ts/Point";
 import Ray from "ts/Ray";
 import Sphere from "ts/shapes/Sphere";
-import Vector from "ts/Vector";
 import IChapter from "./IChapter";
 
 class Chapter05 implements IChapter {
@@ -30,7 +29,7 @@ class Chapter05 implements IChapter {
         const worldX = -half + pixelSize * x;
 
         const p = new Point(worldX, worldY, wallZ);
-        const ray = new Ray(rayOrigin, Vector.fromNumberTuple(p.subtract(rayOrigin)).normalize());
+        const ray = new Ray(rayOrigin, p.subtractPoint(rayOrigin).normalize());
         const intersections = sphere.getIntersectionsWith(ray);
 
         if (intersections.hasHit) {

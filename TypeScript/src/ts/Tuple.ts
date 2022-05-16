@@ -11,7 +11,10 @@ export default abstract class Tuple<T> {
     return this.values.length;
   }
 
-  at = (index: number): T => this.values[index];
+  get = (index: number): T => this.values[index];
+  set = (index: number, value: T): void => {
+    this.values[index] = value;
+  };
 
   abstract valueComparisonFn: (thisValue: T, valueToCompareAgainst: T) => boolean;
 
