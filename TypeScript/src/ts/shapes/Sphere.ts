@@ -1,5 +1,6 @@
 import Intersection from "ts/Intersection";
 import Intersections from "ts/Intersections";
+import Material from "ts/Material";
 import Point from "ts/Point";
 import Ray from "ts/Ray";
 import Vector from "ts/Vector";
@@ -9,11 +10,14 @@ export default class Sphere extends Shape {
   readonly origin: Point;
   readonly radius: number;
 
-  constructor() {
+  material: Material;
+
+  constructor(material: Material = new Material()) {
     super();
 
     this.origin = new Point(0, 0, 0);
     this.radius = 1;
+    this.material = material;
   }
 
   protected getNormalAtImpl = (point: Point): Vector => point.subtractPoint(this.origin);

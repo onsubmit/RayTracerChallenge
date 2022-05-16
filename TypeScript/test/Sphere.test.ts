@@ -1,4 +1,5 @@
 import Constants from "ts/Constants";
+import Material from "ts/Material";
 import Matrix from "ts/Matrix";
 import Point from "ts/Point";
 import Sphere from "ts/shapes/Sphere";
@@ -70,6 +71,32 @@ describe("Sphere", () => {
 
       const n = s.getNormalAt(new Point(0, Constants.sqrt2_2, -Constants.sqrt2_2));
       expect(n.compare(new Vector(0, 0.97014, -0.24254))).toBe(true);
+    });
+  });
+
+  describe("Material", () => {
+    it("A sphere has a default material", () => {
+      const s = new Sphere();
+
+      expect(s.material.compare(new Material())).toBe(true);
+    });
+
+    it("A sphere may be assigned a material", () => {
+      const getMaterial = (): Material => {
+        const m = new Material();
+        m.ambient = 1;
+        return m;
+      };
+
+      const s1 = new Sphere(getMaterial());
+      const s2 = new Sphere();
+      s2.material = getMaterial();
+
+      expect(s1.material.compare(getMaterial())).toBe(true);
+      expect(s2.material.compare(getMaterial())).toBe(true);
+
+      expect(s1.material.compare(s2.material)).toBe(true);
+      expect(s2.material.compare(s1.material)).toBe(true);
     });
   });
 });

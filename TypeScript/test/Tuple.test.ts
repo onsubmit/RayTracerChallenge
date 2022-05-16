@@ -120,76 +120,96 @@ describe("Tuple", () => {
     });
   });
 
-  describe("Vector magnitude and normalization", () => {
-    it("Computing the magnitude of vector(1, 0, 0)", () => {
-      const v = new Vector(1, 0, 0);
+  describe("Vector", () => {
+    describe("Magnitude and normalization", () => {
+      it("Computing the magnitude of vector(1, 0, 0)", () => {
+        const v = new Vector(1, 0, 0);
 
-      expect(v.magnitude.compare(1)).toBe(true);
+        expect(v.magnitude.compare(1)).toBe(true);
+      });
+
+      it("Computing the magnitude of vector(0, 1, 0)", () => {
+        const v = new Vector(0, 1, 0);
+
+        expect(v.magnitude.compare(1)).toBe(true);
+      });
+
+      it("Computing the magnitude of vector(0, 0, 1)", () => {
+        const v = new Vector(0, 0, 1);
+
+        expect(v.magnitude.compare(1)).toBe(true);
+      });
+
+      it("Computing the magnitude of vector(1, 2, 3)", () => {
+        const v = new Vector(1, 2, 3);
+
+        expect(v.magnitude.compare(Math.sqrt(14))).toBe(true);
+      });
+
+      it("Computing the magnitude of vector(-1, -2, -3)", () => {
+        const v = new Vector(-1, -2, -3);
+
+        expect(v.magnitude.compare(Math.sqrt(14))).toBe(true);
+      });
+
+      it("Normalizing vector(4, 0, 0) gives (1, 0, 0)", () => {
+        const v = new Vector(4, 0, 0);
+
+        const normalized = v.normalize();
+        expect(normalized.compare(new Vector(1, 0, 0))).toBe(true);
+      });
+
+      it("Normalizing vector(1, 2, 3)", () => {
+        const v = new Vector(1, 2, 3);
+
+        const normalized = v.normalize();
+        expect(normalized.compare(new Vector(0.26726, 0.53452, 0.80178))).toBe(true);
+      });
+
+      it("The magnitude of a normalized vector", () => {
+        const v = new Vector(1, 2, 3);
+
+        const normalized = v.normalize();
+        expect(normalized.magnitude).toBe(1);
+        expect(normalized.magnitude.compare(1)).toBe(true);
+      });
     });
 
-    it("Computing the magnitude of vector(0, 1, 0)", () => {
-      const v = new Vector(0, 1, 0);
+    describe("Dot and cross product", () => {
+      it("The dot product of two vectors", () => {
+        const v1 = new Vector(1, 2, 3);
+        const v2 = new Vector(2, 3, 4);
 
-      expect(v.magnitude.compare(1)).toBe(true);
+        expect(v1.dot(v2)).toBe(20);
+      });
+
+      it("The cross product of two vectors", () => {
+        const v1 = new Vector(1, 2, 3);
+        const v2 = new Vector(2, 3, 4);
+
+        const cross12 = v1.cross(v2);
+        const cross21 = v2.cross(v1);
+        expect(cross12.compare(new Vector(-1, 2, -1))).toBe(true);
+        expect(cross21.compare(new Vector(1, -2, 1))).toBe(true);
+      });
     });
 
-    it("Computing the magnitude of vector(0, 0, 1)", () => {
-      const v = new Vector(0, 0, 1);
+    describe("Reflection", () => {
+      it("Reflecting a vector approach at 45°", () => {
+        const v = new Vector(1, -1, 0);
+        const n = new Vector(0, 1, 0);
 
-      expect(v.magnitude.compare(1)).toBe(true);
-    });
+        const r = v.reflect(n);
+        expect(r.compare(new Vector(1, 1, 0))).toBe(true);
+      });
 
-    it("Computing the magnitude of vector(1, 2, 3)", () => {
-      const v = new Vector(1, 2, 3);
+      it("Reflecting a vector off a slanted surface", () => {
+        const v = new Vector(0, -1, 0);
+        const n = new Vector(1, 1, 0).normalize();
 
-      expect(v.magnitude.compare(Math.sqrt(14))).toBe(true);
-    });
-
-    it("Computing the magnitude of vector(-1, -2, -3)", () => {
-      const v = new Vector(-1, -2, -3);
-
-      expect(v.magnitude.compare(Math.sqrt(14))).toBe(true);
-    });
-
-    it("Normalizing vector(4, 0, 0) gives (1, 0, 0)", () => {
-      const v = new Vector(4, 0, 0);
-
-      const normalized = v.normalize();
-      expect(normalized.compare(new Vector(1, 0, 0))).toBe(true);
-    });
-
-    it("Normalizing vector(1, 2, 3)", () => {
-      const v = new Vector(1, 2, 3);
-
-      const normalized = v.normalize();
-      expect(normalized.compare(new Vector(0.26726, 0.53452, 0.80178))).toBe(true);
-    });
-
-    it("The magnitude of a normalized vector", () => {
-      const v = new Vector(1, 2, 3);
-
-      const normalized = v.normalize();
-      expect(normalized.magnitude).toBe(1);
-      expect(normalized.magnitude.compare(1)).toBe(true);
-    });
-  });
-
-  describe("Vector dot and cross product", () => {
-    it("The dot product of two vectors", () => {
-      const v1 = new Vector(1, 2, 3);
-      const v2 = new Vector(2, 3, 4);
-
-      expect(v1.dot(v2)).toBe(20);
-    });
-
-    it("The cross product of two vectors", () => {
-      const v1 = new Vector(1, 2, 3);
-      const v2 = new Vector(2, 3, 4);
-
-      const cross12 = v1.cross(v2);
-      const cross21 = v2.cross(v1);
-      expect(cross12.compare(new Vector(-1, 2, -1))).toBe(true);
-      expect(cross21.compare(new Vector(1, -2, 1))).toBe(true);
+        const r = v.reflect(n);
+        expect(r.compare(new Vector(1, 0, 0))).toBe(true);
+      });
     });
   });
 

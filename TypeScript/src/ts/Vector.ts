@@ -41,5 +41,7 @@ export default class Vector extends Tuple4d {
     return new Vector(x, y, z);
   };
 
+  reflect = (normal: Vector): Vector => this.subtractVector(normal.multiply(2 * this.dot(normal)));
+
   override toString = (): string => `(${this.x.toFixed(2)}, ${this.y.toFixed(2)}, ${this.z.toFixed(2)})`;
 }
