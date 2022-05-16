@@ -26,7 +26,7 @@ export default class Vector extends Tuple4d {
 
   override multiply = (scalar: number): Vector => Vector.fromNumberTuple(NumberTuple.multiply(this, scalar));
   override divide = (scalar: number): Vector => Vector.fromNumberTuple(NumberTuple.divide(this, scalar));
-  override negate = (): Tuple4d => Vector.fromNumberTuple(Vector.negate(this));
+  override negate = (): Vector => Vector.fromNumberTuple(Vector.negate(this));
 
   addVector = (vector: Vector): Vector => Vector.fromNumberTuple(this.add(vector));
   subtractVector = (vector: Vector): Vector => Vector.fromNumberTuple(this.subtract(vector));
