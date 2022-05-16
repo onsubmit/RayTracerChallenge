@@ -4,7 +4,8 @@ import NumberTuple from "./NumberTuple";
 export default class Tuple4d extends NumberTuple {
   static readonly zero = new Tuple4d(0, 0, 0, 0);
 
-  static fromNumberTuple = (numberTuple: NumberTuple, _: boolean = false): Tuple4d =>
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  static fromNumberTuple = (numberTuple: NumberTuple, _ = false): Tuple4d =>
     new Tuple4d(numberTuple.get(0), numberTuple.get(1), numberTuple.get(2), numberTuple.get(3));
 
   get x(): number {

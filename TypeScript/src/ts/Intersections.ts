@@ -11,12 +11,15 @@ export default class Intersections {
 
     this.lazyHit = new Lazy<Intersection>(() => {
       const hits = this.sortedIntersections.intersections.filter((i) => i.t >= 0);
-      return hits.length ? hits[0] : null;
+      return { success: hits.length > 0, value: hits[0] };
     });
 
-    this.lazySortedIntersections = new Lazy<Intersections>(
-      () => new Intersections(...this.intersections.sort((a, b) => (a.t > b.t ? 1 : -1)))
-    );
+    this.lazySortedIntersections = new Lazy<Intersections>(() => {
+      return {
+        success: true,
+        value: new Intersections(...this.intersections.sort((a, b) => (a.t > b.t ? 1 : -1))),
+      };
+    });
   }
 
   get length(): number {
@@ -24,14 +27,18 @@ export default class Intersections {
   }
 
   get sortedIntersections(): Intersections {
-    return this.lazySortedIntersections.value!;
+    if (!this.lazySortedIntersections.value) {
+      throw "Sorted intersections could not be determined";
+    }
+
+    return this.lazySortedIntersections.value;
   }
 
   get hasHit(): boolean {
-    return !!this.hit;
+    return this.lazyHit.hasValue;
   }
 
-  get hit(): Intersection | null {
+  get hit(): Intersection {
     return this.lazyHit.value;
   }
 

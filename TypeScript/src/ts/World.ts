@@ -1,6 +1,8 @@
 import Color from "./Color";
+import Computation from "./Computation";
 import Intersections from "./Intersections";
 import Light from "./Light";
+import Lighting from "./Lighting";
 import Material from "./Material";
 import Matrix from "./Matrix";
 import Point from "./Point";
@@ -13,10 +15,12 @@ export default class World {
   light: Light;
   shapes: Shape[];
 
-  private static lazyDefaultWorld: Lazy<World> = new Lazy<World>(() => World.getDefaultWorld());
+  private static lazyDefaultWorld: Lazy<World> = new Lazy<World>(() => {
+    return { success: true, value: World.getDefaultWorld() };
+  });
 
   static get defaultWorld(): World {
-    return World.lazyDefaultWorld.value!;
+    return World.lazyDefaultWorld.value;
   }
 
   constructor(light: Light, ...shapes: Shape[]) {
@@ -29,8 +33,11 @@ export default class World {
     return new Intersections(...intersections).sortedIntersections;
   };
 
-  private static getDefaultWorld = () => {
-    const light = new Light(new Point(-10, 10, 10), Color.white);
+  shadeHit = (computation: Computation): Color =>
+    Lighting.calculate(computation.shape.material, this.light, computation.point, computation.eye, computation.normal);
+
+  private static getDefaultWorld = (): World => {
+    const light = new Light(new Point(-10, 10, -10), Color.white);
 
     const m1 = new Material();
     m1.color = new Color(0.8, 1.0, 0.6);

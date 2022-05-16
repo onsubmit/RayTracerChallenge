@@ -5,7 +5,7 @@ import Chapter05 from "./chapters/Chapter05";
 import Chapter06 from "./chapters/Chapter06";
 
 class App {
-  run = () => {
+  run = (): void => {
     Chapter01.run();
     Chapter02.run();
     Chapter04.run();

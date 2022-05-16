@@ -8,7 +8,7 @@ import Environment from "./shared/Environment";
 import Projectile from "./shared/Projectile";
 
 class Chapter02 implements IChapter {
-  run = () => {
+  run = (): void => {
     const start = new Point(0, 1, 0);
     const velocity = new Vector(1, 1.8, 0).normalize().multiply(11.25);
     let projectile = new Projectile(start, velocity);

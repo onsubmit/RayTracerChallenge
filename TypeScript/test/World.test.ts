@@ -1,4 +1,6 @@
 import Color from "ts/Color";
+import Computation from "ts/Computation";
+import Intersection from "ts/Intersection";
 import Light from "ts/Light";
 import Material from "ts/Material";
 import Matrix from "ts/Matrix";
@@ -11,7 +13,7 @@ import World from "ts/World";
 describe("World", () => {
   describe("Basic", () => {
     it("The default world", () => {
-      const light = new Light(new Point(-10, 10, 10), Color.white);
+      const light = new Light(new Point(-10, 10, -10), Color.white);
 
       const m1 = new Material();
       m1.color = new Color(0.8, 1.0, 0.6);
@@ -40,6 +42,29 @@ describe("World", () => {
       expect(intersections.get(1).t.compare(4.5)).toBe(true);
       expect(intersections.get(2).t.compare(5.5)).toBe(true);
       expect(intersections.get(3).t.compare(6)).toBe(true);
+    });
+
+    it("Shading an intersection", () => {
+      const world = World.defaultWorld;
+      const ray = new Ray(new Point(0, 0, -5), new Vector(0, 0, 1));
+      const shape = world.shapes[0];
+      const intersection = new Intersection(4, shape);
+
+      const computation = Computation.prepare(intersection, ray);
+      const color = world.shadeHit(computation);
+      expect(color.compare(new Color(0.38066, 0.47583, 0.2855))).toBe(true);
+    });
+
+    it("Shading an intersection from the inside", () => {
+      const world = World.defaultWorld;
+      world.light = new Light(new Point(0, 0.25, 0), Color.white);
+      const ray = new Ray(Point.origin, new Vector(0, 0, 1));
+      const shape = world.shapes[1];
+      const intersection = new Intersection(0.5, shape);
+
+      const computation = Computation.prepare(intersection, ray);
+      const color = world.shadeHit(computation);
+      expect(color.compare(new Color(0.90498, 0.90498, 0.90498))).toBe(true);
     });
   });
 });

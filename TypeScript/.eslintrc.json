@@ -3,8 +3,9 @@
   "parser": "@typescript-eslint/parser",
   "plugins": ["@typescript-eslint"],
   "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended", "prettier", "plugin:prettier/recommended"],
-  "ignorePattern": "webpack.config.js",
+  "ignorePatterns": ["webpack.config.js"],
   "rules": {
-    "endOfLine": "off"
+    "endOfLine": "off",
+    "@typescript-eslint/explicit-function-return-type": "warn"
   }
 }

@@ -6,7 +6,7 @@ export default class Vector extends Tuple4d {
     super(x, y, z, 0);
   }
 
-  static override fromNumberTuple = (numberTuple: NumberTuple, force: boolean = false): Vector => {
+  static override fromNumberTuple = (numberTuple: NumberTuple, force = false): Vector => {
     if (numberTuple.length < 3) {
       throw `Tuple not long enough. Its length is ${numberTuple.length}`;
     }

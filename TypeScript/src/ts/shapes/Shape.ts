@@ -14,7 +14,12 @@ export default abstract class Shape {
   constructor(material: Material = new Material()) {
     this.material = material;
 
-    this._transformation = new Lazy<Matrix>(() => Matrix.getIdentityMatrix(4));
+    this._transformation = new Lazy<Matrix>(() => {
+      return {
+        success: true,
+        value: Matrix.getIdentityMatrix(4),
+      };
+    });
   }
 
   get hasTransformation(): boolean {
@@ -22,7 +27,11 @@ export default abstract class Shape {
   }
 
   get transformation(): Matrix {
-    return this._transformation.value!;
+    if (this._transformation.value === null) {
+      throw "Transformation could not be determined";
+    }
+
+    return this._transformation.value;
   }
 
   set transformation(matrix: Matrix) {

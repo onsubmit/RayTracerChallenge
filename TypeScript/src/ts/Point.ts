@@ -10,7 +10,7 @@ export default class Point extends Tuple4d {
     super(x, y, z, 1);
   }
 
-  static override fromNumberTuple = (numberTuple: NumberTuple, force: boolean = false): Point => {
+  static override fromNumberTuple = (numberTuple: NumberTuple, force = false): Point => {
     if (numberTuple.length < 3) {
       throw `Tuple not long enough. Its length is ${numberTuple.length}`;
     }

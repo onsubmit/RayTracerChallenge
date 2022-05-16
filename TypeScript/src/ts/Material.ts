@@ -7,13 +7,7 @@ export default class Material {
   specular: number;
   shininess: number;
 
-  constructor(
-    color: Color = Color.white,
-    ambient: number = 0.1,
-    diffuse: number = 0.9,
-    specular: number = 0.9,
-    shininess: number = 200
-  ) {
+  constructor(color: Color = Color.white, ambient = 0.1, diffuse = 0.9, specular = 0.9, shininess = 200) {
     this.color = color;
     this.ambient = ambient;
     this.diffuse = diffuse;

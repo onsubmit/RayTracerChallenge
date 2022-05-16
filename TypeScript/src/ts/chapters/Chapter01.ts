@@ -5,7 +5,7 @@ import Environment from "./shared/Environment";
 import Projectile from "./shared/Projectile";
 
 class Chapter01 implements IChapter {
-  run = () => {
+  run = (): void => {
     // projectile starts one unit above the origin.
     // velocity is normalized to 1 unit/tick.
     let projectile = new Projectile(new Point(0, 1, 0), new Vector(1, 1, 0).normalize());

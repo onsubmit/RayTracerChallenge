@@ -7,7 +7,7 @@ import Point from "ts/Point";
 import IChapter from "./IChapter";
 
 class Chapter04 implements IChapter {
-  run = () => {
+  run = (): void => {
     const canvasSize = 201;
     const numSegments = 12;
     const scale = (canvasSize * 3) / 8;
@@ -16,7 +16,7 @@ class Chapter04 implements IChapter {
 
     // Canvas orientation is in the x-z plane.
     // Start at 12 o'clock.
-    let point = new Point(0, 0, 1);
+    const point = new Point(0, 0, 1);
     for (let i = 0; i < numSegments; i++) {
       const transform = Matrix.getRotationMatrixY((Constants.twoPi * i) / numSegments).scale(scale, scale, scale);
       const p = Point.fromNumberTuple(transform.multiplyByTuple(point));

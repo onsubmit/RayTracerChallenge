@@ -12,7 +12,7 @@ import Sphere from "ts/shapes/Sphere";
 import IChapter from "./IChapter";
 
 class Chapter06 implements IChapter {
-  run = () => {
+  run = (): void => {
     const canvasSize = 501;
     const wallZ = 10;
     const wallSize = 7;
@@ -40,7 +40,7 @@ class Chapter06 implements IChapter {
         const intersections = sphere.getIntersectionsWith(ray);
 
         if (intersections.hasHit) {
-          const hit = intersections.hit!;
+          const hit = intersections.hit;
           const point = ray.getPointOnRayAtDistance(hit.t);
           const normal = hit.shape.getNormalAt(point);
           const eye = ray.direction.negate();

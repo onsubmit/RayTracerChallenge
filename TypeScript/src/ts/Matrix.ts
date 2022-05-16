@@ -1,5 +1,5 @@
 import NumberTuple from "./NumberTuple";
-import Lazy from "./utils/Lazy";
+import Lazy, { LazyFactoryOutcome } from "./utils/Lazy";
 
 export default class Matrix {
   private _elements: number[][];
@@ -148,7 +148,11 @@ export default class Matrix {
   }
 
   get determinant(): number {
-    return this._determinant.value!;
+    if (this._determinant.value === null) {
+      throw "Determinant could not be determined";
+    }
+
+    return this._determinant.value;
   }
 
   get isInvertible(): boolean {
@@ -156,7 +160,11 @@ export default class Matrix {
   }
 
   get inverse(): Matrix {
-    return this._inverse.value!;
+    if (this._inverse.value === null) {
+      throw "Inverse could not be determined";
+    }
+
+    return this._inverse.value;
   }
 
   at = (row: number, column: number): number => {
@@ -262,7 +270,7 @@ export default class Matrix {
 
   translate = (...coordinates: number[]): Matrix => this.multiply(Matrix.getTranslationMatrix(...coordinates));
 
-  private getDeterminant = (): number => {
+  private getDeterminant = (): LazyFactoryOutcome<number> => {
     if (this.rows !== this.columns) {
       throw "Matrix not square";
     }
@@ -280,10 +288,10 @@ export default class Matrix {
       }
     }
 
-    return determinant;
+    return { success: true, value: determinant };
   };
 
-  private getInverse = (): Matrix => {
+  private getInverse = (): LazyFactoryOutcome<Matrix> => {
     if (!this.isInvertible) {
       throw "Matrix is not invertible";
     }
@@ -296,6 +304,6 @@ export default class Matrix {
       }
     }
 
-    return new Matrix(elements);
+    return { success: true, value: new Matrix(elements) };
   };
 }

@@ -9,7 +9,7 @@ import Sphere from "ts/shapes/Sphere";
 import IChapter from "./IChapter";
 
 class Chapter05 implements IChapter {
-  run = () => {
+  run = (): void => {
     const canvasSize = 501;
     const wallZ = 10;
     const wallSize = 7;
