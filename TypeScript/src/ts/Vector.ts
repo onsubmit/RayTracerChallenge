@@ -6,8 +6,17 @@ export default class Vector extends Tuple4d {
     super(x, y, z, 0);
   }
 
-  static override fromNumberTuple = (numberTuple: NumberTuple): Vector =>
-    new Vector(numberTuple.at(0), numberTuple.at(1), numberTuple.at(2));
+  static override fromNumberTuple = (numberTuple: NumberTuple): Vector => {
+    if (numberTuple.length < 3) {
+      throw `Tuple not long enough. Its length is ${numberTuple.length}`;
+    }
+
+    if (numberTuple.length === 4 && !numberTuple.at(3).compare(0)) {
+      throw `Tuple is not a vector. w=${numberTuple.at(3)}. Must be 0.`;
+    }
+
+    return new Vector(numberTuple.at(0), numberTuple.at(1), numberTuple.at(2));
+  };
 
   static override readonly zero: Vector = Vector.fromNumberTuple(Tuple4d.zero);
 

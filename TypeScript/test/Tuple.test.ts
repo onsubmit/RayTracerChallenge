@@ -14,9 +14,7 @@ describe("Tuple", () => {
       expect(t.y.compare(y)).toBe(true);
       expect(t.z.compare(z)).toBe(true);
       expect(t.w.compare(w)).toBe(true);
-
       expect(t.compare(Point.fromNumberTuple(t))).toBe(true);
-      expect(t.compare(Vector.fromNumberTuple(t))).toBe(false);
     });
 
     it("A tuple with w=0 is a vector", () => {
@@ -27,7 +25,6 @@ describe("Tuple", () => {
       expect(t.y.compare(y)).toBe(true);
       expect(t.z.compare(z)).toBe(true);
       expect(t.w.compare(w)).toBe(true);
-      expect(t.compare(Point.fromNumberTuple(t))).toBe(false);
       expect(t.compare(Vector.fromNumberTuple(t))).toBe(true);
     });
 

@@ -3,16 +3,24 @@ import Tuple4d from "./Tuple4d";
 import Vector from "./Vector";
 
 export default class Point extends Tuple4d {
+  static override readonly zero = new Point(0, 0, 0);
+  static readonly origin = Point.zero;
+
   constructor(x: number, y: number, z: number) {
     super(x, y, z, 1);
   }
 
-  static override fromNumberTuple = (numberTuple: NumberTuple): Point =>
-    new Point(numberTuple.at(0), numberTuple.at(1), numberTuple.at(2));
+  static override fromNumberTuple = (numberTuple: NumberTuple): Point => {
+    if (numberTuple.length < 3) {
+      throw `Tuple not long enough. Its length is ${numberTuple.length}`;
+    }
 
-  static override get zero(): Point {
-    return Point.fromNumberTuple(Tuple4d.zero);
-  }
+    if (numberTuple.length === 4 && !numberTuple.at(3).compare(1)) {
+      throw `Tuple is not a point. w=${numberTuple.at(3)}. Must be 1.`;
+    }
+
+    return new Point(numberTuple.at(0), numberTuple.at(1), numberTuple.at(2));
+  };
 
   addVector = (vector: Vector): Point => Point.fromNumberTuple(this.add(vector));
   subtractVector = (vector: Vector): Point => Point.fromNumberTuple(this.subtract(vector));
