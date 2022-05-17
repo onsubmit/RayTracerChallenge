@@ -11,6 +11,19 @@ const Shape_1 = __importDefault(require("./Shape"));
 class Sphere extends Shape_1.default {
     constructor(material = new Material_1.default()) {
         super(material);
+        this.compare = (shape) => {
+            if (!(shape instanceof Sphere)) {
+                return false;
+            }
+            const sphere = shape;
+            if (!this.origin.compare(sphere.origin)) {
+                return false;
+            }
+            if (!this.radius.compare(sphere.radius)) {
+                return false;
+            }
+            return true;
+        };
         this.getNormalAtImpl = (point) => point.subtractPoint(this.origin);
         this.origin = new Point_1.default(0, 0, 0);
         this.radius = 1;

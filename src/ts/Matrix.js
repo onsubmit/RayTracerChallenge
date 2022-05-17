@@ -4,14 +4,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const NumberTuple_1 = __importDefault(require("./NumberTuple"));
+const Lazy_1 = __importDefault(require("./utils/Lazy"));
 class Matrix {
     constructor(elements) {
         var _a, _b;
         this.at = (row, column) => {
-            if (!this.elements[row] || this.elements[row][column] === undefined) {
+            if (!this._elements[row] || this._elements[row][column] === undefined) {
                 throw `Invalid coordinates @ (${row}, ${column})`;
             }
-            return this.elements[row][column];
+            return this._elements[row][column];
         };
         this.compare = (matrix) => {
             if (this.rows !== matrix.rows) {
@@ -22,7 +23,7 @@ class Matrix {
             }
             for (let r = 0; r < this.rows; r++) {
                 for (let c = 0; c < this.columns; c++) {
-                    if (!this.elements[r][c].compare(matrix.elements[r][c])) {
+                    if (!this._elements[r][c].compare(matrix._elements[r][c])) {
                         return false;
                     }
                 }
@@ -30,7 +31,7 @@ class Matrix {
             return true;
         };
         this.transpose = () => {
-            const transposed = this.elements[0].map((_, c) => this.elements.map((row) => row[c]));
+            const transposed = this._elements[0].map((_, c) => this._elements.map((row) => row[c]));
             return new Matrix(transposed);
         };
         this.multiply = (matrix) => {
@@ -44,7 +45,7 @@ class Matrix {
             for (let r = 0; r < rows; r++) {
                 for (let c = 0; c < columns; c++) {
                     for (let k = 0; k < productsPerEntry; k++) {
-                        elements[r][c] += this.elements[r][k] * matrix.elements[k][c];
+                        elements[r][c] += this._elements[r][k] * matrix._elements[k][c];
                     }
                 }
             }
@@ -57,13 +58,13 @@ class Matrix {
             const values = Array.from({ length: this.rows }, () => 0);
             for (let r = 0; r < this.rows; r++) {
                 for (let c = 0; c < this.columns; c++) {
-                    values[r] += this.elements[r][c] * tuple.get(c);
+                    values[r] += this._elements[r][c] * tuple.get(c);
                 }
             }
             return new NumberTuple_1.default(...values);
         };
         this.getSubMatrix = (rowToRemove, columnToRemove) => {
-            const elements = this.elements
+            const elements = this._elements
                 .filter((_, r) => r !== rowToRemove)
                 .map((row) => row.filter((_, c) => c !== columnToRemove));
             return new Matrix(elements);
@@ -85,9 +86,42 @@ class Matrix {
         this.scale = (...coordinates) => this.multiply(Matrix.getScalingMatrix(...coordinates));
         this.shear = (xy, xz, yx, yz, zx, zy) => this.multiply(Matrix.getShearingMatrix(xy, xz, yx, yz, zx, zy));
         this.translate = (...coordinates) => this.multiply(Matrix.getTranslationMatrix(...coordinates));
-        this.elements = elements;
+        this.getDeterminant = () => {
+            if (this.rows !== this.columns) {
+                throw "Matrix not square";
+            }
+            if (this.rows > 4) {
+                throw "Not implemented";
+            }
+            let determinant = 0;
+            if (this.rows === 2) {
+                determinant = this._elements[0][0] * this._elements[1][1] - this._elements[0][1] * this._elements[1][0];
+            }
+            else {
+                for (let c = 0; c < this.columns; c++) {
+                    determinant += this._elements[0][c] * this.getCofactor(0, c);
+                }
+            }
+            return { success: true, value: determinant };
+        };
+        this.getInverse = () => {
+            if (!this.isInvertible) {
+                throw "Matrix is not invertible";
+            }
+            const elements = Array.from({ length: this.rows }, () => Array.from({ length: this.columns }, () => 0));
+            for (let r = 0; r < this.rows; r++) {
+                for (let c = 0; c < this.columns; c++) {
+                    // Note that [c, r] is intentional.
+                    elements[c][r] = this.getCofactor(r, c) / this.determinant;
+                }
+            }
+            return { success: true, value: new Matrix(elements) };
+        };
+        this._elements = elements;
         this.rows = elements.length;
         this.columns = (_b = (_a = elements[0]) === null || _a === void 0 ? void 0 : _a.length) !== null && _b !== void 0 ? _b : 0;
+        this._determinant = new Lazy_1.default(this.getDeterminant);
+        this._inverse = new Lazy_1.default(this.getInverse);
     }
     static getIdentityMatrix(size) {
         const elements = Array.from({ length: size }, () => Array.from({ length: size }, () => 0));
@@ -181,46 +215,32 @@ class Matrix {
         return new Matrix(elements);
     }
     get determinant() {
-        if (this.cachedDeterminant !== undefined) {
-            return this.cachedDeterminant;
+        if (this._determinant.value === null) {
+            throw "Determinant could not be determined";
         }
-        if (this.rows !== this.columns) {
-            throw "Matrix not square";
-        }
-        if (this.rows > 4) {
-            throw "Not implemented";
-        }
-        if (this.rows === 2) {
-            this.cachedDeterminant = this.elements[0][0] * this.elements[1][1] - this.elements[0][1] * this.elements[1][0];
-        }
-        else {
-            this.cachedDeterminant = 0;
-            for (let c = 0; c < this.columns; c++) {
-                this.cachedDeterminant += this.elements[0][c] * this.getCofactor(0, c);
-            }
-        }
-        return this.cachedDeterminant;
+        return this._determinant.value;
     }
     get isInvertible() {
         return !this.determinant.compare(0);
     }
     get inverse() {
-        if (this.cachedInverse !== undefined) {
-            return this.cachedInverse;
+        if (this._inverse.value === null) {
+            throw "Inverse could not be determined";
         }
-        if (!this.isInvertible) {
-            throw "Matrix is not invertible";
-        }
-        const elements = Array.from({ length: this.rows }, () => Array.from({ length: this.columns }, () => 0));
-        for (let r = 0; r < this.rows; r++) {
-            for (let c = 0; c < this.columns; c++) {
-                // Note that [c, r] is intentional.
-                elements[c][r] = this.getCofactor(r, c) / this.determinant;
-            }
-        }
-        this.cachedInverse = new Matrix(elements);
-        return this.cachedInverse;
+        return this._inverse.value;
     }
 }
 exports.default = Matrix;
+Matrix.getViewTransformationMatrix = (from, to, up) => {
+    const forward = to.subtractPoint(from).normalize();
+    const left = forward.cross(up.normalize());
+    const trueUp = left.cross(forward);
+    const orientation = new Matrix([
+        [left.x, left.y, left.z, 0],
+        [trueUp.x, trueUp.y, trueUp.z, 0],
+        [-forward.x, -forward.y, -forward.z, 0],
+        [0, 0, 0, 1],
+    ]);
+    return orientation.translate(-from.x, -from.y, -from.z);
+};
 //# sourceMappingURL=Matrix.js.map

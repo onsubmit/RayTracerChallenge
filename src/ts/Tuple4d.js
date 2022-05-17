@@ -30,5 +30,6 @@ class Tuple4d extends NumberTuple_1.default {
 }
 exports.default = Tuple4d;
 Tuple4d.zero = new Tuple4d(0, 0, 0, 0);
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 Tuple4d.fromNumberTuple = (numberTuple, _ = false) => new Tuple4d(numberTuple.get(0), numberTuple.get(1), numberTuple.get(2), numberTuple.get(3));
 //# sourceMappingURL=Tuple4d.js.map

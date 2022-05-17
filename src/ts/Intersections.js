@@ -1,38 +1,43 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+const Lazy_1 = __importDefault(require("./utils/Lazy"));
 class Intersections {
     constructor(...intersections) {
-        this.hitKnown = false;
-        this.at = (index) => {
+        this.get = (index) => {
             if (index < 0 || index >= this.intersections.length) {
                 throw "Invalid index";
             }
             return this.intersections[index];
         };
         this.intersections = intersections;
+        this.lazyHit = new Lazy_1.default(() => {
+            const hits = this.sortedIntersections.intersections.filter((i) => i.t >= 0);
+            return { success: hits.length > 0, value: hits[0] };
+        });
+        this.lazySortedIntersections = new Lazy_1.default(() => {
+            return {
+                success: true,
+                value: new Intersections(...this.intersections.sort((a, b) => (a.t > b.t ? 1 : -1))),
+            };
+        });
     }
     get length() {
         return this.intersections.length;
     }
     get sortedIntersections() {
-        return (this.cachedSortedIntersections ||
-            (this.cachedSortedIntersections = new Intersections(...this.intersections.sort((a, b) => (a.t > b.t ? 1 : -1)))));
+        if (!this.lazySortedIntersections.value) {
+            throw "Sorted intersections could not be determined";
+        }
+        return this.lazySortedIntersections.value;
     }
     get hasHit() {
-        return !!this.hit;
+        return this.lazyHit.hasValue;
     }
     get hit() {
-        if (!this.cachedHit && !this.hitKnown) {
-            const hits = this.sortedIntersections.intersections.filter((i) => i.t >= 0);
-            if (hits.length) {
-                this.cachedHit = hits[0];
-            }
-            this.hitKnown = true;
-        }
-        if (this.cachedHit) {
-            return this.cachedHit;
-        }
-        return null;
+        return this.lazyHit.value;
     }
 }
 exports.default = Intersections;

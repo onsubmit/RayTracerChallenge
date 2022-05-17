@@ -18,7 +18,7 @@ class Chapter04 {
             const canvas = new Canvas_1.default(canvasSize, canvasSize);
             // Canvas orientation is in the x-z plane.
             // Start at 12 o'clock.
-            let point = new Point_1.default(0, 0, 1);
+            const point = new Point_1.default(0, 0, 1);
             for (let i = 0; i < numSegments; i++) {
                 const transform = Matrix_1.default.getRotationMatrixY((Constants_1.default.twoPi * i) / numSegments).scale(scale, scale, scale);
                 const p = Point_1.default.fromNumberTuple(transform.multiplyByTuple(point));
