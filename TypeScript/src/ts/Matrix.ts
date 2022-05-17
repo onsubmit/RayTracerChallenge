@@ -1,5 +1,7 @@
 import NumberTuple from "./NumberTuple";
+import Point from "./Point";
 import Lazy, { LazyFactoryOutcome } from "./utils/Lazy";
+import Vector from "./Vector";
 
 export default class Matrix {
   private _elements: number[][];
@@ -146,6 +148,21 @@ export default class Matrix {
 
     return new Matrix(elements);
   }
+
+  static getViewTransformationMatrix = (from: Point, to: Point, up: Vector): Matrix => {
+    const forward = to.subtractPoint(from).normalize();
+    const left = forward.cross(up.normalize());
+    const trueUp = left.cross(forward);
+
+    const orientation = new Matrix([
+      [left.x, left.y, left.z, 0],
+      [trueUp.x, trueUp.y, trueUp.z, 0],
+      [-forward.x, -forward.y, -forward.z, 0],
+      [0, 0, 0, 1],
+    ]);
+
+    return orientation.translate(-from.x, -from.y, -from.z);
+  };
 
   get determinant(): number {
     if (this._determinant.value === null) {

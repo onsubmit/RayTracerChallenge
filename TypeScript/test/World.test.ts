@@ -33,7 +33,7 @@ describe("World", () => {
 
   describe("Intersections", () => {
     it("Intersect a world with a ray", () => {
-      const world = World.defaultWorld;
+      const world = World.getDefaultWorld();
       const ray = new Ray(new Point(0, 0, -5), new Vector(0, 0, 1));
 
       const intersections = world.getIntersectionsWith(ray);
@@ -45,7 +45,7 @@ describe("World", () => {
     });
 
     it("Shading an intersection", () => {
-      const world = World.defaultWorld;
+      const world = World.getDefaultWorld();
       const ray = new Ray(new Point(0, 0, -5), new Vector(0, 0, 1));
       const shape = world.shapes[0];
       const intersection = new Intersection(4, shape);
@@ -56,7 +56,7 @@ describe("World", () => {
     });
 
     it("Shading an intersection from the inside", () => {
-      const world = World.defaultWorld;
+      const world = World.getDefaultWorld();
       world.light = new Light(new Point(0, 0.25, 0), Color.white);
       const ray = new Ray(Point.origin, new Vector(0, 0, 1));
       const shape = world.shapes[1];
@@ -65,6 +65,35 @@ describe("World", () => {
       const computation = Computation.prepare(intersection, ray);
       const color = world.shadeHit(computation);
       expect(color.compare(new Color(0.90498, 0.90498, 0.90498))).toBe(true);
+    });
+
+    it("The color when a ray misses", () => {
+      const world = World.getDefaultWorld();
+      const ray = new Ray(new Point(0, 0, -5), new Vector(0, 1, 0));
+
+      const color = world.getColorAt(ray);
+      expect(color).toEqual(Color.black);
+    });
+
+    it("The color when a ray hits", () => {
+      const world = World.getDefaultWorld();
+      const ray = new Ray(new Point(0, 0, -5), new Vector(0, 0, 1));
+
+      const color = world.getColorAt(ray);
+      expect(color.compare(new Color(0.38066, 0.47583, 0.2855))).toBe(true);
+    });
+
+    it("The color with an intersection behind the ray", () => {
+      const world = World.getDefaultWorld();
+      const outer = world.shapes[0];
+      outer.material.ambient = 1;
+
+      const inner = world.shapes[1];
+      inner.material.ambient = 1;
+
+      const ray = new Ray(new Point(0, 0, 0.75), new Vector(0, 0, -1));
+      const color = world.getColorAt(ray);
+      expect(color.compare(inner.material.color)).toBe(true);
     });
   });
 });

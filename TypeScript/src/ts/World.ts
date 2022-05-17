@@ -9,34 +9,17 @@ import Point from "./Point";
 import Ray from "./Ray";
 import Shape from "./shapes/Shape";
 import Sphere from "./shapes/Sphere";
-import Lazy from "./utils/Lazy";
 
 export default class World {
   light: Light;
   shapes: Shape[];
-
-  private static lazyDefaultWorld: Lazy<World> = new Lazy<World>(() => {
-    return { success: true, value: World.getDefaultWorld() };
-  });
-
-  static get defaultWorld(): World {
-    return World.lazyDefaultWorld.value;
-  }
 
   constructor(light: Light, ...shapes: Shape[]) {
     this.light = light;
     this.shapes = shapes;
   }
 
-  getIntersectionsWith = (ray: Ray): Intersections => {
-    const intersections = this.shapes.flatMap((o) => o.getIntersectionsWith(ray).intersections);
-    return new Intersections(...intersections).sortedIntersections;
-  };
-
-  shadeHit = (computation: Computation): Color =>
-    Lighting.calculate(computation.shape.material, this.light, computation.point, computation.eye, computation.normal);
-
-  private static getDefaultWorld = (): World => {
+  static getDefaultWorld = (): World => {
     const light = new Light(new Point(-10, 10, -10), Color.white);
 
     const m1 = new Material();
@@ -50,4 +33,24 @@ export default class World {
 
     return new World(light, s1, s2);
   };
+
+  getColorAt = (ray: Ray): Color => {
+    const intersections = this.getIntersectionsWith(ray);
+    if (!intersections.hasHit) {
+      return Color.black;
+    }
+
+    const hit = intersections.hit;
+    const computation = Computation.prepare(hit, ray);
+    const color = this.shadeHit(computation);
+    return color;
+  };
+
+  getIntersectionsWith = (ray: Ray): Intersections => {
+    const intersections = this.shapes.flatMap((o) => o.getIntersectionsWith(ray).intersections);
+    return new Intersections(...intersections).sortedIntersections;
+  };
+
+  shadeHit = (computation: Computation): Color =>
+    Lighting.calculate(computation.shape.material, this.light, computation.point, computation.eye, computation.normal);
 }
