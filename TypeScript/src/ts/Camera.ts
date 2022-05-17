@@ -88,11 +88,11 @@ export default class Camera {
     return new Ray(origin, direction);
   };
 
-  render = (world: World): Canvas => {
+  render = (world: World, resolution = 1): Canvas => {
     const canvas = new Canvas(this.horizontalSize, this.verticalSize);
 
-    for (let y = 0; y < this.verticalSize; y++) {
-      for (let x = 0; x < this.horizontalSize; x++) {
+    for (let y = 0; y < this.verticalSize; y += resolution) {
+      for (let x = 0; x < this.horizontalSize; x += resolution) {
         const ray = this.getRayForPixel(x, y);
         const color = world.getColorAt(ray);
         canvas.writePixel(x, y, color);

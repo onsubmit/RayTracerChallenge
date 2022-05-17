@@ -34,6 +34,10 @@ export default class World {
     return new World(light, s1, s2);
   };
 
+  addShape = (shape: Shape): void => {
+    this.shapes.push(shape);
+  };
+
   getColorAt = (ray: Ray): Color => {
     const intersections = this.getIntersectionsWith(ray);
     if (!intersections.hasHit) {
