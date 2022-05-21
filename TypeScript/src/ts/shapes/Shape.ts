@@ -9,6 +9,8 @@ import Vector from "ts/Vector";
 export default abstract class Shape {
   private _transformation: Lazy<Matrix>;
 
+  abstract type: string;
+
   material: Material;
 
   constructor(material: Material = new Material()) {
@@ -28,7 +30,7 @@ export default abstract class Shape {
 
   get transformation(): Matrix {
     if (this._transformation.value === null) {
-      throw "Transformation could not be determined";
+      throw new Error("Transformation could not be determined");
     }
 
     return this._transformation.value;
@@ -45,7 +47,8 @@ export default abstract class Shape {
 
   getIntersectionsWith = (ray: Ray): Intersections => {
     if (this.hasTransformation) {
-      ray = ray.transform(this.transformation.inverse);
+      const transformedRay = ray.transform(this.transformation.inverse);
+      return this.getIntersectionsWithImpl(transformedRay);
     }
 
     return this.getIntersectionsWithImpl(ray);
@@ -53,11 +56,12 @@ export default abstract class Shape {
 
   getNormalAt = (point: Point): Vector => {
     const objectPoint = Point.fromNumberTuple(this.transformation.inverse.multiplyByTuple(point));
-    const objectNormal = objectPoint.subtractPoint(Point.origin);
+    const objectNormal = this.getNormalAtImpl(objectPoint);
     const worldNormal = Vector.fromNumberTuple(
       this.transformation.inverse.transpose().multiplyByTuple(objectNormal),
       true /* force */
     );
+
     return worldNormal.normalize();
   };
 }

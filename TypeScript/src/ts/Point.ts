@@ -12,11 +12,11 @@ export default class Point extends Tuple4d {
 
   static override fromNumberTuple = (numberTuple: NumberTuple, force = false): Point => {
     if (numberTuple.length < 3) {
-      throw `Tuple not long enough. Its length is ${numberTuple.length}`;
+      throw new Error(`Tuple not long enough. Its length is ${numberTuple.length}`);
     }
 
     if (!force && numberTuple.length === 4 && !numberTuple.get(3).compare(1)) {
-      throw `Tuple is not a point. w=${numberTuple.get(3)}. Must be 1.`;
+      throw new Error(`Tuple is not a point. w=${numberTuple.get(3)}. Must be 1.`);
     }
 
     return new Point(numberTuple.get(0), numberTuple.get(1), numberTuple.get(2));

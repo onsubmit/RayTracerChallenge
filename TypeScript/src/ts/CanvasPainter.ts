@@ -12,7 +12,7 @@ export default class CanvasPainter {
   paint = (): void => {
     const canvas = <HTMLCanvasElement>document.getElementById(this.id);
     if (!canvas) {
-      throw "Can't find canvas.";
+      throw new Error("Can't find canvas.");
     }
 
     canvas.width = this.canvas.width;
@@ -20,7 +20,7 @@ export default class CanvasPainter {
 
     const ctx = canvas.getContext && canvas.getContext("2d");
     if (!ctx) {
-      throw "Can't get canvas context";
+      throw new Error("Can't get canvas context");
     }
     const imageData = ctx.createImageData(canvas.width, canvas.height);
 

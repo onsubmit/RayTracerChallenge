@@ -166,7 +166,7 @@ export default class Matrix {
 
   get determinant(): number {
     if (this._determinant.value === null) {
-      throw "Determinant could not be determined";
+      throw new Error("Determinant could not be determined");
     }
 
     return this._determinant.value;
@@ -178,7 +178,7 @@ export default class Matrix {
 
   get inverse(): Matrix {
     if (this._inverse.value === null) {
-      throw "Inverse could not be determined";
+      throw new Error("Inverse could not be determined");
     }
 
     return this._inverse.value;
@@ -186,7 +186,7 @@ export default class Matrix {
 
   at = (row: number, column: number): number => {
     if (!this._elements[row] || this._elements[row][column] === undefined) {
-      throw `Invalid coordinates @ (${row}, ${column})`;
+      throw new Error(`Invalid coordinates @ (${row}, ${column})`);
     }
 
     return this._elements[row][column];
@@ -219,7 +219,7 @@ export default class Matrix {
 
   multiply = (matrix: Matrix): Matrix => {
     if (this.columns !== matrix.rows) {
-      throw `Invalid dimensions. Cannot multiply these matrices. ${this.columns} !== ${matrix.rows}`;
+      throw new Error(`Invalid dimensions. Cannot multiply these matrices. ${this.columns} !== ${matrix.rows}`);
     }
 
     const rows = this.rows;
@@ -240,7 +240,7 @@ export default class Matrix {
 
   multiplyByTuple = (tuple: NumberTuple): NumberTuple => {
     if (this.columns !== tuple.length) {
-      throw `Invalid dimensions. Cannot multiply by this tuple. ${this.columns} !== ${tuple.length}`;
+      throw new Error(`Invalid dimensions. Cannot multiply by this tuple. ${this.columns} !== ${tuple.length}`);
     }
 
     const values = Array.from({ length: this.rows }, () => 0);
@@ -289,11 +289,11 @@ export default class Matrix {
 
   private getDeterminant = (): LazyFactoryOutcome<number> => {
     if (this.rows !== this.columns) {
-      throw "Matrix not square";
+      throw new Error("Matrix not square");
     }
 
     if (this.rows > 4) {
-      throw "Not implemented";
+      throw new Error("Not implemented");
     }
 
     let determinant = 0;
@@ -310,7 +310,7 @@ export default class Matrix {
 
   private getInverse = (): LazyFactoryOutcome<Matrix> => {
     if (!this.isInvertible) {
-      throw "Matrix is not invertible";
+      throw new Error("Matrix is not invertible");
     }
 
     const elements = Array.from({ length: this.rows }, () => Array.from({ length: this.columns }, () => 0));

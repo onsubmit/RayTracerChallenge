@@ -28,7 +28,7 @@ export default class Intersections {
 
   get sortedIntersections(): Intersections {
     if (!this.lazySortedIntersections.value) {
-      throw "Sorted intersections could not be determined";
+      throw new Error("Sorted intersections could not be determined");
     }
 
     return this.lazySortedIntersections.value;
@@ -44,7 +44,7 @@ export default class Intersections {
 
   get = (index: number): Intersection => {
     if (index < 0 || index >= this.intersections.length) {
-      throw "Invalid index";
+      throw new Error("Invalid index");
     }
 
     return this.intersections[index];

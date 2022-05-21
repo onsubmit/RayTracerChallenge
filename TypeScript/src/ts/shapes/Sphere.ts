@@ -7,6 +7,8 @@ import Vector from "ts/Vector";
 import Shape from "./Shape";
 
 export default class Sphere extends Shape {
+  override type = "Sphere";
+
   readonly origin: Point;
   readonly radius: number;
 
@@ -17,7 +19,7 @@ export default class Sphere extends Shape {
     this.radius = 1;
   }
 
-  compare = (shape: Shape): boolean => {
+  override compare = (shape: Shape): boolean => {
     if (!(shape instanceof Sphere)) {
       return false;
     }
@@ -34,9 +36,9 @@ export default class Sphere extends Shape {
     return true;
   };
 
-  protected getNormalAtImpl = (point: Point): Vector => point.subtractPoint(this.origin);
+  protected override getNormalAtImpl = (point: Point): Vector => point.subtractPoint(this.origin);
 
-  protected getIntersectionsWithImpl(ray: Ray): Intersections {
+  protected override getIntersectionsWithImpl = (ray: Ray): Intersections => {
     const sphereToRay = ray.origin.subtractPoint(Point.origin);
 
     const a = ray.direction.dot(ray.direction);
@@ -55,5 +57,5 @@ export default class Sphere extends Shape {
     }
 
     return new Intersections();
-  }
+  };
 }

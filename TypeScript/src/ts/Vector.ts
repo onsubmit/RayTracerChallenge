@@ -8,11 +8,11 @@ export default class Vector extends Tuple4d {
 
   static override fromNumberTuple = (numberTuple: NumberTuple, force = false): Vector => {
     if (numberTuple.length < 3) {
-      throw `Tuple not long enough. Its length is ${numberTuple.length}`;
+      throw new Error(`Tuple not long enough. Its length is ${numberTuple.length}`);
     }
 
     if (!force && numberTuple.length === 4 && !numberTuple.get(3).compare(0)) {
-      throw `Tuple is not a vector. w=${numberTuple.get(3)}. Must be 0.`;
+      throw new Error(`Tuple is not a vector. w=${numberTuple.get(3)}. Must be 0.`);
     }
 
     return new Vector(numberTuple.get(0), numberTuple.get(1), numberTuple.get(2));

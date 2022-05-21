@@ -15,7 +15,7 @@ class Chapter01 implements IChapter {
 
     const pre = document.getElementById("pre1");
     if (!pre) {
-      throw "Can't find <pre> tag for chapter 1";
+      throw new Error("Can't find <pre> tag for chapter 1");
     }
 
     pre.innerHTML += `Projectile position: ${projectile.position.toString()}\n`;
