@@ -1,4 +1,6 @@
 class Constants {
+  readonly epsilon = 0.00001;
+
   readonly twoPi = Math.PI * 2;
   readonly pi_2 = Math.PI / 2;
   readonly pi_3 = Math.PI / 3;

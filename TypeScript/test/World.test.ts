@@ -96,4 +96,50 @@ describe("World", () => {
       expect(color.compare(inner.material.color)).toBe(true);
     });
   });
+
+  describe("Shadows", () => {
+    it("There is no shadow when nothing is collinear with point and light", () => {
+      const world = World.getDefaultWorld();
+      const point = new Point(0, 10, 10);
+
+      const isShadowed = world.isShadowed(point);
+      expect(isShadowed).toBe(false);
+    });
+
+    it("The shadow when an object is between the point and the light", () => {
+      const world = World.getDefaultWorld();
+      const point = new Point(10, -10, 10);
+
+      const isShadowed = world.isShadowed(point);
+      expect(isShadowed).toBe(true);
+    });
+
+    it("There is no shadow when an object is behind the point", () => {
+      const world = World.getDefaultWorld();
+      const point = new Point(-2, 2, -2);
+
+      const isShadowed = world.isShadowed(point);
+      expect(isShadowed).toBe(false);
+    });
+
+    it("shadeHit() is given an intersection in shadow", () => {
+      const light = new Light(new Point(0, 0, -10), Color.white);
+      const world = new World(light);
+
+      const s1 = new Sphere();
+      world.addShape(s1);
+
+      const s2 = new Sphere();
+      s2.transformation = Matrix.getTranslationMatrix(0, 0, 10);
+      world.addShape(s2);
+
+      const ray = new Ray(new Point(0, 0, 5), new Vector(0, 0, 1));
+      const intersection = new Intersection(4, s2);
+
+      const computation = Computation.prepare(intersection, ray);
+      const color = world.shadeHit(computation);
+
+      expect(color.compare(new Color(0.1, 0.1, 0.1))).toBe(true);
+    });
+  });
 });

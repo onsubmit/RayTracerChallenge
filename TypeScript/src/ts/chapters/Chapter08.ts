@@ -10,16 +10,10 @@ import Vector from "ts/Vector";
 import World from "ts/World";
 import IChapter from "./IChapter";
 
-class Chapter07 implements IChapter {
+class Chapter08 implements IChapter {
   run = (): void => {
     const light = new Light(new Point(-10, 10, -10), Color.white);
     const world = new World(light);
-    const camera = new Camera(
-      500,
-      500,
-      Constants.pi_3,
-      Matrix.getViewTransformationMatrix(new Point(0, 1.5, -5), new Point(0, 1, 0), new Vector(0, 1, 0))
-    );
 
     // The floor is an extremely flattened sphere with a matte texture.
     const floor = new Sphere();
@@ -74,12 +68,19 @@ class Chapter07 implements IChapter {
     left.material.specular = 0.3;
     world.addShape(left);
 
-    world.disableShadows();
+    const from = new Point(0, 1.5, -5);
+    const to = new Point(0, 1, 0);
+    const camera = new Camera(
+      500,
+      500,
+      Constants.pi_3,
+      Matrix.getViewTransformationMatrix(from, to, new Vector(0, 1, 0))
+    );
     const canvas = camera.render(world);
 
-    const painter = new CanvasPainter("canvas7", canvas);
+    const painter = new CanvasPainter("canvas8", canvas);
     painter.paint();
   };
 }
 
-export default new Chapter07();
+export default new Chapter08();

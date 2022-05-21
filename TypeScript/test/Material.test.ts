@@ -24,8 +24,9 @@ describe("Material", () => {
       const eye = new Vector(0, 0, -1);
       const normal = new Vector(0, 0, -1);
       const light = new Light(new Point(0, 0, -10), Color.white);
+      const inShadow = false;
 
-      const result = Lighting.calculate(m, light, Point.origin, eye, normal);
+      const result = Lighting.calculate(m, light, Point.origin, eye, normal, inShadow);
       expect(result.compare(new Color(1.9, 1.9, 1.9))).toBe(true);
     });
 
@@ -34,8 +35,9 @@ describe("Material", () => {
       const eye = new Vector(0, 1, -1).normalize();
       const normal = new Vector(0, 0, -1);
       const light = new Light(new Point(0, 0, -10), Color.white);
+      const inShadow = false;
 
-      const result = Lighting.calculate(m, light, Point.origin, eye, normal);
+      const result = Lighting.calculate(m, light, Point.origin, eye, normal, inShadow);
       expect(result.compare(new Color(1.0, 1.0, 1.0))).toBe(true);
     });
 
@@ -44,8 +46,9 @@ describe("Material", () => {
       const eye = new Vector(0, 0, -1);
       const normal = new Vector(0, 0, -1);
       const light = new Light(new Point(0, 10, -10), Color.white);
+      const inShadow = false;
 
-      const result = Lighting.calculate(m, light, Point.origin, eye, normal);
+      const result = Lighting.calculate(m, light, Point.origin, eye, normal, inShadow);
       expect(result.compare(new Color(0.7364, 0.7364, 0.7364))).toBe(true);
     });
 
@@ -54,8 +57,9 @@ describe("Material", () => {
       const eye = new Vector(0, -1, -1).normalize();
       const normal = new Vector(0, 0, -1);
       const light = new Light(new Point(0, 10, -10), Color.white);
+      const inShadow = false;
 
-      const result = Lighting.calculate(m, light, Point.origin, eye, normal);
+      const result = Lighting.calculate(m, light, Point.origin, eye, normal, inShadow);
       expect(result.compare(new Color(1.6364, 1.6364, 1.6364))).toBe(true);
     });
 
@@ -64,9 +68,23 @@ describe("Material", () => {
       const eye = new Vector(0, 0, -1);
       const normal = new Vector(0, 0, -1);
       const light = new Light(new Point(0, 0, 10), Color.white);
+      const inShadow = false;
 
-      const result = Lighting.calculate(m, light, Point.origin, eye, normal);
+      const result = Lighting.calculate(m, light, Point.origin, eye, normal, inShadow);
       expect(result.compare(new Color(0.1, 0.1, 0.1))).toBe(true);
+    });
+
+    describe("Shadows", () => {
+      it("Lighting with the surface in shadow", () => {
+        const m = new Material();
+        const eye = new Vector(0, 0, -1);
+        const normal = new Vector(0, 0, -1);
+        const light = new Light(new Point(0, 0, -10), Color.white);
+        const inShadow = true;
+
+        const result = Lighting.calculate(m, light, Point.origin, eye, normal, inShadow);
+        expect(result.compare(new Color(0.1, 0.1, 0.1))).toBe(true);
+      });
     });
   });
 });

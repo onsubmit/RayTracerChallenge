@@ -11,6 +11,8 @@ import Shape from "./shapes/Shape";
 import Sphere from "./shapes/Sphere";
 
 export default class World {
+  private _disableShadows = false;
+
   light: Light;
   shapes: Shape[];
 
@@ -55,6 +57,39 @@ export default class World {
     return new Intersections(...intersections).sortedIntersections;
   };
 
-  shadeHit = (computation: Computation): Color =>
-    Lighting.calculate(computation.shape.material, this.light, computation.point, computation.eye, computation.normal);
+  disableShadows = (): void => {
+    this._disableShadows = true;
+  };
+
+  isShadowed = (point: Point): boolean => {
+    if (this._disableShadows) {
+      return false;
+    }
+
+    const v = this.light.position.subtractPoint(point);
+    const distance = v.magnitude;
+    const direction = v.normalize();
+
+    const ray = new Ray(point, direction);
+    const intersections = this.getIntersectionsWith(ray);
+
+    if (intersections.hasHit && intersections.hit.t < distance) {
+      return true;
+    }
+
+    return false;
+  };
+
+  shadeHit = (computation: Computation): Color => {
+    const shadowed = this.isShadowed(computation.overPoint);
+
+    return Lighting.calculate(
+      computation.shape.material,
+      this.light,
+      computation.overPoint,
+      computation.eye,
+      computation.normal,
+      shadowed
+    );
+  };
 }

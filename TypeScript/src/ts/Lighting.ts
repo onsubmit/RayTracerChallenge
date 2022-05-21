@@ -5,7 +5,14 @@ import Point from "./Point";
 import Vector from "./Vector";
 
 class Lighting {
-  calculate = (material: Material, light: Light, point: Point, eye: Vector, normal: Vector): Color => {
+  calculate = (
+    material: Material,
+    light: Light,
+    point: Point,
+    eye: Vector,
+    normal: Vector,
+    inShadow: boolean
+  ): Color => {
     // Combine the surface color with the light's color/intensity.
     const effectiveColor = material.color.getHadamardProductWith(light.intensity);
 
@@ -14,6 +21,11 @@ class Lighting {
 
     // Compute the ambient contribution.
     const ambient = effectiveColor.multiply(material.ambient);
+
+    if (inShadow) {
+      return ambient;
+    }
+
     let diffuse = Color.black;
     let specular = Color.black;
 

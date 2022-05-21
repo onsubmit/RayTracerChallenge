@@ -1,3 +1,7 @@
+# Chapter 8
+
+![Chapter 8](images/chpt08.png)
+
 # Chapter 7
 
 ![Chapter 7](images/chpt07.png)
