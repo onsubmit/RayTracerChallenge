@@ -10,7 +10,7 @@ class Matrix {
         var _a, _b;
         this.at = (row, column) => {
             if (!this._elements[row] || this._elements[row][column] === undefined) {
-                throw `Invalid coordinates @ (${row}, ${column})`;
+                throw new Error(`Invalid coordinates @ (${row}, ${column})`);
             }
             return this._elements[row][column];
         };
@@ -36,7 +36,7 @@ class Matrix {
         };
         this.multiply = (matrix) => {
             if (this.columns !== matrix.rows) {
-                throw `Invalid dimensions. Cannot multiply these matrices. ${this.columns} !== ${matrix.rows}`;
+                throw new Error(`Invalid dimensions. Cannot multiply these matrices. ${this.columns} !== ${matrix.rows}`);
             }
             const rows = this.rows;
             const columns = matrix.columns;
@@ -53,7 +53,7 @@ class Matrix {
         };
         this.multiplyByTuple = (tuple) => {
             if (this.columns !== tuple.length) {
-                throw `Invalid dimensions. Cannot multiply by this tuple. ${this.columns} !== ${tuple.length}`;
+                throw new Error(`Invalid dimensions. Cannot multiply by this tuple. ${this.columns} !== ${tuple.length}`);
             }
             const values = Array.from({ length: this.rows }, () => 0);
             for (let r = 0; r < this.rows; r++) {
@@ -88,10 +88,10 @@ class Matrix {
         this.translate = (...coordinates) => this.multiply(Matrix.getTranslationMatrix(...coordinates));
         this.getDeterminant = () => {
             if (this.rows !== this.columns) {
-                throw "Matrix not square";
+                throw new Error("Matrix not square");
             }
             if (this.rows > 4) {
-                throw "Not implemented";
+                throw new Error("Not implemented");
             }
             let determinant = 0;
             if (this.rows === 2) {
@@ -106,7 +106,7 @@ class Matrix {
         };
         this.getInverse = () => {
             if (!this.isInvertible) {
-                throw "Matrix is not invertible";
+                throw new Error("Matrix is not invertible");
             }
             const elements = Array.from({ length: this.rows }, () => Array.from({ length: this.columns }, () => 0));
             for (let r = 0; r < this.rows; r++) {
@@ -216,7 +216,7 @@ class Matrix {
     }
     get determinant() {
         if (this._determinant.value === null) {
-            throw "Determinant could not be determined";
+            throw new Error("Determinant could not be determined");
         }
         return this._determinant.value;
     }
@@ -225,7 +225,7 @@ class Matrix {
     }
     get inverse() {
         if (this._inverse.value === null) {
-            throw "Inverse could not be determined";
+            throw new Error("Inverse could not be determined");
         }
         return this._inverse.value;
     }

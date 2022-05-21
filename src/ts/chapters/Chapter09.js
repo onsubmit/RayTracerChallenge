@@ -10,38 +10,25 @@ const Constants_1 = __importDefault(require("ts/Constants"));
 const Light_1 = __importDefault(require("ts/Light"));
 const Matrix_1 = __importDefault(require("ts/Matrix"));
 const Point_1 = __importDefault(require("ts/Point"));
+const Plane_1 = __importDefault(require("ts/shapes/Plane"));
 const Sphere_1 = __importDefault(require("ts/shapes/Sphere"));
 const Vector_1 = __importDefault(require("ts/Vector"));
 const World_1 = __importDefault(require("ts/World"));
-class Chapter08 {
+class Chapter09 {
     constructor() {
         this.run = () => {
             const light = new Light_1.default(new Point_1.default(-10, 10, -10), Color_1.default.white);
             const world = new World_1.default(light);
-            // The floor is an extremely flattened sphere with a matte texture.
-            const floor = new Sphere_1.default();
-            floor.transformation = Matrix_1.default.getScalingMatrix(10, 0.01, 10);
+            const floor = new Plane_1.default();
+            floor.transformation = Matrix_1.default.getTranslationMatrix(0, -1, 0);
             floor.material.color = new Color_1.default(1, 0.9, 0.9);
             floor.material.specular = 0;
             world.addShape(floor);
-            // The wall on the left has the same scale and color as the floor,
-            // but is also rotated and translated into place.
-            const leftWall = new Sphere_1.default();
-            leftWall.material = floor.material;
-            leftWall.transformation = Matrix_1.default.getTranslationMatrix(0, 0, 5)
-                .rotateY(-Constants_1.default.pi_4)
-                .rotateX(Constants_1.default.pi_2)
-                .scale(10, 0.01, 10);
-            world.addShape(leftWall);
-            // The wall on the right is identical to the left wall,
-            // but is rotated the opposite direction in y.
-            const rightWall = new Sphere_1.default();
-            rightWall.material = floor.material;
-            rightWall.transformation = Matrix_1.default.getTranslationMatrix(0, 0, 5)
-                .rotateY(Constants_1.default.pi_4)
-                .rotateX(Constants_1.default.pi_2)
-                .scale(10, 0.01, 10);
-            world.addShape(rightWall);
+            const ceiling = new Plane_1.default();
+            ceiling.transformation = Matrix_1.default.getTranslationMatrix(0, 10, 0);
+            ceiling.material.color = new Color_1.default(0, 0.4, 0.9);
+            ceiling.material.specular = 0;
+            world.addShape(ceiling);
             // The large sphere in the middle is a unit sphere,
             // translated upward slightly and colored green.
             const middle = new Sphere_1.default();
@@ -68,10 +55,10 @@ class Chapter08 {
             const to = new Point_1.default(0, 1, 0);
             const camera = new Camera_1.default(500, 500, Constants_1.default.pi_3, Matrix_1.default.getViewTransformationMatrix(from, to, new Vector_1.default(0, 1, 0)));
             const canvas = camera.render(world);
-            const painter = new CanvasPainter_1.default("canvas8", canvas);
+            const painter = new CanvasPainter_1.default("canvas9", canvas);
             painter.paint();
         };
     }
 }
-exports.default = new Chapter08();
-//# sourceMappingURL=Chapter08.js.map
+exports.default = new Chapter09();
+//# sourceMappingURL=Chapter09.js.map

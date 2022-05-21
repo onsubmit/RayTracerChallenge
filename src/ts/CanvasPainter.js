@@ -5,13 +5,13 @@ class CanvasPainter {
         this.paint = () => {
             const canvas = document.getElementById(this.id);
             if (!canvas) {
-                throw "Can't find canvas.";
+                throw new Error("Can't find canvas.");
             }
             canvas.width = this.canvas.width;
             canvas.height = this.canvas.height;
             const ctx = canvas.getContext && canvas.getContext("2d");
             if (!ctx) {
-                throw "Can't get canvas context";
+                throw new Error("Can't get canvas context");
             }
             const imageData = ctx.createImageData(canvas.width, canvas.height);
             let index = 0;

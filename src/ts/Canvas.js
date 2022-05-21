@@ -8,7 +8,7 @@ class Canvas {
     constructor(width, height) {
         this.get = (x, y) => {
             if (!this.pixels[y] || !this.pixels[y][x]) {
-                throw `Invalid coordinates @ (${x}, ${y})`;
+                throw new Error(`Invalid coordinates @ (${x}, ${y})`);
             }
             return this.pixels[y][x];
         };
@@ -19,7 +19,7 @@ class Canvas {
             x = Math.round(x);
             y = Math.round(y);
             if (!this.pixels[y] || !this.pixels[y][x]) {
-                throw `Invalid coordinates @ (${x}, ${y})`;
+                throw new Error(`Invalid coordinates @ (${x}, ${y})`);
             }
             this.pixels[y][x] = color;
         };

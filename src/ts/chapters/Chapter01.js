@@ -17,7 +17,7 @@ class Chapter01 {
             const environment = new Environment_1.default(new Vector_1.default(0, -0.1, 0), new Vector_1.default(-0.01, 0, 0));
             const pre = document.getElementById("pre1");
             if (!pre) {
-                throw "Can't find <pre> tag for chapter 1";
+                throw new Error("Can't find <pre> tag for chapter 1");
             }
             pre.innerHTML += `Projectile position: ${projectile.position.toString()}\n`;
             while (projectile.position.y > 0) {

@@ -65,6 +65,7 @@ class Chapter07 {
             left.material.diffuse = 0.7;
             left.material.specular = 0.3;
             world.addShape(left);
+            world.disableShadows();
             const canvas = camera.render(world);
             const painter = new CanvasPainter_1.default("canvas7", canvas);
             painter.paint();

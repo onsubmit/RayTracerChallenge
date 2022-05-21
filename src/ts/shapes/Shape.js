@@ -12,13 +12,14 @@ class Shape {
     constructor(material = new Material_1.default()) {
         this.getIntersectionsWith = (ray) => {
             if (this.hasTransformation) {
-                ray = ray.transform(this.transformation.inverse);
+                const transformedRay = ray.transform(this.transformation.inverse);
+                return this.getIntersectionsWithImpl(transformedRay);
             }
             return this.getIntersectionsWithImpl(ray);
         };
         this.getNormalAt = (point) => {
             const objectPoint = Point_1.default.fromNumberTuple(this.transformation.inverse.multiplyByTuple(point));
-            const objectNormal = objectPoint.subtractPoint(Point_1.default.origin);
+            const objectNormal = this.getNormalAtImpl(objectPoint);
             const worldNormal = Vector_1.default.fromNumberTuple(this.transformation.inverse.transpose().multiplyByTuple(objectNormal), true /* force */);
             return worldNormal.normalize();
         };
@@ -35,7 +36,7 @@ class Shape {
     }
     get transformation() {
         if (this._transformation.value === null) {
-            throw "Transformation could not be determined";
+            throw new Error("Transformation could not be determined");
         }
         return this._transformation.value;
     }

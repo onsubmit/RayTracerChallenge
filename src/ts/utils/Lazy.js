@@ -15,7 +15,7 @@ class Lazy {
             this._value = this._outcome.value;
             return this._value;
         }
-        throw "Could not determine value";
+        throw new Error("Could not determine value");
     }
     set value(t) {
         this._value = t;

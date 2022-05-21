@@ -8,7 +8,7 @@ class Intersections {
     constructor(...intersections) {
         this.get = (index) => {
             if (index < 0 || index >= this.intersections.length) {
-                throw "Invalid index";
+                throw new Error("Invalid index");
             }
             return this.intersections[index];
         };
@@ -29,7 +29,7 @@ class Intersections {
     }
     get sortedIntersections() {
         if (!this.lazySortedIntersections.value) {
-            throw "Sorted intersections could not be determined";
+            throw new Error("Sorted intersections could not be determined");
         }
         return this.lazySortedIntersections.value;
     }

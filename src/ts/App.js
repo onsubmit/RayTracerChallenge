@@ -9,15 +9,23 @@ const Chapter04_1 = __importDefault(require("./chapters/Chapter04"));
 const Chapter05_1 = __importDefault(require("./chapters/Chapter05"));
 const Chapter06_1 = __importDefault(require("./chapters/Chapter06"));
 const Chapter07_1 = __importDefault(require("./chapters/Chapter07"));
+const Chapter08_1 = __importDefault(require("./chapters/Chapter08"));
+const Chapter09_1 = __importDefault(require("./chapters/Chapter09"));
 class App {
     constructor() {
         this.run = () => {
-            Chapter01_1.default.run();
-            Chapter02_1.default.run();
-            Chapter04_1.default.run();
-            Chapter05_1.default.run();
-            Chapter06_1.default.run();
-            Chapter07_1.default.run();
+            const chapters = [
+                Chapter01_1.default,
+                Chapter02_1.default,
+                Chapter04_1.default,
+                Chapter05_1.default,
+                Chapter06_1.default,
+                Chapter07_1.default,
+                Chapter08_1.default,
+                Chapter09_1.default,
+            ];
+            chapters[chapters.length - 1].run();
+            //chapters.forEach((c) => c.run());
         };
     }
 }

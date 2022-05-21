@@ -15,6 +15,7 @@ const Ray_1 = __importDefault(require("./Ray"));
 const Sphere_1 = __importDefault(require("./shapes/Sphere"));
 class World {
     constructor(light, ...shapes) {
+        this._disableShadows = false;
         this.addShape = (shape) => {
             this.shapes.push(shape);
         };
@@ -32,7 +33,13 @@ class World {
             const intersections = this.shapes.flatMap((o) => o.getIntersectionsWith(ray).intersections);
             return new Intersections_1.default(...intersections).sortedIntersections;
         };
+        this.disableShadows = () => {
+            this._disableShadows = true;
+        };
         this.isShadowed = (point) => {
+            if (this._disableShadows) {
+                return false;
+            }
             const v = this.light.position.subtractPoint(point);
             const distance = v.magnitude;
             const direction = v.normalize();
