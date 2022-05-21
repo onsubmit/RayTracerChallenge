@@ -5,11 +5,23 @@ import Chapter05 from "./chapters/Chapter05";
 import Chapter06 from "./chapters/Chapter06";
 import Chapter07 from "./chapters/Chapter07";
 import Chapter08 from "./chapters/Chapter08";
+import Chapter09 from "./chapters/Chapter09";
 import IChapter from "./chapters/IChapter";
 
 class App {
   run = (): void => {
-    const chapters: IChapter[] = [Chapter01, Chapter02, Chapter04, Chapter05, Chapter06, Chapter07, Chapter08];
+    const chapters: IChapter[] = [
+      Chapter01,
+      Chapter02,
+      Chapter04,
+      Chapter05,
+      Chapter06,
+      Chapter07,
+      Chapter08,
+      Chapter09,
+    ];
+
+    //chapters[chapters.length - 1].run();
     chapters.forEach((c) => c.run());
   };
 }

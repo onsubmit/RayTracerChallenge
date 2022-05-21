@@ -36,9 +36,9 @@ export default class Sphere extends Shape {
     return true;
   };
 
-  protected override getNormalAtImpl = (point: Point): Vector => point.subtractPoint(this.origin);
+  override getNormalAtImpl = (point: Point): Vector => point.subtractPoint(this.origin);
 
-  protected override getIntersectionsWithImpl = (ray: Ray): Intersections => {
+  override getIntersectionsWithImpl = (ray: Ray): Intersections => {
     const sphereToRay = ray.origin.subtractPoint(Point.origin);
 
     const a = ray.direction.dot(ray.direction);

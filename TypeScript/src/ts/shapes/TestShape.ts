@@ -18,10 +18,10 @@ export default class TestShape extends Shape {
     throw new Error("Method not implemented.");
   };
 
-  protected getIntersectionsWithImpl = (ray: Ray): Intersections => {
+  getIntersectionsWithImpl = (ray: Ray): Intersections => {
     this.savedRay = ray;
     return new Intersections();
   };
 
-  protected getNormalAtImpl = (point: Point): Vector => point.subtractPoint(Point.origin);
+  getNormalAtImpl = (point: Point): Vector => point.subtractPoint(Point.origin);
 }

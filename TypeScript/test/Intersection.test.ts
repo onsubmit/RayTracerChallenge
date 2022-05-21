@@ -1,4 +1,5 @@
 import Computation from "ts/Computation";
+import Constants from "ts/Constants";
 import Intersection from "ts/Intersection";
 import Intersections from "ts/Intersections";
 import Matrix from "ts/Matrix";
@@ -128,6 +129,18 @@ describe("Intersections", () => {
       const i4 = new Intersection(2, s);
       const intersections = new Intersections(i1, i2, i3, i4);
       expect(intersections.hit).toEqual(i4);
+    });
+
+    it("The hit should offset the point", () => {
+      const ray = new Ray(new Point(0, 0, -5), new Vector(0, 0, 1));
+      const sphere = new Sphere();
+      sphere.transformation = Matrix.getTranslationMatrix(0, 0, 1);
+
+      const intersection = new Intersection(5, sphere);
+      const computation = Computation.prepare(intersection, ray);
+
+      expect(computation.overPoint.z).toBeLessThan(-Constants.epsilon / 2);
+      expect(computation.point.z).toBeGreaterThan(computation.overPoint.z);
     });
   });
 

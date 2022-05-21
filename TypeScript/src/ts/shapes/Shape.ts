@@ -40,9 +40,8 @@ export default abstract class Shape {
     this._transformation.value = matrix;
   }
 
-  protected abstract getIntersectionsWithImpl(ray: Ray): Intersections;
-  protected abstract getNormalAtImpl(point: Point): Vector;
-
+  abstract getIntersectionsWithImpl(ray: Ray): Intersections;
+  abstract getNormalAtImpl(point: Point): Vector;
   abstract compare(shape: Shape): boolean;
 
   getIntersectionsWith = (ray: Ray): Intersections => {
