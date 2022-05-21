@@ -6,13 +6,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Color_1 = __importDefault(require("./Color"));
 class Lighting {
     constructor() {
-        this.calculate = (material, light, point, eye, normal) => {
+        this.calculate = (material, light, point, eye, normal, inShadow) => {
             // Combine the surface color with the light's color/intensity.
             const effectiveColor = material.color.getHadamardProductWith(light.intensity);
             // Find the direction to the light source.
             const lightVector = light.position.subtractPoint(point).normalize();
             // Compute the ambient contribution.
             const ambient = effectiveColor.multiply(material.ambient);
+            if (inShadow) {
+                return ambient;
+            }
             let diffuse = Color_1.default.black;
             let specular = Color_1.default.black;
             // Get the cosine of the angle between the light vector and the normal vector.

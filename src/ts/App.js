@@ -8,6 +8,7 @@ const Chapter02_1 = __importDefault(require("./chapters/Chapter02"));
 const Chapter04_1 = __importDefault(require("./chapters/Chapter04"));
 const Chapter05_1 = __importDefault(require("./chapters/Chapter05"));
 const Chapter06_1 = __importDefault(require("./chapters/Chapter06"));
+const Chapter07_1 = __importDefault(require("./chapters/Chapter07"));
 class App {
     constructor() {
         this.run = () => {
@@ -16,6 +17,7 @@ class App {
             Chapter04_1.default.run();
             Chapter05_1.default.run();
             Chapter06_1.default.run();
+            Chapter07_1.default.run();
         };
     }
 }

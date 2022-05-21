@@ -11,9 +11,13 @@ const Lighting_1 = __importDefault(require("./Lighting"));
 const Material_1 = __importDefault(require("./Material"));
 const Matrix_1 = __importDefault(require("./Matrix"));
 const Point_1 = __importDefault(require("./Point"));
+const Ray_1 = __importDefault(require("./Ray"));
 const Sphere_1 = __importDefault(require("./shapes/Sphere"));
 class World {
     constructor(light, ...shapes) {
+        this.addShape = (shape) => {
+            this.shapes.push(shape);
+        };
         this.getColorAt = (ray) => {
             const intersections = this.getIntersectionsWith(ray);
             if (!intersections.hasHit) {
@@ -28,7 +32,21 @@ class World {
             const intersections = this.shapes.flatMap((o) => o.getIntersectionsWith(ray).intersections);
             return new Intersections_1.default(...intersections).sortedIntersections;
         };
-        this.shadeHit = (computation) => Lighting_1.default.calculate(computation.shape.material, this.light, computation.point, computation.eye, computation.normal);
+        this.isShadowed = (point) => {
+            const v = this.light.position.subtractPoint(point);
+            const distance = v.magnitude;
+            const direction = v.normalize();
+            const ray = new Ray_1.default(point, direction);
+            const intersections = this.getIntersectionsWith(ray);
+            if (intersections.hasHit && intersections.hit.t < distance) {
+                return true;
+            }
+            return false;
+        };
+        this.shadeHit = (computation) => {
+            const shadowed = this.isShadowed(computation.overPoint);
+            return Lighting_1.default.calculate(computation.shape.material, this.light, computation.overPoint, computation.eye, computation.normal, shadowed);
+        };
         this.light = light;
         this.shapes = shapes;
     }

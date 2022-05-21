@@ -13,12 +13,11 @@ const Point_1 = __importDefault(require("ts/Point"));
 const Sphere_1 = __importDefault(require("ts/shapes/Sphere"));
 const Vector_1 = __importDefault(require("ts/Vector"));
 const World_1 = __importDefault(require("ts/World"));
-class Chapter07 {
+class Chapter08 {
     constructor() {
         this.run = () => {
             const light = new Light_1.default(new Point_1.default(-10, 10, -10), Color_1.default.white);
             const world = new World_1.default(light);
-            const camera = new Camera_1.default(500, 500, Constants_1.default.pi_3, Matrix_1.default.getViewTransformationMatrix(new Point_1.default(0, 1.5, -5), new Point_1.default(0, 1, 0), new Vector_1.default(0, 1, 0)));
             // The floor is an extremely flattened sphere with a matte texture.
             const floor = new Sphere_1.default();
             floor.transformation = Matrix_1.default.getScalingMatrix(10, 0.01, 10);
@@ -65,11 +64,14 @@ class Chapter07 {
             left.material.diffuse = 0.7;
             left.material.specular = 0.3;
             world.addShape(left);
+            const from = new Point_1.default(0, 1.5, -5);
+            const to = Point_1.default.fromNumberTuple(left.transformation.multiplyByTuple(Point_1.default.origin));
+            const camera = new Camera_1.default(500, 500, Constants_1.default.pi_3, Matrix_1.default.getViewTransformationMatrix(from, to, new Vector_1.default(0, 1, 0)));
             const canvas = camera.render(world);
-            const painter = new CanvasPainter_1.default("canvas7", canvas);
+            const painter = new CanvasPainter_1.default("canvas8", canvas);
             painter.paint();
         };
     }
 }
-exports.default = new Chapter07();
-//# sourceMappingURL=Chapter07.js.map
+exports.default = new Chapter08();
+//# sourceMappingURL=Chapter08.js.map

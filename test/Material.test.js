@@ -26,7 +26,8 @@ describe("Material", () => {
             const eye = new Vector_1.default(0, 0, -1);
             const normal = new Vector_1.default(0, 0, -1);
             const light = new Light_1.default(new Point_1.default(0, 0, -10), Color_1.default.white);
-            const result = Lighting_1.default.calculate(m, light, Point_1.default.origin, eye, normal);
+            const inShadow = false;
+            const result = Lighting_1.default.calculate(m, light, Point_1.default.origin, eye, normal, inShadow);
             expect(result.compare(new Color_1.default(1.9, 1.9, 1.9))).toBe(true);
         });
         it("Lighting with the eye between light and surface, eye offset 45°", () => {
@@ -34,7 +35,8 @@ describe("Material", () => {
             const eye = new Vector_1.default(0, 1, -1).normalize();
             const normal = new Vector_1.default(0, 0, -1);
             const light = new Light_1.default(new Point_1.default(0, 0, -10), Color_1.default.white);
-            const result = Lighting_1.default.calculate(m, light, Point_1.default.origin, eye, normal);
+            const inShadow = false;
+            const result = Lighting_1.default.calculate(m, light, Point_1.default.origin, eye, normal, inShadow);
             expect(result.compare(new Color_1.default(1.0, 1.0, 1.0))).toBe(true);
         });
         it("Lighting with the eye opposite surface, light offset 45°", () => {
@@ -42,7 +44,8 @@ describe("Material", () => {
             const eye = new Vector_1.default(0, 0, -1);
             const normal = new Vector_1.default(0, 0, -1);
             const light = new Light_1.default(new Point_1.default(0, 10, -10), Color_1.default.white);
-            const result = Lighting_1.default.calculate(m, light, Point_1.default.origin, eye, normal);
+            const inShadow = false;
+            const result = Lighting_1.default.calculate(m, light, Point_1.default.origin, eye, normal, inShadow);
             expect(result.compare(new Color_1.default(0.7364, 0.7364, 0.7364))).toBe(true);
         });
         it("Lighting with eye in the path of the reflection vector", () => {
@@ -50,7 +53,8 @@ describe("Material", () => {
             const eye = new Vector_1.default(0, -1, -1).normalize();
             const normal = new Vector_1.default(0, 0, -1);
             const light = new Light_1.default(new Point_1.default(0, 10, -10), Color_1.default.white);
-            const result = Lighting_1.default.calculate(m, light, Point_1.default.origin, eye, normal);
+            const inShadow = false;
+            const result = Lighting_1.default.calculate(m, light, Point_1.default.origin, eye, normal, inShadow);
             expect(result.compare(new Color_1.default(1.6364, 1.6364, 1.6364))).toBe(true);
         });
         it("Lighting with the light behind the surface", () => {
@@ -58,8 +62,20 @@ describe("Material", () => {
             const eye = new Vector_1.default(0, 0, -1);
             const normal = new Vector_1.default(0, 0, -1);
             const light = new Light_1.default(new Point_1.default(0, 0, 10), Color_1.default.white);
-            const result = Lighting_1.default.calculate(m, light, Point_1.default.origin, eye, normal);
+            const inShadow = false;
+            const result = Lighting_1.default.calculate(m, light, Point_1.default.origin, eye, normal, inShadow);
             expect(result.compare(new Color_1.default(0.1, 0.1, 0.1))).toBe(true);
+        });
+        describe("Shadows", () => {
+            it("Lighting with the surface in shadow", () => {
+                const m = new Material_1.default();
+                const eye = new Vector_1.default(0, 0, -1);
+                const normal = new Vector_1.default(0, 0, -1);
+                const light = new Light_1.default(new Point_1.default(0, 0, -10), Color_1.default.white);
+                const inShadow = true;
+                const result = Lighting_1.default.calculate(m, light, Point_1.default.origin, eye, normal, inShadow);
+                expect(result.compare(new Color_1.default(0.1, 0.1, 0.1))).toBe(true);
+            });
         });
     });
 });

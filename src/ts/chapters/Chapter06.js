@@ -40,7 +40,7 @@ class Chapter06 {
                         const point = ray.getPointOnRayAtDistance(hit.t);
                         const normal = hit.shape.getNormalAt(point);
                         const eye = ray.direction.negate();
-                        const color = Lighting_1.default.calculate(hit.shape.material, light, point, eye, normal);
+                        const color = Lighting_1.default.calculate(hit.shape.material, light, point, eye, normal, false);
                         canvas.writePixel(x, y, color);
                     }
                 }

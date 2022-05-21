@@ -84,5 +84,39 @@ describe("World", () => {
             expect(color.compare(inner.material.color)).toBe(true);
         });
     });
+    describe("Shadows", () => {
+        it("There is no shadow when nothing is collinear with point and light", () => {
+            const world = World_1.default.getDefaultWorld();
+            const point = new Point_1.default(0, 10, 10);
+            const isShadowed = world.isShadowed(point);
+            expect(isShadowed).toBe(false);
+        });
+        it("The shadow when an object is between the point and the light", () => {
+            const world = World_1.default.getDefaultWorld();
+            const point = new Point_1.default(10, -10, 10);
+            const isShadowed = world.isShadowed(point);
+            expect(isShadowed).toBe(true);
+        });
+        it("There is no shadow when an object is behind the point", () => {
+            const world = World_1.default.getDefaultWorld();
+            const point = new Point_1.default(-2, 2, -2);
+            const isShadowed = world.isShadowed(point);
+            expect(isShadowed).toBe(false);
+        });
+        it("shadeHit() is given an intersection in shadow", () => {
+            const light = new Light_1.default(new Point_1.default(0, 0, -10), Color_1.default.white);
+            const world = new World_1.default(light);
+            const s1 = new Sphere_1.default();
+            world.addShape(s1);
+            const s2 = new Sphere_1.default();
+            s2.transformation = Matrix_1.default.getTranslationMatrix(0, 0, 10);
+            world.addShape(s2);
+            const ray = new Ray_1.default(new Point_1.default(0, 0, 5), new Vector_1.default(0, 0, 1));
+            const intersection = new Intersection_1.default(4, s2);
+            const computation = Computation_1.default.prepare(intersection, ray);
+            const color = world.shadeHit(computation);
+            expect(color.compare(new Color_1.default(0.1, 0.1, 0.1))).toBe(true);
+        });
+    });
 });
 //# sourceMappingURL=World.test.js.map

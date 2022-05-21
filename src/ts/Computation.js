@@ -1,13 +1,18 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+const Constants_1 = __importDefault(require("./Constants"));
 class Computation {
-    constructor(t, shape, point, eye, normal, inside) {
+    constructor(t, shape, point, eye, normal, inside, overPoint) {
         this.t = t;
         this.shape = shape;
         this.point = point;
         this.eye = eye;
         this.normal = normal;
         this.inside = inside;
+        this.overPoint = overPoint;
     }
 }
 exports.default = Computation;
@@ -22,6 +27,7 @@ Computation.prepare = (intersection, ray) => {
         inside = true;
         normal = normal.negate();
     }
-    return new Computation(t, shape, point, eye, normal, inside);
+    const overPoint = point.addVector(normal.multiply(Constants_1.default.epsilon));
+    return new Computation(t, shape, point, eye, normal, inside, overPoint);
 };
 //# sourceMappingURL=Computation.js.map
