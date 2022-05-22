@@ -11,7 +11,20 @@ import World from "ts/World";
 import IChapter from "./IChapter";
 
 class Chapter08 implements IChapter {
-  run = (): void => {
+  getCamera = (width = 500, height = 500): Camera => {
+    const from = new Point(0, 1.5, -5);
+    const to = new Point(0, 1, 0);
+    const camera = new Camera(
+      width,
+      height,
+      Constants.pi_3,
+      Matrix.getViewTransformationMatrix(from, to, new Vector(0, 1, 0))
+    );
+
+    return camera;
+  };
+
+  getWorld = (): World => {
     const light = new Light(new Point(-10, 10, -10), Color.white);
     const world = new World(light);
 
@@ -68,18 +81,16 @@ class Chapter08 implements IChapter {
     left.material.specular = 0.3;
     world.addShape(left);
 
-    const from = new Point(0, 1.5, -5);
-    const to = new Point(0, 1, 0);
-    const camera = new Camera(
-      500,
-      500,
-      Constants.pi_3,
-      Matrix.getViewTransformationMatrix(from, to, new Vector(0, 1, 0))
-    );
-    const canvas = camera.render(world);
+    return world;
+  };
 
-    const painter = new CanvasPainter("canvas8", canvas);
-    painter.paint();
+  run = (): void => {
+    const camera = this.getCamera();
+    const world = this.getWorld();
+
+    const canvas = camera.render(world);
+    const painter = new CanvasPainter("canvas8");
+    painter.paint(canvas);
   };
 }
 

@@ -1,12 +1,22 @@
+import Camera from "ts/Camera";
 import Canvas from "ts/Canvas";
 import CanvasPainter from "ts/CanvasPainter";
 import Color from "ts/Color";
 import Constants from "ts/Constants";
 import Matrix from "ts/Matrix";
 import Point from "ts/Point";
+import World from "ts/World";
 import IChapter from "./IChapter";
 
 class Chapter04 implements IChapter {
+  getCamera = (_width: number, _height: number): Camera => {
+    throw new Error("Chapter doesn't use a camera");
+  };
+
+  getWorld = (): World => {
+    throw new Error("Chapter doesn't use a world");
+  };
+
   run = (): void => {
     const canvasSize = 201;
     const numSegments = 12;
@@ -23,8 +33,8 @@ class Chapter04 implements IChapter {
       canvas.writePixelWithCenteredOrigin(p.x, p.z, Color.white);
     }
 
-    const painter = new CanvasPainter("canvas4", canvas);
-    painter.paint();
+    const painter = new CanvasPainter("canvas4", canvasSize, canvasSize);
+    painter.paint(canvas);
   };
 }
 

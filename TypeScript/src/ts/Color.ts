@@ -26,6 +26,14 @@ export default class Color extends NumberTuple {
     return this.get(2);
   }
 
+  get hex(): string {
+    const r = this.dec2hex(this.red);
+    const g = this.dec2hex(this.green);
+    const b = this.dec2hex(this.blue);
+
+    return `#${r}${g}${b}`;
+  }
+
   multiply = (scalar: number): Color => Color.fromNumberTuple(NumberTuple.multiply(this, scalar));
 
   addColor = (color: Color): Color => Color.fromNumberTuple(NumberTuple.add(this, color));
@@ -38,4 +46,9 @@ export default class Color extends NumberTuple {
 
     return new Color(r, g, b);
   };
+
+  private dec2hex = (num: number): string =>
+    Math.round(255 * num)
+      .toString(16)
+      .padStart(2, "0");
 }

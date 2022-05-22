@@ -1,3 +1,4 @@
+import Camera from "ts/Camera";
 import Canvas from "ts/Canvas";
 import CanvasPainter from "ts/CanvasPainter";
 import Color from "ts/Color";
@@ -6,9 +7,18 @@ import Matrix from "ts/Matrix";
 import Point from "ts/Point";
 import Ray from "ts/Ray";
 import Sphere from "ts/shapes/Sphere";
+import World from "ts/World";
 import IChapter from "./IChapter";
 
 class Chapter05 implements IChapter {
+  getCamera = (_width: number, _height: number): Camera => {
+    throw new Error("Chapter doesn't use a camera");
+  };
+
+  getWorld = (): World => {
+    throw new Error("Chapter doesn't use a world");
+  };
+
   run = (): void => {
     const canvasSize = 501;
     const wallZ = 10;
@@ -38,8 +48,8 @@ class Chapter05 implements IChapter {
       }
     }
 
-    const painter = new CanvasPainter("canvas5", canvas);
-    painter.paint();
+    const painter = new CanvasPainter("canvas5", canvasSize, canvasSize);
+    painter.paint(canvas);
   };
 }
 

@@ -1,4 +1,5 @@
 import Canvas from "./Canvas";
+import Color from "./Color";
 import Matrix from "./Matrix";
 import Point from "./Point";
 import Ray from "./Ray";
@@ -93,12 +94,16 @@ export default class Camera {
 
     for (let y = 0; y < this.verticalSize; y += resolution) {
       for (let x = 0; x < this.horizontalSize; x += resolution) {
-        const ray = this.getRayForPixel(x, y);
-        const color = world.getColorAt(ray);
+        const color = this.getColorAt(world, x, y);
         canvas.writePixel(x, y, color);
       }
     }
 
     return canvas;
+  };
+
+  getColorAt = (world: World, x: number, y: number): Color => {
+    const ray = this.getRayForPixel(x, y);
+    return world.getColorAt(ray);
   };
 }

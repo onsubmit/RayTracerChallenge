@@ -1,10 +1,20 @@
+import Camera from "ts/Camera";
 import Point from "ts/Point";
 import Vector from "ts/Vector";
+import World from "ts/World";
 import IChapter from "./IChapter";
 import Environment from "./shared/Environment";
 import Projectile from "./shared/Projectile";
 
 class Chapter01 implements IChapter {
+  getCamera = (_width: number, _height: number): Camera => {
+    throw new Error("Chapter doesn't use a camera");
+  };
+
+  getWorld = (): World => {
+    throw new Error("Chapter doesn't use a world");
+  };
+
   run = (): void => {
     // projectile starts one unit above the origin.
     // velocity is normalized to 1 unit/tick.

@@ -1,13 +1,23 @@
+import Camera from "ts/Camera";
 import Canvas from "ts/Canvas";
 import CanvasPainter from "ts/CanvasPainter";
 import Color from "ts/Color";
 import Point from "ts/Point";
 import Vector from "ts/Vector";
+import World from "ts/World";
 import IChapter from "./IChapter";
 import Environment from "./shared/Environment";
 import Projectile from "./shared/Projectile";
 
 class Chapter02 implements IChapter {
+  getCamera = (_width: number, _height: number): Camera => {
+    throw new Error("Chapter doesn't use a camera");
+  };
+
+  getWorld = (): World => {
+    throw new Error("Chapter doesn't use a world");
+  };
+
   run = (): void => {
     const start = new Point(0, 1, 0);
     const velocity = new Vector(1, 1.8, 0).normalize().multiply(11.25);
@@ -24,8 +34,8 @@ class Chapter02 implements IChapter {
       projectile = this.tick(environment, projectile);
     }
 
-    const painter = new CanvasPainter("canvas2", canvas);
-    painter.paint();
+    const painter = new CanvasPainter("canvas2", canvas.width, canvas.height);
+    painter.paint(canvas);
   };
 
   private tick = (environment: Environment, projectile: Projectile): Projectile => {
