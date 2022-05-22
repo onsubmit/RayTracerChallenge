@@ -7,31 +7,26 @@ import Chapter05 from "./chapters/Chapter05";
 import Chapter06 from "./chapters/Chapter06";
 import IChapter from "./chapters/IChapter";
 import Color from "./Color";
-
-type WorldConfig = {
-  painter: CanvasPainter;
-  worker: ChapterWorker;
-};
+import { Pixel } from "./Pixel";
 
 class App {
   run = (): void => {
     const chaptersNoWorld: IChapter[] = [Chapter01, Chapter02, Chapter04, Chapter05, Chapter06];
     chaptersNoWorld.forEach((c) => c.run());
 
-    const size = 250;
-    const chaptersWithWorld: Map<number, WorldConfig> = new Map([
-      [7, { painter: new CanvasPainter("canvas7", size, size), worker: new ChapterWorker() }],
-      [8, { painter: new CanvasPainter("canvas8", size, size), worker: new ChapterWorker() }],
-      [9, { painter: new CanvasPainter("canvas9", size, size), worker: new ChapterWorker() }],
-    ]);
-
-    chaptersWithWorld.forEach((config, chapter) => {
-      config.worker.onmessage = (event: MessageEvent): void => {
-        const { x, y, r, g, b } = event.data;
-        config.painter.paintPixel(x, y, new Color(r, g, b));
+    const size = 500;
+    [7, 8, 9].forEach((chapter) => {
+      const painter = new CanvasPainter(`canvas${chapter}`, size, size);
+      const worker = new ChapterWorker();
+      worker.onmessage = (event: MessageEvent): void => {
+        const row: Pixel[] = event.data;
+        for (const pixel of row) {
+          const { x, y, r, g, b } = pixel;
+          painter.paintPixel(x, y, new Color(r, g, b));
+        }
       };
 
-      config.worker.postMessage({ chapter, width: size, height: size });
+      worker.postMessage({ chapter, width: size, height: size });
     });
   };
 }
