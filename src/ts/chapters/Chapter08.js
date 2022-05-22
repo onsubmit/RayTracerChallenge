@@ -15,7 +15,13 @@ const Vector_1 = __importDefault(require("ts/Vector"));
 const World_1 = __importDefault(require("ts/World"));
 class Chapter08 {
     constructor() {
-        this.run = () => {
+        this.getCamera = (width = 500, height = 500) => {
+            const from = new Point_1.default(0, 1.5, -5);
+            const to = new Point_1.default(0, 1, 0);
+            const camera = new Camera_1.default(width, height, Constants_1.default.pi_3, Matrix_1.default.getViewTransformationMatrix(from, to, new Vector_1.default(0, 1, 0)));
+            return camera;
+        };
+        this.getWorld = () => {
             const light = new Light_1.default(new Point_1.default(-10, 10, -10), Color_1.default.white);
             const world = new World_1.default(light);
             // The floor is an extremely flattened sphere with a matte texture.
@@ -64,12 +70,14 @@ class Chapter08 {
             left.material.diffuse = 0.7;
             left.material.specular = 0.3;
             world.addShape(left);
-            const from = new Point_1.default(0, 1.5, -5);
-            const to = new Point_1.default(0, 1, 0);
-            const camera = new Camera_1.default(500, 500, Constants_1.default.pi_3, Matrix_1.default.getViewTransformationMatrix(from, to, new Vector_1.default(0, 1, 0)));
+            return world;
+        };
+        this.run = () => {
+            const camera = this.getCamera();
+            const world = this.getWorld();
             const canvas = camera.render(world);
-            const painter = new CanvasPainter_1.default("canvas8", canvas);
-            painter.paint();
+            const painter = new CanvasPainter_1.default("canvas8");
+            painter.paint(canvas);
         };
     }
 }

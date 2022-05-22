@@ -12,6 +12,12 @@ const Environment_1 = __importDefault(require("./shared/Environment"));
 const Projectile_1 = __importDefault(require("./shared/Projectile"));
 class Chapter02 {
     constructor() {
+        this.getCamera = (_width, _height) => {
+            throw new Error("Chapter doesn't use a camera");
+        };
+        this.getWorld = () => {
+            throw new Error("Chapter doesn't use a world");
+        };
         this.run = () => {
             const start = new Point_1.default(0, 1, 0);
             const velocity = new Vector_1.default(1, 1.8, 0).normalize().multiply(11.25);
@@ -24,8 +30,8 @@ class Chapter02 {
                 canvas.writePixel(projectile.position.x, canvas.height - projectile.position.y, Color_1.default.white);
                 projectile = this.tick(environment, projectile);
             }
-            const painter = new CanvasPainter_1.default("canvas2", canvas);
-            painter.paint();
+            const painter = new CanvasPainter_1.default("canvas2", canvas.width, canvas.height);
+            painter.paint(canvas);
         };
         this.tick = (environment, projectile) => {
             const position = projectile.position.addVector(projectile.velocity);

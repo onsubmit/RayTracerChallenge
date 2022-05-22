@@ -29,12 +29,15 @@ class Camera {
             const canvas = new Canvas_1.default(this.horizontalSize, this.verticalSize);
             for (let y = 0; y < this.verticalSize; y += resolution) {
                 for (let x = 0; x < this.horizontalSize; x += resolution) {
-                    const ray = this.getRayForPixel(x, y);
-                    const color = world.getColorAt(ray);
+                    const color = this.getColorAt(world, x, y);
                     canvas.writePixel(x, y, color);
                 }
             }
             return canvas;
+        };
+        this.getColorAt = (world, x, y) => {
+            const ray = this.getRayForPixel(x, y);
+            return world.getColorAt(ray);
         };
         this.horizontalSize = horizontalSize;
         this.verticalSize = verticalSize;

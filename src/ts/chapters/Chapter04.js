@@ -11,6 +11,12 @@ const Matrix_1 = __importDefault(require("ts/Matrix"));
 const Point_1 = __importDefault(require("ts/Point"));
 class Chapter04 {
     constructor() {
+        this.getCamera = (_width, _height) => {
+            throw new Error("Chapter doesn't use a camera");
+        };
+        this.getWorld = () => {
+            throw new Error("Chapter doesn't use a world");
+        };
         this.run = () => {
             const canvasSize = 201;
             const numSegments = 12;
@@ -24,8 +30,8 @@ class Chapter04 {
                 const p = Point_1.default.fromNumberTuple(transform.multiplyByTuple(point));
                 canvas.writePixelWithCenteredOrigin(p.x, p.z, Color_1.default.white);
             }
-            const painter = new CanvasPainter_1.default("canvas4", canvas);
-            painter.paint();
+            const painter = new CanvasPainter_1.default("canvas4", canvasSize, canvasSize);
+            painter.paint(canvas);
         };
     }
 }

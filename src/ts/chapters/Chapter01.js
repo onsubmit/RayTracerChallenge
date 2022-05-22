@@ -9,6 +9,12 @@ const Environment_1 = __importDefault(require("./shared/Environment"));
 const Projectile_1 = __importDefault(require("./shared/Projectile"));
 class Chapter01 {
     constructor() {
+        this.getCamera = (_width, _height) => {
+            throw new Error("Chapter doesn't use a camera");
+        };
+        this.getWorld = () => {
+            throw new Error("Chapter doesn't use a world");
+        };
         this.run = () => {
             // projectile starts one unit above the origin.
             // velocity is normalized to 1 unit/tick.

@@ -16,6 +16,12 @@ const Ray_1 = __importDefault(require("ts/Ray"));
 const Sphere_1 = __importDefault(require("ts/shapes/Sphere"));
 class Chapter06 {
     constructor() {
+        this.getCamera = (_width, _height) => {
+            throw new Error("Chapter doesn't use a camera");
+        };
+        this.getWorld = () => {
+            throw new Error("Chapter doesn't use a world");
+        };
         this.run = () => {
             const canvasSize = 501;
             const wallZ = 10;
@@ -45,8 +51,8 @@ class Chapter06 {
                     }
                 }
             }
-            const painter = new CanvasPainter_1.default("canvas6", canvas);
-            painter.paint();
+            const painter = new CanvasPainter_1.default("canvas6", canvasSize, canvasSize);
+            painter.paint(canvas);
         };
     }
 }

@@ -16,6 +16,9 @@ class Color extends NumberTuple_1.default {
             const b = this.blue * color.blue;
             return new Color(r, g, b);
         };
+        this.dec2hex = (num) => Math.round(255 * num)
+            .toString(16)
+            .padStart(2, "0");
     }
     get red() {
         return this.get(0);
@@ -25,6 +28,12 @@ class Color extends NumberTuple_1.default {
     }
     get blue() {
         return this.get(2);
+    }
+    get hex() {
+        const r = this.dec2hex(this.red);
+        const g = this.dec2hex(this.green);
+        const b = this.dec2hex(this.blue);
+        return `#${r}${g}${b}`;
     }
 }
 exports.default = Color;
