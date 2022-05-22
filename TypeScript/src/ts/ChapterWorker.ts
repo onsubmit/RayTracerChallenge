@@ -11,7 +11,7 @@ type ChapterConfig = {
 
 let chapters: Map<number, ChapterConfig> = new Map();
 
-self.addEventListener("message", (event: any) => {
+self.addEventListener("message", (event: MessageEvent) => {
   const width = event.data.width;
   const height = event.data.height;
 

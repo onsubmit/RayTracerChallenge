@@ -26,7 +26,7 @@ class App {
     ]);
 
     chaptersWithWorld.forEach((config, chapter) => {
-      config.worker.onmessage = (event: any) => {
+      config.worker.onmessage = (event: MessageEvent): void => {
         const { x, y, r, g, b } = event.data;
         config.painter.paintPixel(x, y, new Color(r, g, b));
       };
