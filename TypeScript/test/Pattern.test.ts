@@ -1,10 +1,22 @@
 import Color from "ts/Color";
 import Matrix from "ts/Matrix";
 import StripePattern from "ts/patterns/StripePattern";
+import TestPattern from "ts/patterns/TestPattern";
 import Point from "ts/Point";
 import Sphere from "ts/shapes/Sphere";
 
 describe("Pattern", () => {
+  it("The default pattern transformation", () => {
+    const pattern = new TestPattern();
+    expect(pattern.transformation.compare(Matrix.getIdentityMatrix(4))).toBe(true);
+  });
+
+  it("Assigning a pattern", () => {
+    const pattern = new TestPattern();
+    pattern.transformation = Matrix.getTranslationMatrix(1, 2, 3);
+    expect(pattern.transformation.compare(Matrix.getTranslationMatrix(1, 2, 3))).toBe(true);
+  });
+
   describe("Stripe", () => {
     it("Creating a stripe pattern", () => {
       const pattern = new StripePattern(Color.white, Color.black);
@@ -68,6 +80,38 @@ describe("Pattern", () => {
         const color = pattern.getColorAtShape(sphere, new Point(2.5, 0, 0));
         expect(color.compare(Color.white)).toBe(true);
       });
+    });
+  });
+
+  describe("Transformations", () => {
+    it("A pattern with an object transformation", () => {
+      const sphere = new Sphere();
+      sphere.transformation = Matrix.getScalingMatrix(2, 2, 2);
+
+      const pattern = new TestPattern();
+
+      const color = pattern.getColorAtShape(sphere, new Point(2, 3, 4));
+      expect(color.compare(new Color(1, 1.5, 2))).toBe(true);
+    });
+
+    it("A pattern with a pattern transformation", () => {
+      const sphere = new Sphere();
+      const pattern = new TestPattern();
+      pattern.transformation = Matrix.getScalingMatrix(2, 2, 2);
+
+      const color = pattern.getColorAtShape(sphere, new Point(2, 3, 4));
+      expect(color.compare(new Color(1, 1.5, 2))).toBe(true);
+    });
+
+    it("A pattern with both an object and a pattern transformation", () => {
+      const sphere = new Sphere();
+      sphere.transformation = Matrix.getScalingMatrix(2, 2, 2);
+
+      const pattern = new TestPattern();
+      pattern.transformation = Matrix.getTranslationMatrix(0.5, 1, 1.5);
+
+      const color = pattern.getColorAtShape(sphere, new Point(2.5, 3, 3.5));
+      expect(color.compare(new Color(0.75, 0.5, 0.25))).toBe(true);
     });
   });
 });
