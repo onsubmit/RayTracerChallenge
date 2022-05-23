@@ -1,6 +1,9 @@
 import Color from "./Color";
+import Pattern from "./patterns/Pattern";
 
 export default class Material {
+  private _pattern?: Pattern;
+
   color: Color;
   ambient: number;
   diffuse: number;
@@ -13,6 +16,22 @@ export default class Material {
     this.diffuse = diffuse;
     this.specular = specular;
     this.shininess = shininess;
+  }
+
+  get hasPattern(): boolean {
+    return !!this._pattern;
+  }
+
+  get pattern(): Pattern {
+    if (!this._pattern) {
+      throw new Error("No pattern exists");
+    }
+
+    return this._pattern;
+  }
+
+  set pattern(pattern: Pattern) {
+    this._pattern = pattern;
   }
 
   compare = (material: Material): boolean => {

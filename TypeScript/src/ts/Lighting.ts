@@ -2,19 +2,23 @@ import Color from "./Color";
 import Light from "./Light";
 import Material from "./Material";
 import Point from "./Point";
+import Shape from "./shapes/Shape";
 import Vector from "./Vector";
 
 class Lighting {
   calculate = (
     material: Material,
+    shape: Shape,
     light: Light,
     point: Point,
     eye: Vector,
     normal: Vector,
     inShadow: boolean
   ): Color => {
+    const color = material.hasPattern ? material.pattern.getColorAtShape(shape, point) : material.color;
+
     // Combine the surface color with the light's color/intensity.
-    const effectiveColor = material.color.getHadamardProductWith(light.intensity);
+    const effectiveColor = color.getHadamardProductWith(light.intensity);
 
     // Find the direction to the light source.
     const lightVector = light.position.subtractPoint(point).normalize();

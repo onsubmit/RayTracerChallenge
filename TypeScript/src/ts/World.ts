@@ -85,6 +85,7 @@ export default class World {
 
     return Lighting.calculate(
       computation.shape.material,
+      computation.shape,
       this.light,
       computation.overPoint,
       computation.eye,
