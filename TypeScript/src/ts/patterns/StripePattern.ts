@@ -6,7 +6,7 @@ export default class StripePattern extends Pattern {
   readonly color1: Color;
   readonly color2: Color;
 
-  constructor(color1: Color, color2: Color) {
+  constructor(color1 = Color.white, color2 = Color.black) {
     super();
 
     this.color1 = color1;
