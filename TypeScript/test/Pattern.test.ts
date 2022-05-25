@@ -1,5 +1,6 @@
 import Color from "ts/Color";
 import Matrix from "ts/Matrix";
+import CheckerPattern3d from "ts/patterns/CheckerPattern3d";
 import GradientPattern from "ts/patterns/GradientPattern";
 import RingPattern from "ts/patterns/RingPattern";
 import StripePattern from "ts/patterns/StripePattern";
@@ -93,12 +94,37 @@ describe("Pattern", () => {
     expect(pattern.getColorAtPoint(new Point(0.75, 0, 0)).compare(new Color(0.25, 0.25, 0.25))).toBe(true);
   });
 
-  it("A ring should extend in both x and z", () => {
-    const pattern = new RingPattern();
-    expect(pattern.getColorAtPoint(Point.origin).compare(Color.white)).toBe(true);
-    expect(pattern.getColorAtPoint(new Point(1, 0, 0)).compare(Color.black)).toBe(true);
-    expect(pattern.getColorAtPoint(new Point(0, 0, 1)).compare(Color.black)).toBe(true);
-    expect(pattern.getColorAtPoint(new Point(0.708, 0, 0.708)).compare(Color.black)).toBe(true);
+  describe("Ring", () => {
+    it("A ring should extend in both x and z", () => {
+      const pattern = new RingPattern();
+      expect(pattern.getColorAtPoint(Point.origin).compare(Color.white)).toBe(true);
+      expect(pattern.getColorAtPoint(new Point(1, 0, 0)).compare(Color.black)).toBe(true);
+      expect(pattern.getColorAtPoint(new Point(0, 0, 1)).compare(Color.black)).toBe(true);
+      expect(pattern.getColorAtPoint(new Point(0.708, 0, 0.708)).compare(Color.black)).toBe(true);
+    });
+  });
+
+  describe("Checkers", () => {
+    it("Checkers should repeat in x", () => {
+      const pattern = new CheckerPattern3d();
+      expect(pattern.getColorAtPoint(Point.origin).compare(Color.white)).toBe(true);
+      expect(pattern.getColorAtPoint(new Point(0.99, 0, 0)).compare(Color.white)).toBe(true);
+      expect(pattern.getColorAtPoint(new Point(1.01, 0, 0)).compare(Color.black)).toBe(true);
+    });
+
+    it("Checkers should repeat in y", () => {
+      const pattern = new CheckerPattern3d();
+      expect(pattern.getColorAtPoint(Point.origin).compare(Color.white)).toBe(true);
+      expect(pattern.getColorAtPoint(new Point(0, 0.99, 0)).compare(Color.white)).toBe(true);
+      expect(pattern.getColorAtPoint(new Point(0, 1.01, 0)).compare(Color.black)).toBe(true);
+    });
+
+    it("Checkers should repeat in z", () => {
+      const pattern = new CheckerPattern3d();
+      expect(pattern.getColorAtPoint(Point.origin).compare(Color.white)).toBe(true);
+      expect(pattern.getColorAtPoint(new Point(0, 0, 0.99)).compare(Color.white)).toBe(true);
+      expect(pattern.getColorAtPoint(new Point(0, 0, 1.01)).compare(Color.black)).toBe(true);
+    });
   });
 
   describe("Transformations", () => {
