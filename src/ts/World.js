@@ -52,7 +52,7 @@ class World {
         };
         this.shadeHit = (computation) => {
             const shadowed = this.isShadowed(computation.overPoint);
-            return Lighting_1.default.calculate(computation.shape.material, this.light, computation.overPoint, computation.eye, computation.normal, shadowed);
+            return Lighting_1.default.calculate(computation.shape.material, computation.shape, this.light, computation.overPoint, computation.eye, computation.normal, shadowed);
         };
         this.light = light;
         this.shapes = shapes;

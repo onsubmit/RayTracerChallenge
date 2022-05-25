@@ -30,6 +30,18 @@ class Material {
         this.specular = specular;
         this.shininess = shininess;
     }
+    get hasPattern() {
+        return !!this._pattern;
+    }
+    get pattern() {
+        if (!this._pattern) {
+            throw new Error("No pattern exists");
+        }
+        return this._pattern;
+    }
+    set pattern(pattern) {
+        this._pattern = pattern;
+    }
 }
 exports.default = Material;
 //# sourceMappingURL=Material.js.map

@@ -6,9 +6,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Color_1 = __importDefault(require("./Color"));
 class Lighting {
     constructor() {
-        this.calculate = (material, light, point, eye, normal, inShadow) => {
+        this.calculate = (material, shape, light, point, eye, normal, inShadow) => {
+            const color = material.hasPattern ? material.pattern.getColorAtShape(shape, point) : material.color;
             // Combine the surface color with the light's color/intensity.
-            const effectiveColor = material.color.getHadamardProductWith(light.intensity);
+            const effectiveColor = color.getHadamardProductWith(light.intensity);
             // Find the direction to the light source.
             const lightVector = light.position.subtractPoint(point).normalize();
             // Compute the ambient contribution.
