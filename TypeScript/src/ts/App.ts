@@ -15,7 +15,7 @@ class App {
     chaptersNoWorld.forEach((c) => c.run());
 
     const size = 500;
-    [7, 8, 9].forEach((chapter) => {
+    [7, 8, 9, 10].forEach((chapter) => {
       const painter = new CanvasPainter(`canvas${chapter}`, size, size);
       const worker = new ChapterWorker();
       worker.onmessage = (event: MessageEvent): void => {

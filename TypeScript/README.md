@@ -1,3 +1,7 @@
+# Chapter 10
+
+![Chapter 10](images/chpt10.png)
+
 # Chapter 9
 
 ![Chapter 9](images/chpt09.png)

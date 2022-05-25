@@ -1,6 +1,7 @@
 import Chapter07 from "./chapters/Chapter07";
 import Chapter08 from "./chapters/Chapter08";
 import Chapter09 from "./chapters/Chapter09";
+import Chapter10 from "./chapters/Chapter10";
 import IChapter from "./chapters/IChapter";
 import { Pixel } from "./Pixel";
 
@@ -8,6 +9,7 @@ const chapters: Map<number, IChapter> = new Map([
   [7, Chapter07],
   [8, Chapter08],
   [9, Chapter09],
+  [10, Chapter10],
 ]);
 
 self.addEventListener("message", (event: MessageEvent) => {
