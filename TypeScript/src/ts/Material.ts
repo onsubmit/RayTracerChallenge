@@ -9,13 +9,22 @@ export default class Material {
   diffuse: number;
   specular: number;
   shininess: number;
+  reflective: number;
 
-  constructor(color: Color = Color.white, ambient = 0.1, diffuse = 0.9, specular = 0.9, shininess = 200) {
+  constructor(
+    color: Color = Color.white,
+    ambient = 0.1,
+    diffuse = 0.9,
+    specular = 0.9,
+    shininess = 200,
+    reflective = 0
+  ) {
     this.color = color;
     this.ambient = ambient;
     this.diffuse = diffuse;
     this.specular = specular;
     this.shininess = shininess;
+    this.reflective = reflective;
   }
 
   get hasPattern(): boolean {

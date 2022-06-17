@@ -10,6 +10,8 @@ import Ray from "./Ray";
 import Shape from "./shapes/Shape";
 import Sphere from "./shapes/Sphere";
 
+const MaxReflections = 4;
+
 export default class World {
   private _disableShadows = false;
 
@@ -40,7 +42,7 @@ export default class World {
     this.shapes.push(shape);
   };
 
-  getColorAt = (ray: Ray): Color => {
+  getColorAt = (ray: Ray, remaining = MaxReflections): Color => {
     const intersections = this.getIntersectionsWith(ray);
     if (!intersections.hasHit) {
       return Color.black;
@@ -48,7 +50,7 @@ export default class World {
 
     const hit = intersections.hit;
     const computation = Computation.prepare(hit, ray);
-    const color = this.shadeHit(computation);
+    const color = this.shadeHit(computation, remaining);
     return color;
   };
 
@@ -80,10 +82,10 @@ export default class World {
     return false;
   };
 
-  shadeHit = (computation: Computation): Color => {
+  shadeHit = (computation: Computation, remaining = MaxReflections): Color => {
     const shadowed = this.isShadowed(computation.overPoint);
 
-    return Lighting.calculate(
+    const surface = Lighting.calculate(
       computation.shape.material,
       computation.shape,
       this.light,
@@ -92,5 +94,23 @@ export default class World {
       computation.normal,
       shadowed
     );
+
+    const reflected = this.getReflectedColor(computation, remaining);
+    return surface.addColor(reflected);
+  };
+
+  getReflectedColor = (computation: Computation, remaining = MaxReflections): Color => {
+    if (remaining <= 0) {
+      return Color.black;
+    }
+
+    if (computation.shape.material.reflective.compare(0)) {
+      return Color.black;
+    }
+
+    const reflectRay = new Ray(computation.overPoint, computation.reflect);
+    const color = this.getColorAt(reflectRay, remaining - 1);
+
+    return color.multiply(computation.shape.material.reflective);
   };
 }

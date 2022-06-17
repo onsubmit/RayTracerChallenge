@@ -5,6 +5,7 @@ import Intersections from "ts/Intersections";
 import Matrix from "ts/Matrix";
 import Point from "ts/Point";
 import Ray from "ts/Ray";
+import Plane from "ts/shapes/Plane";
 import Sphere from "ts/shapes/Sphere";
 import TestShape from "ts/shapes/TestShape";
 import Vector from "ts/Vector";
@@ -211,6 +212,14 @@ describe("Intersections", () => {
       expect(computation.point.compare(new Point(0, 0, -1))).toBe(true);
       expect(computation.eye.compare(new Vector(0, 0, -1))).toBe(true);
       expect(computation.normal.compare(new Vector(0, 0, -1))).toBe(true);
+    });
+
+    it("Precomputing the reflection vector", () => {
+      const shape = new Plane();
+      const ray = new Ray(new Point(0, 1, -1), new Vector(0, -1, 1).normalize());
+      const intersection = new Intersection(Constants.sqrt2, shape);
+      const computation = Computation.prepare(intersection, ray);
+      expect(computation.reflect.compare(new Vector(0, 1, 1).normalize())).toBe(true);
     });
   });
 });

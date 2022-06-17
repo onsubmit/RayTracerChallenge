@@ -1,11 +1,13 @@
 import Color from "ts/Color";
 import Computation from "ts/Computation";
+import Constants from "ts/Constants";
 import Intersection from "ts/Intersection";
 import Light from "ts/Light";
 import Material from "ts/Material";
 import Matrix from "ts/Matrix";
 import Point from "ts/Point";
 import Ray from "ts/Ray";
+import Plane from "ts/shapes/Plane";
 import Sphere from "ts/shapes/Sphere";
 import Vector from "ts/Vector";
 import World from "ts/World";
@@ -140,6 +142,88 @@ describe("World", () => {
       const color = world.shadeHit(computation);
 
       expect(color.compare(new Color(0.1, 0.1, 0.1))).toBe(true);
+    });
+  });
+
+  describe("Reflections", () => {
+    it("The reflected color for a nonreflective material", () => {
+      const world = World.getDefaultWorld();
+      const ray = new Ray(Point.origin, new Vector(0, 0, 1));
+
+      const shape = world.shapes[1];
+      shape.material.ambient = 1;
+
+      const intersection = new Intersection(1, shape);
+      const computation = Computation.prepare(intersection, ray);
+      const color = world.getReflectedColor(computation);
+      expect(color.compare(Color.black)).toBe(true);
+    });
+
+    it("The reflected color for a reflective material", () => {
+      const world = World.getDefaultWorld();
+      const shape = new Plane();
+      shape.material.reflective = 0.5;
+      shape.transformation = Matrix.getTranslationMatrix(0, -1, 0);
+
+      world.addShape(shape);
+
+      const ray = new Ray(new Point(0, 0, -3), new Vector(0, -1, 1).normalize());
+      const intersection = new Intersection(Constants.sqrt2, shape);
+      const computations = Computation.prepare(intersection, ray);
+      const color = world.getReflectedColor(computations);
+      expect(color.compare(new Color(0.19033, 0.23791, 0.14274))).toBe(true);
+    });
+
+    it("shadeHit with a reflective material", () => {
+      const world = World.getDefaultWorld();
+      const shape = new Plane();
+      shape.material.reflective = 0.5;
+      shape.transformation = Matrix.getTranslationMatrix(0, -1, 0);
+
+      world.addShape(shape);
+
+      const ray = new Ray(new Point(0, 0, -3), new Vector(0, -1, 1).normalize());
+      const intersection = new Intersection(Constants.sqrt2, shape);
+      const computations = Computation.prepare(intersection, ray);
+      const color = world.shadeHit(computations);
+      expect(color.compare(new Color(0.87675, 0.92434, 0.82917))).toBe(true);
+    });
+
+    it("getColorAt with mutually reflective surfaces", () => {
+      const world = World.getDefaultWorld();
+      world.light = new Light(Point.origin, Color.white);
+
+      const lower = new Plane();
+      lower.material.reflective = 1;
+      lower.transformation = Matrix.getTranslationMatrix(0, -1, 0);
+
+      const upper = new Plane();
+      upper.material.reflective = 1;
+      upper.transformation = Matrix.getTranslationMatrix(0, 1, 0);
+
+      world.addShape(lower);
+      world.addShape(upper);
+
+      const ray = new Ray(Point.origin, new Vector(0, 1, 0));
+      const color = world.getColorAt(ray);
+      expect(color).toBeDefined;
+    });
+
+    it("The reflected color at the maximum recursive depth", () => {
+      const world = World.getDefaultWorld();
+      world.light = new Light(Point.origin, Color.white);
+
+      const shape = new Plane();
+      shape.material.reflective = 0.5;
+      shape.transformation = Matrix.getTranslationMatrix(0, -1, 0);
+
+      world.addShape(shape);
+
+      const ray = new Ray(new Point(0, 0, -3), new Vector(0, -1, 1).normalize());
+      const intersection = new Intersection(Constants.sqrt2, shape);
+      const computations = Computation.prepare(intersection, ray);
+      const color = world.getReflectedColor(computations, 0);
+      expect(color.compare(Color.black)).toBe(true);
     });
   });
 });

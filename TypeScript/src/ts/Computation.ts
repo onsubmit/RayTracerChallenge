@@ -13,6 +13,7 @@ export default class Computation {
   readonly normal: Vector;
   readonly inside: boolean;
   readonly overPoint: Point;
+  readonly reflect: Vector;
 
   private constructor(
     t: number,
@@ -21,7 +22,8 @@ export default class Computation {
     eye: Vector,
     normal: Vector,
     inside: boolean,
-    overPoint: Point
+    overPoint: Point,
+    reflect: Vector
   ) {
     this.t = t;
     this.shape = shape;
@@ -30,6 +32,7 @@ export default class Computation {
     this.normal = normal;
     this.inside = inside;
     this.overPoint = overPoint;
+    this.reflect = reflect;
   }
 
   static prepare = (intersection: Intersection, ray: Ray): Computation => {
@@ -47,6 +50,8 @@ export default class Computation {
     }
 
     const overPoint = point.addVector(normal.multiply(Constants.epsilon));
-    return new Computation(t, shape, point, eye, normal, inside, overPoint);
+    const reflect = ray.direction.reflect(normal);
+
+    return new Computation(t, shape, point, eye, normal, inside, overPoint, reflect);
   };
 }
