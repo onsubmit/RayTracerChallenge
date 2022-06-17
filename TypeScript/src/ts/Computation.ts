@@ -14,6 +14,7 @@ export default class Computation {
   readonly normal: Vector;
   readonly inside: boolean;
   readonly overPoint: Point;
+  readonly underPoint: Point;
   readonly reflect: Vector;
   readonly exitedMaterialRefractiveIndex: number;
   readonly enteredMaterialRefractiveIndex: number;
@@ -26,6 +27,7 @@ export default class Computation {
     normal: Vector,
     inside: boolean,
     overPoint: Point,
+    underPoint: Point,
     reflect: Vector,
     exitedMaterialRefractiveIndex: number,
     enteredMaterialRefractiveIndex: number
@@ -37,6 +39,7 @@ export default class Computation {
     this.normal = normal;
     this.inside = inside;
     this.overPoint = overPoint;
+    this.underPoint = underPoint;
     this.reflect = reflect;
     this.exitedMaterialRefractiveIndex = exitedMaterialRefractiveIndex;
     this.enteredMaterialRefractiveIndex = enteredMaterialRefractiveIndex;
@@ -60,7 +63,9 @@ export default class Computation {
       normal = normal.negate();
     }
 
-    const overPoint = point.addVector(normal.multiply(Constants.epsilon));
+    const normalTimesEpsilon = normal.multiply(Constants.epsilon);
+    const overPoint = point.addVector(normalTimesEpsilon);
+    const underPoint = point.subtractVector(normalTimesEpsilon);
     const reflect = ray.direction.reflect(normal);
 
     let exitedMaterialRefractiveIndex = 0;
@@ -102,6 +107,7 @@ export default class Computation {
       normal,
       inside,
       overPoint,
+      underPoint,
       reflect,
       exitedMaterialRefractiveIndex,
       enteredMaterialRefractiveIndex

@@ -143,6 +143,18 @@ describe("Intersections", () => {
       expect(computation.overPoint.z).toBeLessThan(-Constants.epsilon / 2);
       expect(computation.point.z).toBeGreaterThan(computation.overPoint.z);
     });
+
+    it("The under point is offset below the surface", () => {
+      const ray = new Ray(new Point(0, 0, -5), new Vector(0, 0, 1));
+      const sphere = Sphere.getGlassSphere();
+      sphere.transformation = Matrix.getTranslationMatrix(0, 0, 1);
+
+      const intersection = new Intersection(5, sphere);
+      const computation = Computation.prepare(intersection, ray);
+
+      expect(computation.underPoint.z).toBeGreaterThan(Constants.epsilon / 2);
+      expect(computation.point.z).toBeLessThan(computation.underPoint.z);
+    });
   });
 
   describe("Shapes", () => {
