@@ -221,5 +221,62 @@ describe("Intersections", () => {
       const computation = Computation.prepare(intersection, ray);
       expect(computation.reflect.compare(new Vector(0, 1, 1).normalize())).toBe(true);
     });
+
+    it("Finding n1 and n2 at various intersections", () => {
+      const sphere1 = Sphere.getGlassSphere();
+      sphere1.transformation = Matrix.getScalingMatrix(2, 2, 2);
+      sphere1.material.refractiveIndex = 1.5;
+
+      const sphere2 = Sphere.getGlassSphere();
+      sphere2.transformation = Matrix.getTranslationMatrix(0, 0, -0.25);
+      sphere2.material.refractiveIndex = 2.0;
+
+      const sphere3 = Sphere.getGlassSphere();
+      sphere3.transformation = Matrix.getTranslationMatrix(0, 0, 0.25);
+      sphere3.material.refractiveIndex = 2.5;
+
+      const ray = new Ray(new Point(0, 0, -4), new Vector(0, 0, 1));
+      const intersections = new Intersections(
+        new Intersection(2, sphere1),
+        new Intersection(2.75, sphere2),
+        new Intersection(3.25, sphere3),
+        new Intersection(4.75, sphere2),
+        new Intersection(5.25, sphere3),
+        new Intersection(6, sphere1)
+      );
+
+      const expecteds = [
+        {
+          n1: 1.0,
+          n2: 1.5,
+        },
+        {
+          n1: 1.5,
+          n2: 2.0,
+        },
+        {
+          n1: 2.0,
+          n2: 2.5,
+        },
+        {
+          n1: 2.5,
+          n2: 2.5,
+        },
+        {
+          n1: 2.5,
+          n2: 1.5,
+        },
+        {
+          n1: 1.5,
+          n2: 1.0,
+        },
+      ];
+
+      expecteds.forEach((expected, index) => {
+        const computations = Computation.prepare(intersections.get(index), ray, intersections);
+        expect(computations.exitedMaterialRefractiveIndex.compare(expected.n1)).toBe(true);
+        expect(computations.enteredMaterialRefractiveIndex.compare(expected.n2)).toBe(true);
+      });
+    });
   });
 });

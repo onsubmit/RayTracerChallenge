@@ -1,5 +1,6 @@
 import Constants from "./Constants";
 import Intersection from "./Intersection";
+import Intersections from "./Intersections";
 import Point from "./Point";
 import Ray from "./Ray";
 import Shape from "./shapes/Shape";
@@ -14,6 +15,8 @@ export default class Computation {
   readonly inside: boolean;
   readonly overPoint: Point;
   readonly reflect: Vector;
+  readonly exitedMaterialRefractiveIndex: number;
+  readonly enteredMaterialRefractiveIndex: number;
 
   private constructor(
     t: number,
@@ -23,7 +26,9 @@ export default class Computation {
     normal: Vector,
     inside: boolean,
     overPoint: Point,
-    reflect: Vector
+    reflect: Vector,
+    exitedMaterialRefractiveIndex: number,
+    enteredMaterialRefractiveIndex: number
   ) {
     this.t = t;
     this.shape = shape;
@@ -33,9 +38,15 @@ export default class Computation {
     this.inside = inside;
     this.overPoint = overPoint;
     this.reflect = reflect;
+    this.exitedMaterialRefractiveIndex = exitedMaterialRefractiveIndex;
+    this.enteredMaterialRefractiveIndex = enteredMaterialRefractiveIndex;
   }
 
-  static prepare = (intersection: Intersection, ray: Ray): Computation => {
+  static prepare = (
+    intersection: Intersection,
+    ray: Ray,
+    intersections: Intersections = new Intersections(intersection)
+  ): Computation => {
     const t = intersection.t;
     const shape = intersection.shape;
 
@@ -52,6 +63,48 @@ export default class Computation {
     const overPoint = point.addVector(normal.multiply(Constants.epsilon));
     const reflect = ray.direction.reflect(normal);
 
-    return new Computation(t, shape, point, eye, normal, inside, overPoint, reflect);
+    let exitedMaterialRefractiveIndex = 0;
+    let enteredMaterialRefractiveIndex = 0;
+    const containers: Shape[] = [];
+    for (let i = 0, length = intersections.length; i < length; i++) {
+      const x = intersections.get(i);
+      if (x === intersection) {
+        if (!containers.length) {
+          exitedMaterialRefractiveIndex = 1;
+        } else {
+          exitedMaterialRefractiveIndex = containers[containers.length - 1].material.refractiveIndex;
+        }
+      }
+
+      const index = containers.indexOf(x.shape);
+      if (index >= 0) {
+        containers.splice(index, 1);
+      } else {
+        containers.push(x.shape);
+      }
+
+      if (x === intersection) {
+        if (!containers.length) {
+          enteredMaterialRefractiveIndex = 1;
+        } else {
+          enteredMaterialRefractiveIndex = containers[containers.length - 1].material.refractiveIndex;
+        }
+
+        break;
+      }
+    }
+
+    return new Computation(
+      t,
+      shape,
+      point,
+      eye,
+      normal,
+      inside,
+      overPoint,
+      reflect,
+      exitedMaterialRefractiveIndex,
+      enteredMaterialRefractiveIndex
+    );
   };
 }

@@ -18,6 +18,8 @@ describe("Material", () => {
       expect(m.specular).toBe(0.9);
       expect(m.shininess).toBe(200);
       expect(m.reflective).toBe(0);
+      expect(m.transparency).toBe(0);
+      expect(m.refractiveIndex).toBe(1);
     });
   });
 

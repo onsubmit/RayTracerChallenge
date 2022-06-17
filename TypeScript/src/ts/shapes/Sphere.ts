@@ -19,6 +19,14 @@ export default class Sphere extends Shape {
     this.radius = 1;
   }
 
+  static getGlassSphere = (): Sphere => {
+    const sphere = new Sphere();
+    sphere.material.transparency = 1;
+    sphere.material.refractiveIndex = 1.5;
+
+    return sphere;
+  };
+
   override compare = (shape: Shape): boolean => {
     if (!(shape instanceof Sphere)) {
       return false;

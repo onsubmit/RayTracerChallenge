@@ -10,6 +10,8 @@ export default class Material {
   specular: number;
   shininess: number;
   reflective: number;
+  transparency: number;
+  refractiveIndex: number;
 
   constructor(
     color: Color = Color.white,
@@ -17,7 +19,9 @@ export default class Material {
     diffuse = 0.9,
     specular = 0.9,
     shininess = 200,
-    reflective = 0
+    reflective = 0,
+    transparency = 0,
+    refractiveIndex = 1
   ) {
     this.color = color;
     this.ambient = ambient;
@@ -25,6 +29,8 @@ export default class Material {
     this.specular = specular;
     this.shininess = shininess;
     this.reflective = reflective;
+    this.transparency = transparency;
+    this.refractiveIndex = refractiveIndex;
   }
 
   get hasPattern(): boolean {

@@ -49,7 +49,7 @@ export default class World {
     }
 
     const hit = intersections.hit;
-    const computation = Computation.prepare(hit, ray);
+    const computation = Computation.prepare(hit, ray, intersections);
     const color = this.shadeHit(computation, remaining);
     return color;
   };
