@@ -97,6 +97,13 @@ export default class World {
 
     const reflected = this.getReflectedColor(computation, remaining);
     const refracted = this.getRefractedColor(computation, remaining);
+
+    const material = computation.shape.material;
+    if (material.reflective > 0 && material.transparency > 0) {
+      const reflectance = computation.getSchlickApproximation();
+      return surface.addColor(reflected.multiply(reflectance)).addColor(refracted.multiply(1 - reflectance));
+    }
+
     return surface.addColor(reflected).addColor(refracted);
   };
 

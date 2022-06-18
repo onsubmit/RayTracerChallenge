@@ -113,4 +113,29 @@ export default class Computation {
       enteredMaterialRefractiveIndex
     );
   };
+
+  getSchlickApproximation = (): number => {
+    // Cosine of the angle between eye and normal vectors.
+    let cosine = this.eye.dot(this.normal);
+
+    if (this.exitedMaterialRefractiveIndex > this.enteredMaterialRefractiveIndex) {
+      // Total internal reflection.
+      const ratio = this.exitedMaterialRefractiveIndex / this.enteredMaterialRefractiveIndex;
+      const sineSquaredTheta = ratio * ratio * (1.0 - cosine * cosine);
+      if (sineSquaredTheta > 1) {
+        return 1.0;
+      }
+
+      const cosineTheta = Math.sqrt(1.0 - sineSquaredTheta);
+      cosine = cosineTheta;
+    }
+
+    const r0 = Math.pow(
+      (this.exitedMaterialRefractiveIndex - this.enteredMaterialRefractiveIndex) /
+        (this.exitedMaterialRefractiveIndex + this.enteredMaterialRefractiveIndex),
+      2.0
+    );
+
+    return r0 + (1 - r0) * Math.pow(1 - cosine, 5.0);
+  };
 }

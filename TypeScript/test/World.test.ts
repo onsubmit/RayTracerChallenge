@@ -314,5 +314,29 @@ describe("World", () => {
       const color = world.shadeHit(computations);
       expect(color.compare(new Color(0.93642, 0.68642, 0.68642))).toBe(true);
     });
+
+    it("shadeHit with a reflective, transparent material", () => {
+      const world = World.getDefaultWorld();
+      const floor = new Plane();
+      floor.transformation = Matrix.getTranslationMatrix(0, -1, 0);
+      floor.material.reflective = 0.5;
+      floor.material.transparency = 0.5;
+      floor.material.refractiveIndex = 1.5;
+
+      world.addShape(floor);
+
+      const ball = new Sphere();
+      ball.material.color = Color.red;
+      ball.material.ambient = 0.5;
+      ball.transformation = Matrix.getTranslationMatrix(0, -3.5, -0.5);
+
+      world.addShape(ball);
+
+      const ray = new Ray(new Point(0, 0, -3), new Vector(0, -1, 1).normalize());
+      const intersections = new Intersections(new Intersection(Constants.sqrt2, floor));
+      const computations = Computation.prepare(intersections.get(0), ray, intersections);
+      const color = world.shadeHit(computations);
+      expect(color.compare(new Color(0.93391, 0.69643, 0.69243))).toBe(true);
+    });
   });
 });

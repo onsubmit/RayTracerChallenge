@@ -290,5 +290,35 @@ describe("Intersections", () => {
         expect(computations.enteredMaterialRefractiveIndex.compare(expected.n2)).toBe(true);
       });
     });
+
+    it("The Schlick approximation under total internal reflection", () => {
+      const sphere = Sphere.getGlassSphere();
+      const ray = new Ray(new Point(0, 0, Constants.sqrt2_2), new Vector(0, 1, 0));
+      const intersections = new Intersections(
+        new Intersection(-Constants.sqrt2_2, sphere),
+        new Intersection(Constants.sqrt2_2, sphere)
+      );
+      const computation = Computation.prepare(intersections.get(1), ray, intersections);
+      const reflectance = computation.getSchlickApproximation();
+      expect(reflectance.compare(1)).toBe(true);
+    });
+
+    it("The Schlick approximation with a perpendicular viewing angle", () => {
+      const sphere = Sphere.getGlassSphere();
+      const ray = new Ray(Point.origin, new Vector(0, 1, 0));
+      const intersections = new Intersections(new Intersection(-1, sphere), new Intersection(1, sphere));
+      const computation = Computation.prepare(intersections.get(1), ray, intersections);
+      const reflectance = computation.getSchlickApproximation();
+      expect(reflectance.compare(0.04)).toBe(true);
+    });
+
+    it("The Schlick approximation with small angle and n2 > n1", () => {
+      const sphere = Sphere.getGlassSphere();
+      const ray = new Ray(new Point(0, 0.99, -2), new Vector(0, 0, 1));
+      const intersections = new Intersections(new Intersection(1.8589, sphere));
+      const computation = Computation.prepare(intersections.get(0), ray, intersections);
+      const reflectance = computation.getSchlickApproximation();
+      expect(reflectance.compare(0.48873)).toBe(true);
+    });
   });
 });
