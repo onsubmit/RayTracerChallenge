@@ -2,9 +2,11 @@ import Color from "ts/Color";
 import Computation from "ts/Computation";
 import Constants from "ts/Constants";
 import Intersection from "ts/Intersection";
+import Intersections from "ts/Intersections";
 import Light from "ts/Light";
 import Material from "ts/Material";
 import Matrix from "ts/Matrix";
+import TestPattern from "ts/patterns/TestPattern";
 import Point from "ts/Point";
 import Ray from "ts/Ray";
 import Plane from "ts/shapes/Plane";
@@ -224,6 +226,93 @@ describe("World", () => {
       const computations = Computation.prepare(intersection, ray);
       const color = world.getReflectedColor(computations, 0);
       expect(color.compare(Color.black)).toBe(true);
+    });
+  });
+
+  describe("Refractions", () => {
+    it("The refracted color with an opaque surface", () => {
+      const world = World.getDefaultWorld();
+      const shape = world.shapes[0];
+
+      const ray = new Ray(new Point(0, 0, -5), new Vector(0, 0, 1));
+      const intersections = new Intersections(new Intersection(4, shape), new Intersection(6, shape));
+      const computations = Computation.prepare(intersections.get(0), ray, intersections);
+      const color = world.getRefractedColor(computations);
+      expect(color.compare(Color.black)).toBe(true);
+    });
+
+    it("The refracted color at the maximum recursive depth", () => {
+      const world = World.getDefaultWorld();
+      const shape = world.shapes[0];
+      shape.material.transparency = 1;
+      shape.material.refractiveIndex = 1.5;
+
+      const ray = new Ray(new Point(0, 0, -5), new Vector(0, 0, 1));
+      const intersections = new Intersections(new Intersection(4, shape), new Intersection(6, shape));
+      const computations = Computation.prepare(intersections.get(0), ray, intersections);
+      const color = world.getRefractedColor(computations, 0);
+      expect(color.compare(Color.black)).toBe(true);
+    });
+
+    it("The refracted color under total internal reflection", () => {
+      const world = World.getDefaultWorld();
+      const shape = world.shapes[0];
+      shape.material.transparency = 1;
+      shape.material.refractiveIndex = 1.5;
+
+      const ray = new Ray(new Point(0, 0, Constants.sqrt2_2), new Vector(0, 1, 0));
+      const intersections = new Intersections(
+        new Intersection(-Constants.sqrt2_2, shape),
+        new Intersection(Constants.sqrt2_2, shape)
+      );
+      const computations = Computation.prepare(intersections.get(1), ray, intersections);
+      const color = world.getRefractedColor(computations);
+      expect(color.compare(Color.black)).toBe(true);
+    });
+
+    it("The refracted color with a refracted ray", () => {
+      const world = World.getDefaultWorld();
+      const shape1 = world.shapes[0];
+      shape1.material.ambient = 1;
+      shape1.material.pattern = new TestPattern();
+
+      const shape2 = world.shapes[1];
+      shape2.material.transparency = 1;
+      shape2.material.refractiveIndex = 1.5;
+
+      const ray = new Ray(new Point(0, 0, 0.1), new Vector(0, 1, 0));
+      const intersections = new Intersections(
+        new Intersection(-0.9899, shape1),
+        new Intersection(-0.4899, shape2),
+        new Intersection(0.4899, shape2),
+        new Intersection(0.9899, shape1)
+      );
+      const computations = Computation.prepare(intersections.get(2), ray, intersections);
+      const color = world.getRefractedColor(computations);
+      expect(color.compare(new Color(0, 0.99887, 0.04721))).toBe(true);
+    });
+
+    it("shadeHit with a transparent material", () => {
+      const world = World.getDefaultWorld();
+      const floor = new Plane();
+      floor.transformation = Matrix.getTranslationMatrix(0, -1, 0);
+      floor.material.transparency = 0.5;
+      floor.material.refractiveIndex = 1.5;
+
+      world.addShape(floor);
+
+      const ball = new Sphere();
+      ball.material.color = Color.red;
+      ball.material.ambient = 0.5;
+      ball.transformation = Matrix.getTranslationMatrix(0, -3.5, -0.5);
+
+      world.addShape(ball);
+
+      const ray = new Ray(new Point(0, 0, -3), new Vector(0, -1, 1).normalize());
+      const intersections = new Intersections(new Intersection(Constants.sqrt2, floor));
+      const computations = Computation.prepare(intersections.get(0), ray, intersections);
+      const color = world.shadeHit(computations);
+      expect(color.compare(new Color(0.93642, 0.68642, 0.68642))).toBe(true);
     });
   });
 });

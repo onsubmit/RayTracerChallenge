@@ -10,7 +10,7 @@ import Ray from "./Ray";
 import Shape from "./shapes/Shape";
 import Sphere from "./shapes/Sphere";
 
-const MaxReflections = 4;
+const MaxReflections = 5;
 
 export default class World {
   private _disableShadows = false;
@@ -96,7 +96,8 @@ export default class World {
     );
 
     const reflected = this.getReflectedColor(computation, remaining);
-    return surface.addColor(reflected);
+    const refracted = this.getRefractedColor(computation, remaining);
+    return surface.addColor(reflected).addColor(refracted);
   };
 
   getReflectedColor = (computation: Computation, remaining = MaxReflections): Color => {
@@ -112,5 +113,36 @@ export default class World {
     const color = this.getColorAt(reflectRay, remaining - 1);
 
     return color.multiply(computation.shape.material.reflective);
+  };
+
+  getRefractedColor = (computation: Computation, remaining = MaxReflections): Color => {
+    if (remaining <= 0) {
+      return Color.black;
+    }
+
+    if (computation.shape.material.transparency.compare(0)) {
+      return Color.black;
+    }
+
+    const ratio = computation.exitedMaterialRefractiveIndex / computation.enteredMaterialRefractiveIndex;
+    const cosineThetaI = computation.eye.dot(computation.normal);
+    const sineSquaredThetaT = ratio * ratio * (1.0 - cosineThetaI * cosineThetaI);
+
+    if (sineSquaredThetaT > 1) {
+      // Total internal reflection.
+      return Color.black;
+    }
+
+    const cosineThetaT = Math.sqrt(1.0 - sineSquaredThetaT);
+
+    // Direction of refracted ray.
+    const direction = computation.normal
+      .multiply(ratio * cosineThetaI - cosineThetaT)
+      .subtractVector(computation.eye.multiply(ratio));
+    const refractedRay = new Ray(computation.underPoint, direction);
+
+    // Find the color of the refracted ray, accounting for opacity.
+    const color = this.getColorAt(refractedRay, remaining - 1);
+    return color.multiply(computation.shape.material.transparency);
   };
 }
