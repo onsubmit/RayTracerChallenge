@@ -13,20 +13,21 @@ const Matrix_1 = __importDefault(require("./Matrix"));
 const Point_1 = __importDefault(require("./Point"));
 const Ray_1 = __importDefault(require("./Ray"));
 const Sphere_1 = __importDefault(require("./shapes/Sphere"));
+const MaxReflections = 5;
 class World {
     constructor(light, ...shapes) {
         this._disableShadows = false;
         this.addShape = (shape) => {
             this.shapes.push(shape);
         };
-        this.getColorAt = (ray) => {
+        this.getColorAt = (ray, remaining = MaxReflections) => {
             const intersections = this.getIntersectionsWith(ray);
             if (!intersections.hasHit) {
                 return Color_1.default.black;
             }
             const hit = intersections.hit;
-            const computation = Computation_1.default.prepare(hit, ray);
-            const color = this.shadeHit(computation);
+            const computation = Computation_1.default.prepare(hit, ray, intersections);
+            const color = this.shadeHit(computation, remaining);
             return color;
         };
         this.getIntersectionsWith = (ray) => {
@@ -50,9 +51,52 @@ class World {
             }
             return false;
         };
-        this.shadeHit = (computation) => {
+        this.shadeHit = (computation, remaining = MaxReflections) => {
             const shadowed = this.isShadowed(computation.overPoint);
-            return Lighting_1.default.calculate(computation.shape.material, computation.shape, this.light, computation.overPoint, computation.eye, computation.normal, shadowed);
+            const surface = Lighting_1.default.calculate(computation.shape.material, computation.shape, this.light, computation.overPoint, computation.eye, computation.normal, shadowed);
+            const reflected = this.getReflectedColor(computation, remaining);
+            const refracted = this.getRefractedColor(computation, remaining);
+            const material = computation.shape.material;
+            if (material.reflective > 0 && material.transparency > 0) {
+                const reflectance = computation.getSchlickApproximation();
+                return surface.addColor(reflected.multiply(reflectance)).addColor(refracted.multiply(1 - reflectance));
+            }
+            return surface.addColor(reflected).addColor(refracted);
+        };
+        this.getReflectedColor = (computation, remaining = MaxReflections) => {
+            if (remaining <= 0) {
+                return Color_1.default.black;
+            }
+            if (computation.shape.material.reflective.compare(0)) {
+                return Color_1.default.black;
+            }
+            const reflectRay = new Ray_1.default(computation.overPoint, computation.reflect);
+            const color = this.getColorAt(reflectRay, remaining - 1);
+            return color.multiply(computation.shape.material.reflective);
+        };
+        this.getRefractedColor = (computation, remaining = MaxReflections) => {
+            if (remaining <= 0) {
+                return Color_1.default.black;
+            }
+            if (computation.shape.material.transparency.compare(0)) {
+                return Color_1.default.black;
+            }
+            const ratio = computation.exitedMaterialRefractiveIndex / computation.enteredMaterialRefractiveIndex;
+            const cosineThetaI = computation.eye.dot(computation.normal);
+            const sineSquaredThetaT = ratio * ratio * (1.0 - cosineThetaI * cosineThetaI);
+            if (sineSquaredThetaT > 1) {
+                // Total internal reflection.
+                return Color_1.default.black;
+            }
+            const cosineThetaT = Math.sqrt(1.0 - sineSquaredThetaT);
+            // Direction of refracted ray.
+            const direction = computation.normal
+                .multiply(ratio * cosineThetaI - cosineThetaT)
+                .subtractVector(computation.eye.multiply(ratio));
+            const refractedRay = new Ray_1.default(computation.underPoint, direction);
+            // Find the color of the refracted ray, accounting for opacity.
+            const color = this.getColorAt(refractedRay, remaining - 1);
+            return color.multiply(computation.shape.material.transparency);
         };
         this.light = light;
         this.shapes = shapes;

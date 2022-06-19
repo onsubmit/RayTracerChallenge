@@ -10,6 +10,7 @@ const Intersections_1 = __importDefault(require("ts/Intersections"));
 const Matrix_1 = __importDefault(require("ts/Matrix"));
 const Point_1 = __importDefault(require("ts/Point"));
 const Ray_1 = __importDefault(require("ts/Ray"));
+const Plane_1 = __importDefault(require("ts/shapes/Plane"));
 const Sphere_1 = __importDefault(require("ts/shapes/Sphere"));
 const TestShape_1 = __importDefault(require("ts/shapes/TestShape"));
 const Vector_1 = __importDefault(require("ts/Vector"));
@@ -121,6 +122,15 @@ describe("Intersections", () => {
             expect(computation.overPoint.z).toBeLessThan(-Constants_1.default.epsilon / 2);
             expect(computation.point.z).toBeGreaterThan(computation.overPoint.z);
         });
+        it("The under point is offset below the surface", () => {
+            const ray = new Ray_1.default(new Point_1.default(0, 0, -5), new Vector_1.default(0, 0, 1));
+            const sphere = Sphere_1.default.getGlassSphere();
+            sphere.transformation = Matrix_1.default.getTranslationMatrix(0, 0, 1);
+            const intersection = new Intersection_1.default(5, sphere);
+            const computation = Computation_1.default.prepare(intersection, ray);
+            expect(computation.underPoint.z).toBeGreaterThan(Constants_1.default.epsilon / 2);
+            expect(computation.point.z).toBeLessThan(computation.underPoint.z);
+        });
     });
     describe("Shapes", () => {
         describe("TestShape", () => {
@@ -180,6 +190,81 @@ describe("Intersections", () => {
             expect(computation.point.compare(new Point_1.default(0, 0, -1))).toBe(true);
             expect(computation.eye.compare(new Vector_1.default(0, 0, -1))).toBe(true);
             expect(computation.normal.compare(new Vector_1.default(0, 0, -1))).toBe(true);
+        });
+        it("Precomputing the reflection vector", () => {
+            const shape = new Plane_1.default();
+            const ray = new Ray_1.default(new Point_1.default(0, 1, -1), new Vector_1.default(0, -1, 1).normalize());
+            const intersection = new Intersection_1.default(Constants_1.default.sqrt2, shape);
+            const computation = Computation_1.default.prepare(intersection, ray);
+            expect(computation.reflect.compare(new Vector_1.default(0, 1, 1).normalize())).toBe(true);
+        });
+        it("Finding n1 and n2 at various intersections", () => {
+            const sphere1 = Sphere_1.default.getGlassSphere();
+            sphere1.transformation = Matrix_1.default.getScalingMatrix(2, 2, 2);
+            sphere1.material.refractiveIndex = 1.5;
+            const sphere2 = Sphere_1.default.getGlassSphere();
+            sphere2.transformation = Matrix_1.default.getTranslationMatrix(0, 0, -0.25);
+            sphere2.material.refractiveIndex = 2.0;
+            const sphere3 = Sphere_1.default.getGlassSphere();
+            sphere3.transformation = Matrix_1.default.getTranslationMatrix(0, 0, 0.25);
+            sphere3.material.refractiveIndex = 2.5;
+            const ray = new Ray_1.default(new Point_1.default(0, 0, -4), new Vector_1.default(0, 0, 1));
+            const intersections = new Intersections_1.default(new Intersection_1.default(2, sphere1), new Intersection_1.default(2.75, sphere2), new Intersection_1.default(3.25, sphere3), new Intersection_1.default(4.75, sphere2), new Intersection_1.default(5.25, sphere3), new Intersection_1.default(6, sphere1));
+            const expecteds = [
+                {
+                    n1: 1.0,
+                    n2: 1.5,
+                },
+                {
+                    n1: 1.5,
+                    n2: 2.0,
+                },
+                {
+                    n1: 2.0,
+                    n2: 2.5,
+                },
+                {
+                    n1: 2.5,
+                    n2: 2.5,
+                },
+                {
+                    n1: 2.5,
+                    n2: 1.5,
+                },
+                {
+                    n1: 1.5,
+                    n2: 1.0,
+                },
+            ];
+            expecteds.forEach((expected, index) => {
+                const computations = Computation_1.default.prepare(intersections.get(index), ray, intersections);
+                expect(computations.exitedMaterialRefractiveIndex.compare(expected.n1)).toBe(true);
+                expect(computations.enteredMaterialRefractiveIndex.compare(expected.n2)).toBe(true);
+            });
+        });
+        it("The Schlick approximation under total internal reflection", () => {
+            const sphere = Sphere_1.default.getGlassSphere();
+            const ray = new Ray_1.default(new Point_1.default(0, 0, Constants_1.default.sqrt2_2), new Vector_1.default(0, 1, 0));
+            const intersections = new Intersections_1.default(new Intersection_1.default(-Constants_1.default.sqrt2_2, sphere), new Intersection_1.default(Constants_1.default.sqrt2_2, sphere));
+            const computation = Computation_1.default.prepare(intersections.get(1), ray, intersections);
+            const reflectance = computation.getSchlickApproximation();
+            expect(reflectance.compare(1)).toBe(true);
+        });
+        it("The Schlick approximation with a perpendicular viewing angle", () => {
+            const sphere = Sphere_1.default.getGlassSphere();
+            const ray = new Ray_1.default(Point_1.default.origin, new Vector_1.default(0, 1, 0));
+            const intersections = new Intersections_1.default(new Intersection_1.default(-1, sphere), new Intersection_1.default(1, sphere));
+            const computation = Computation_1.default.prepare(intersections.get(1), ray, intersections);
+            const reflectance = computation.getSchlickApproximation();
+            expect(reflectance.compare(0.04)).toBe(true);
+        });
+        it("The Schlick approximation with small angle and n2 > n1", () => {
+            const sphere = Sphere_1.default.getGlassSphere();
+            const ray = new Ray_1.default(new Point_1.default(0, 0.99, -2), new Vector_1.default(0, 0, 1));
+            const intersections = new Intersections_1.default(new Intersection_1.default(1.8589, sphere));
+            const computation = Computation_1.default.prepare(intersections.get(0), ray, intersections);
+            const reflectance = computation.getSchlickApproximation();
+            expect(reflectance.compare(0.48873)).toBe(true);
         });
     });
 });

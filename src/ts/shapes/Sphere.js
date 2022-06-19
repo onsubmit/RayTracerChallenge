@@ -44,4 +44,10 @@ class Sphere extends Shape_1.default {
     }
 }
 exports.default = Sphere;
+Sphere.getGlassSphere = () => {
+    const sphere = new Sphere();
+    sphere.material.transparency = 1;
+    sphere.material.refractiveIndex = 1.5;
+    return sphere;
+};
 //# sourceMappingURL=Sphere.js.map

@@ -17,7 +17,7 @@ const Plane_1 = __importDefault(require("ts/shapes/Plane"));
 const Sphere_1 = __importDefault(require("ts/shapes/Sphere"));
 const Vector_1 = __importDefault(require("ts/Vector"));
 const World_1 = __importDefault(require("ts/World"));
-class Chapter10 {
+class Chapter11 {
     constructor() {
         this.getCamera = (width = 500, height = 500) => {
             const from = new Point_1.default(0, 1.5, -5);
@@ -30,7 +30,7 @@ class Chapter10 {
             const world = new World_1.default(light);
             const floor = new Plane_1.default();
             floor.transformation = Matrix_1.default.getTranslationMatrix(0, -0.5, 0);
-            floor.material.color = new Color_1.default(0, 0.2, 0.4);
+            floor.material.pattern = new CheckerPattern3d_1.default(new Color_1.default(0, 0.2, 0.4), Color_1.default.black);
             floor.material.specular = 0;
             world.addShape(floor);
             // The large sphere in the middle is a unit sphere,
@@ -41,6 +41,7 @@ class Chapter10 {
             middle.material.pattern.transformation = Matrix_1.default.getRotationMatrixZ(Constants_1.default.pi_4).scale(0.2, 1, 1);
             middle.material.diffuse = 0.7;
             middle.material.specular = 0.3;
+            middle.material.reflective = 0.99;
             world.addShape(middle);
             // The smaller green sphere on the right is scaled in half.
             const right = new Sphere_1.default();
@@ -50,14 +51,19 @@ class Chapter10 {
                 .translate(-1, 0, 0)
                 .scale(2, 1, 1);
             right.material.diffuse = 0.7;
-            right.material.specular = 0.3;
+            right.material.specular = 1;
+            right.material.shininess = 400;
+            right.material.transparency = 0.25;
+            right.material.reflective = 0.99;
             world.addShape(right);
             // The smallest sphere is scaled by a third, before being translated.
             const left = new Sphere_1.default();
             left.transformation = Matrix_1.default.getTranslationMatrix(-1.5, 0.33, -0.75).scale(0.33, 0.33, 0.33);
             left.material.pattern = new CheckerPattern3d_1.default(new Color_1.default(1, 0.1, 0.1), new Color_1.default(0.5, 0.1, 0.1));
             left.material.diffuse = 0.7;
-            left.material.specular = 0.3;
+            left.material.specular = 1;
+            left.material.transparency = 0.25;
+            left.material.reflective = 0.99;
             world.addShape(left);
             return world;
         };
@@ -65,10 +71,10 @@ class Chapter10 {
             const camera = this.getCamera();
             const world = this.getWorld();
             const canvas = camera.render(world);
-            const painter = new CanvasPainter_1.default("canvas10");
+            const painter = new CanvasPainter_1.default("canvas11");
             painter.paint(canvas);
         };
     }
 }
-exports.default = new Chapter10();
-//# sourceMappingURL=Chapter10.js.map
+exports.default = new Chapter11();
+//# sourceMappingURL=Chapter11.js.map

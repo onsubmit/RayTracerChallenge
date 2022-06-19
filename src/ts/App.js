@@ -17,7 +17,7 @@ class App {
             const chaptersNoWorld = [Chapter01_1.default, Chapter02_1.default, Chapter04_1.default, Chapter05_1.default, Chapter06_1.default];
             chaptersNoWorld.forEach((c) => c.run());
             const size = 500;
-            [7, 8, 9].forEach((chapter) => {
+            [7, 8, 9, 10, 11].forEach((chapter) => {
                 const painter = new CanvasPainter_1.default(`canvas${chapter}`, size, size);
                 const worker = new ChapterWorker_1.default();
                 worker.onmessage = (event) => {
